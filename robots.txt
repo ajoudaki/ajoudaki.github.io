@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://ajoudaki.github.io/ajoudaki.github.io/sitemap.xml
+Sitemap: https://ajoudaki.github.io/sitemap.xml
