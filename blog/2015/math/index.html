@@ -157,10 +157,9 @@
 <p>You can also use <code class="language-plaintext highlighter-rouge">\begin{equation}...\end{equation}</code> instead of <code class="language-plaintext highlighter-rouge">$$</code> for display mode math.
 MathJax will automatically number equations:</p>
 
-<p>\begin{equation}
-\label{eq:cauchy-schwarz}
+\[\label{eq:cauchy-schwarz}
 \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)
-\end{equation}</p>
+\end{equation}\]
 
 <p>and by adding <code class="language-plaintext highlighter-rouge">\label{...}</code> inside the equation environment, we can now refer to the equation using <code class="language-plaintext highlighter-rouge">\eqref</code>.</p>
 
@@ -208,7 +207,11 @@ MathJax will automatically number equations:</p>
       tex: {
         tags: 'ams',
         macros: {
+          E: "{\\mathbb{E}}",
+          P: "{\\mathbb{P}}",
           RR: "{\\bf R}",
+          Expec: ["{\\langle #1 \\rangle}", 1],
+          Prob: ["{\\mathbb{P}\\left[ #1 \\right]}", 1],
           bold: ["{\\bf #1}", 1]}
       }
     };
