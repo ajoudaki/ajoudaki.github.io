@@ -2,96 +2,91 @@
   type: map
   contents:
     - name: Full Name
-      value: Albert Einstein
-    - name: Date of Birth
-      value: 14th March 1879
+      value: Amir Joudaki
     - name: Languages
-      value: English, German
+      value: English, Persian, German
+    - name: homepage
+      value: https://bmi.inf.ethz.ch/people/person/amir-joudaki
+    - name: linkedin
+      value: https://www.linkedin.com/in/amirjoudaki/
+    - name: github
+      value: https://github.com/ajoudaki
 
 - title: Education
-  type: time_table
-  contents:
-    - title: PhD
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1905
-      description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Federal teaching diploma
-      institution: Eidgenössische Technische Hochschule, Zurich, Switzerland
-      year: 1900
-      description:
-        - Description 1.
-        - Description 2.
+  - degree: Ph.D. in Artificial Intelligence
+    institution: ETH Zurich
+    period: Sept 2019 -- now
+    location: Zurich, Switzerland
+    thesis: Theoretical approaches to neural networks; biomedical applications of AI
+
+  - degree: M.Sc. in Computer Science
+    institution: ETH Zurich
+    period: Sept 2017 -- June 2019
+    location: Zurich, Switzerland
+    thesis: Scalable algorithms for biological sequence analysis
+    gpa: 5.7/6 (top 10%)
+    related_courses:
+      - Algorithms Lab (5.75/6)
+      - System Biology (5.5/6)
+      - Probabilistic Artificial Intelligence (5.75/6)
+
+  - degree: M.Sc. in Cognitive Neuroscience
+    institution: International School for Advanced Studies (SISSA)
+    period: Sept 2014 -- June 2016
+    location: Trieste, Italy
+    thesis: Modeling activity of electrophysiological recordings in vivo in rats
+
+  - degree: B.Sc. in Computer Engineering
+    institution: Sharif University of Technology
+    period: Sept 2008 -- June 2011
+    location: Tehran, Iran
 
 - title: Experience
-  type: time_table
-  contents:
-    - title: Professor of Theoretical Physics
-      institution: Institute for Advanced Study, Princeton University
-      year: 1933 - 1955
-      description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Visiting Professor
-      institution: California Institute of Technology, Pasadena, California, US
-      year: 1933
-      description:
-        - Description 1.
-        - Description 2.
+  - position: Machine Learning Consultant
+    company: SkillLab
+    period: Jan 2022 -- July 2022
+    location: Zurich, Switzerland
+    description: Research and development of a proof-of-concept for training, labeling, and monitoring NLP tasks, written in PyTorch, Flask, Typescript, React, MongoDB, orchestrated as micro-services in REST API, and run inside docker containers for deployment.
 
-    - title: Director
-      institution: Kaiser Wilhelm Institute for Physics, Berlin, Germany.
-      year: 1917-1933
+  - position: Research Assistant
+    company: Sharif University of Technology
+    period: Jan 2013 -- Dec 2013
+    location: Iran, Tehran
+    description: Developed network-based analysis of EEG recordings of control and patient groups in MATLAB.
 
-    - title: Professor of Theoretical Physics
-      institution: Karl-Ferdinand University, Prague, Czechoslovakia
-      year: 1911 - 1917
-      description:
+  - position: Software Engineer Intern
+    company: Rahtech Hooshmand Sharif
+    period: Sept 2011 -- Dec 2012
+    location: Iran, Tehran
+    description: Worked on a product to track and monitor vehicles, written in Qt/C++
 
-    - title: Associate Professor of Theoretical Physics
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1909 - 1911
+- title: Projects
+  - title: Human-in-the-loop pipeline for occupation and skill extraction
+    client: SkillLab
+    description: Extraction of occupations and skills from unstructured text and normalized them to European Skills, Competences, and Occupations (ESCO). Built a human-in-the-loop pipeline to validate model predictions, implemented as microservices that spun up with a docker-compose.
 
-- title: Open Source Projects
-  type: time_table
-  contents:
-    - title: <a href="https://github.com/alshedivat/al-folio">al-folio</a>
-      year: 2015-now
-      description: A beautiful, simple, clean, and responsive Jekyll theme for academics.
+  - title: Theoretical Approach to Neural Networks
+    client: ETH Zurich
+    description: Collaborative project with ENS Paris and MIT researchers, pursuing a theoretical and rigorous understanding of neural networks, particularly the effects of normalization on depth and training.
+    publications:
+      - Amir Joudaki, Hadi Daneshmand Francis Bach, "Entropy Maximization with Depth: A Variational Principle for Random Neural Networks", preprint on arXiv.
+      - Hadi Daneshmand, Amir Joudaki, Francis Bach, "Batch Normalization Orthogonalizes Representations in Deep Random Networks", spotlighted (3% acceptance rate) in proceedings of NeurIPS 2021.
 
-- title: Honors and Awards
-  type: time_table
-  contents:
-    - year: 1921
-      items: 
-        - Nobel Prize in Physics 
-        - Matteucci Medal
-    - year: 2029
-      items: 
-        - Max Planck Medal
+  - title: Scalable biological sequence analysis
+    client: ETH Zurich
+    publications:
+      - Amir Joudaki, Alexandru Meterez, Harun Mustafa, Ragnar Groot Koerkamp, Andre Kahles, Gunnar Raetsch, "Aligning Distant Sequences to Graphs using Long Seed Sketches", accepted to RECOMB 2023 (acceptance rate: ~10%).
+      - Amir Joudaki, Andre Kahles, Gunnar Ratsch, "Fast Alignment-Free Similarity Estimation By Tensor Sketching", accepted into proceedings of RECOMB 2021.
+      - Mikhail Karasikov, Harun Mustafa, Amir Joudaki, Sara Javadzadeh-No, Gunnar Rätsch, André Kahles, "Sparse Binary Relation Representations for Genome Graph", Journal of computational biology: a journal of computational molecular cell biology 27.4 (2020): 626-639.
 
-- title: Academic Interests
-  type: nested_list
-  contents:
-    - title: Topic 1.
-      items: 
-        - Description 1.
-        - Description 2.
-    - title: Topic 2.
-      items:
-        - Description 1.
-        - Description 2.
+  - title: Non-linear Dimensionality Reduction
+    client: Sharif University of Technology
+    publication: Amir Najafi, Amir Joudaki, "Nonlinear Dimensionality Reduction via Path-Based Isometric Mapping", IEEE transactions on pattern analysis and machine intelligence, 38(7), 1452-1464.
 
-- title: Other Interests
-  type: list
-  contents:
-    - <u>Hobbies:</u> Hobby 1, Hobby 2, etc.
+  - title: EEG signal analysis
+    client: Sharif University of Technology
+    publications:
+      Amir Joudaki*, Elham Barzegaran*, Mahdi Jalili*, Andrea O. Rossetti, Richard S. Frackowiak, and Maria G. Knyazeva, "Properties of functional brain networks affect frequency of psychogenic non-epileptic seizures", Frontiers in Human Neuroscience, 6:335. (*: equally contributed).
+      Amir Joudaki, Niloufar Salehi, Mahdi Jalili, Maria Knyazeva, "EEG-based functional brain networks: does the network size matter?", PLoS ONE 7(4): e35673.
+
+     
