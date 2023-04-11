@@ -17,23 +17,23 @@
   contents:
     - title: Ph.D. in Artificial Intelligence
       institution: ETH Zurich
-      year: Sept 2019 - now
+      year: Sept 2019 - Present
       location: Zurich, Switzerland
       description:
-        - (Thesis) Theoretical approaches to neural networks; biomedical applications of AI
+        - Thesis. Theoretical approaches to neural networks; biomedical applications of AI
     - title: M.Sc. in Computer Science
       institution: ETH Zurich
       year: Sept 2017 - June 2019
       location: Zurich, Switzerland
       description:
-        - (Thesis) Scalable algorithms for biological sequence analysis
-        - GPA 5.7/6 (top 10%)
+        - Thesis. Scalable algorithms for biological sequence analysis
+        - GPA. 5.7/6 (Top 10%)
     - title: M.Sc. in Cognitive Neuroscience
       institution: International School for Advanced Studies (SISSA)
       year: Sept 2014 - June 2016
       location: Trieste, Italy
       description:
-        - (Thesis) Modeling activity of electrophysiological recordings in vivo in rats
+        - Thesis. Modeling activity of electrophysiological recordings in vivo in rats
     - title: B.Sc. in Computer Engineering
       institution: Sharif University of Technology
       year: Sept 2008 - June 2011
@@ -47,30 +47,29 @@
       year: Jan 2022 - July 2022
       location: Zurich, Switzerland
       description:
-        - Research and development of a proof-of-concept for training, labeling, and monitoring NLP tasks, written in PyTorch, Flask, Typescript, React, MongoDB, orchestrated as micro-services in REST API, and run inside docker containers for deployment.
+        - Developed a proof-of-concept for training, labeling, and monitoring NLP tasks using PyTorch, Flask, Typescript, React, MongoDB; orchestrated as microservices in REST API and deployed using Docker containers.
     - title: Research Assistant
       institution: Sharif University of Technology
       year: Jan 2013 - Dec 2013
-      location: Iran, Tehran
+      location: Tehran, Iran
       description:
-        - Developed network-based analysis of EEG recordings of control and patient groups in MATLAB.
+        - Conducted network-based analysis of EEG recordings for control and patient groups using MATLAB.
     - title: Software Engineer Intern
       institution: Rahtech Hooshmand Sharif
       year: Sept 2011 - Dec 2012
-      location: Iran, Tehran
+      location: Tehran, Iran
       description:
-        - Worked on a product to track and monitor vehicles, written in Qt/C++
+        - Developed a vehicle tracking and monitoring product using Qt/C++.
 
 - title: Projects
   type: time_table
   contents:
-    - title: Human-in-the-loop pipeline for occupation and skill extraction
+    - title: Human-in-the-Loop Pipeline for Occupation and Skill Extraction
       client: SkillLab
       description:
-        - AI/NLP consultant for SkillLab, worked on the extraction of occupations and skills from unstructured text and normalized them to European Skills, Competences, and Occupations (ESCO).
-        - Built a human-in-the-loop pipeline to validate model predictions, implemented as microservices that spun up with a docker-compose.
+        - Served as AI/NLP consultant, focusing on extracting occupations and skills from unstructured text and normalizing them to European Skills, Competences, and Occupations (ESCO) standards.
+        - Designed a human-in-the-loop pipeline to validate model predictions, implemented as microservices deployed with Docker Compose.
     - title: Theoretical Approach to Neural Networks
       client: ETH Zurich
       description:
-        - Collaborative project with ENS Paris and MIT researchers, pursuing a
-        
+        - Engaged in a collaborative project with researchers from ENS Paris and MIT, investigating a theoretical approach to neural networks.
