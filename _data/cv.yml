@@ -68,9 +68,13 @@
 - title: Projects
   type: time_table
   contents:
-     - title: Theoretical Approach to Neural Networks
+    - title: Human-in-the-loop pipeline for occupation and skill extraction
+      client: SkillLab
+      description:
+        - AI/NLP consultant for SkillLab, worked on the extraction of occupations and skills from unstructured text and normalized them to European Skills, Competences, and Occupations (ESCO).
+        - Built a human-in-the-loop pipeline to validate model predictions, implemented as microservices that spun up with a docker-compose.
+    - title: Theoretical Approach to Neural Networks
       client: ETH Zurich
-      description: Collaborative project with ENS Paris and MIT researchers, pursuing a theoretical and rigorous understanding of neural networks, particularly the effects of normalization on depth and training.
-    - title: Scalable Algorithms for Biological Sequence Analysis
-      client: ETH Zurich
-      description: Developed a novel algorithm for the alignment of biological sequences, which is scalable to large datasets and can be used for the analysis of large-scale biological data.
+      description:
+        - Collaborative project with ENS Paris and MIT researchers, pursuing a
+        
