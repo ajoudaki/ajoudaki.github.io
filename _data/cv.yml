@@ -3,8 +3,6 @@
   contents:
     - name: Full Name
       value: Amir Joudaki
-    - name: Email
-      value: amir.judaki@gmail.com
     - name: Location
       value: Zurich, SWITZERLAND
     - name: Homepage
@@ -22,13 +20,13 @@
       year: Sept 2019 - now
       location: Zurich, Switzerland
       description:
-        - Thesis: Theoretical approaches to neural networks; biomedical applications of AI
+        - (Thesis) Theoretical approaches to neural networks; biomedical applications of AI
     - title: M.Sc. in Computer Science
       institution: ETH Zurich
       year: Sept 2017 - June 2019
       location: Zurich, Switzerland
       description:
-        - Thesis: Scalable algorithms for biological sequence analysis
+        - (Thesis) Scalable algorithms for biological sequence analysis
         - GPA 5.7/6 (top 10%)
         - Related courses:
           - Algorithms Lab (5.75/6)
@@ -39,7 +37,7 @@
       year: Sept 2014 - June 2016
       location: Trieste, Italy
       description:
-        - Thesis: Modeling activity of electrophysiological recordings in vivo in rats
+        - (Thesis) Modeling activity of electrophysiological recordings in vivo in rats
     - title: B.Sc. in Computer Engineering
       institution: Sharif University of Technology
       year: Sept 2008 - June 2011
@@ -70,12 +68,9 @@
 - title: Projects
   type: time_table
   contents:
-    - title: Human-in-the-loop pipeline for occupation and skill extraction
-      client: SkillLab
-      description:
-        - AI/NLP consultant for SkillLab, worked on the extraction of occupations and skills from unstructured text and normalized them to European Skills, Competences, and Occupations (ESCO).
-        - Built a human-in-the-loop pipeline to validate model predictions, implemented as microservices that spun up with a docker-compose.
-    - title: Theoretical Approach to Neural Networks
+     - title: Theoretical Approach to Neural Networks
       client: ETH Zurich
-      description:
-        - Collaborative project with ENS Paris and MIT researchers, pursuing a
+      description: Collaborative project with ENS Paris and MIT researchers, pursuing a theoretical and rigorous understanding of neural networks, particularly the effects of normalization on depth and training.
+    - title: Scalable Algorithms for Biological Sequence Analysis
+      client: ETH Zurich
+      description: Developed a novel algorithm for the alignment of biological sequences, which is scalable to large datasets and can be used for the analysis of large-scale biological data.
