@@ -1,6 +1,6 @@
 ---
 layout: distill
-title: my first post 
+title: my first post cool facts 
 description: an example of a distill-style blog post and main elements
 giscus_comments: true
 date: 2023-06-22
