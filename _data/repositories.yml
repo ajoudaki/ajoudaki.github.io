@@ -1,12 +1,10 @@
 github_users:
-  - torvalds
-  - alshedivat
+  - ajoudaki
 
 github_repos:
-  - alshedivat/al-folio
-  - twbs/bootstrap
-  - jekyll/jekyll
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - jpswalsh/academicons
-  - mathjax/MathJax
+  - ajoudaki/deepnet-isometry
+  - ajoudaki/mean-field-normalization
+  - ratschlab/Project2020-seq-tensor-sketching
+  - ratschlab/tensor-sketch-alignment
+  - mlcheap/esco_tagging
+  - mlcheap/mlcheap-services
