@@ -3,6 +3,7 @@ layout: distill
 title: my first post cool facts 
 description: an example of a distill-style blog post and main elements
 giscus_comments: true
+tags: cool-facts neural-net-theory
 date: 2023-06-22
 
 authors:
