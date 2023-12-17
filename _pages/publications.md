@@ -7,12 +7,26 @@ years: [2023,2021,2020,2019,2015,2012]
 nav: true
 nav_order: 1
 ---
-<!-- _pages/publications.md -->
-<div class="publications">
 
-{%- for y in page.years %}
-  <h2 class="year">{{y}}</h2>
-  {% bibliography -f papers -q @*[year={{y}}]* %}
-{% endfor %}
 
-</div>
+### Mathematical foundations of AI
+- Alex Meterez*, **Amir Joudaki***, Francesco Orabona, Alex Immer, Gunnar Ratsch, Hadi Daneshmand, "Batch normalization without gradient explosion: Towards training without depth limits", Under review (*: equally contributed).
+- **Amir Joudaki**, Hadi Daneshmand Francis Bach, "On the impact of activation and normalization in obtaining isometric embeddings at initialization", NeurIPS 2023.
+- **Amir Joudaki**, Hadi Daneshmand Francis Bach, "On Bridging the Gap between Mean Field and Finite Width in Deep Random Neural Networks with Batch Normalization", ICML 2023.
+- Hadi Daneshmand, **Amir Joudaki**, Francis Bach, "Batch Normalization Orthogonalizes Representations in Deep Random Networks",  NeurIPS 2021 **<span style="color:red">(spotlight, top 3% of submissiosn)</span>**.
+- Alexandre Bense, **Amir Joudaki**, Tim G. J. Rudner, Vincent Fortuin, "PCA Subspaces Are Not Always Optimal for Bayesian Learning", NeurIPS 2021 workshop (DistShift).
+
+### Genomic Sequence Analysis
+- Kacper Kapusniak, Manuel Burger, Gunnar Ratsch, **Amir Joudaki**, "Learning Genomic Sequence Representations using Graph Neural Networks over De Bruijn Graphs", NeurIPS workshop 2023 (Graph Learning Frontiers).
+- **Amir Joudaki***, Alexandru Meterez*, Harun Mustafa, Ragnar Groot Koerkamp, Andre Kahles, Gunnar Raetsch, "Aligning distant sequences to graphs using long seed sketches", Journal of Genome Research 2023 (Cold Spring Harbor Laboratory press). (*: equally contributed).
+- **Amir Joudaki**, Gunnar Ratsch, Andre Kahles, "Fast Alignment-Free Similarity Estimation By Tensor Sketching", proceedings of RECOMB 2021.
+- Mikhail Karasikov, Harun Mustafa, **Amir Joudaki**, Sara Javadzadeh-No, Gunnar Rätsch, André Kahles, "Sparse Binary Relation Representations for Genome Graph", Journal of computational biology: a journal of computational molecular cell biology 27.4 (2020): 626-639.
+
+### Dimensionality Reduction
+- Amir Najafi, **Amir Joudaki**, "Nonlinear Dimensionality Reduction via Path-Based Isometric Mapping", IEEE transactions on pattern analysis and machine intelligence, 38(7), 1452-1464.
+
+### Functional Brain Networks Analysis
+- **Amir Joudaki***, Elham Barzegaran*, Mahdi Jalili*, Andrea O. Rossetti, Richard S. Frackowiak, and Maria G. Knyazeva, "Properties of functional brain networks affect frequency of psychogenic non-epileptic seizures", Frontiers in Human Neuroscience, 6:335. (*: equally contributed).
+- **Amir Joudaki**, Niloufar Salehi, Mahdi Jalili, Maria Knyazeva, "EEG-based functional brain networks: does the network size matter?", PLoS ONE 7(4): e35673.
+
+
