@@ -20,15 +20,4 @@ social: true  # includes social icons at the bottom of the page
 
 **Bio:** I'm a doctoral candidate in the [Biomedical Informatics (BMI)](https://bmi.inf.ethz.ch) group at ETH, where I can work on the intersections between theoretical and applied problems in machine learning. Before joining ETH, I earned a BSc in Computer Engineering from Sharif University, an MPhil in Cognitive Neuroscience at SISSA, Italy, and an MSc in Computer Science from ETH Zurich. You can find my CV [here](link_to_CV).
 
-## Research Projects
-
-I'm very open to collaborative research efforts and mentoring future MSc students. Please reach out if you are interested in cutting-edge machine learning projects or want to engage in meaningful research discussions. Here is a list of available projects for MSc theses. Please send me an email with your CV and transcripts if you're interested :)
-
-- **GNN+genomics:** Learning metagenome graphs by GNNs
-- **Neural Net theory+Transformers:** Can a transformer learn sequence alignment?
-- **Neural Net theory:** Replacing normalization with initialization
-- **Neural Net theory:** Mystery of activation in neural nets
-- **Neural Net theory+Transformers:** "Understanding pretraining speed in transformers."
-- **Neural Net theory:** Zero-shot neural architecture search
-- **Active Learning+medical:** Doctor in the loop
-
+**Research collaboration.** I'm very open to collaborative research efforts and mentoring future MSc students. Please have a look [here](/projects/) if you find somethign interesting. 
