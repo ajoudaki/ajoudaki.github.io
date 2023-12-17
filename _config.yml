@@ -80,7 +80,7 @@ telegram_username:  # your Telegram user name
 scholar_userid: iCXSFxMAAAAJ# your Google Scholar ID
 semanticscholar_id: # your Semantic Scholar ID
 whatsapp_number: # your WhatsApp number (full phone number in international format. Omit any zeroes, brackets, or dashes when adding the phone number in international format.)
-orcid_id: 0000-0003-0095-6750# your ORCID ID
+orcid_id: # 0000-0003-0095-6750# your ORCID ID
 medium_username: # your Medium username
 quora_username: # your Quora username
 publons_id: # your ID on Publons
@@ -120,9 +120,9 @@ bing_site_verification:  # out your bing-site-verification ID (Bing Webmaster)
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: blog # blog_name will be displayed in your blog page
-blog_nav_title: blog # your blog must have a title for it to be displayed in the nav bar
-blog_description: Notes on theory of deep learning and genomics # blog description will be displayed in your blog page
+blog_name: Amir's blog # blog_name will be displayed in your blog page
+blog_nav_title: Amir's blog # your blog must have a title for it to be displayed in the nav bar
+blog_description: Foundatioins of AI # blog description will be displayed in your blog page
 permalink: /blog/:year/:title/
 
 # Pagination
@@ -171,7 +171,7 @@ collections:
     output: false
     permalink: /news/:path/
   projects:
-    output: true
+    output: false
     permalink: /projects/:path/
 
 news:
@@ -358,7 +358,7 @@ enable_tooltips:            false  # enables automatic tooltip links generated
 enable_darkmode:            true   # enables switching between light/dark modes
 enable_navbar_social:       false  # enables displaying social links in the
                                    # navbar on the about page
-enable_project_categories:  true   # enables categorization of projects into
+enable_project_categories:  false   # enables categorization of projects into
                                    # multiple categories
 enable_medium_zoom:         true   # enables image zoom feature (as on medium.com)
 enable_progressbar:         true   # enables a horizontal progress bar linked to the vertical scroll position
