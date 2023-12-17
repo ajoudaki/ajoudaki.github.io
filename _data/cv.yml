@@ -5,38 +5,28 @@
       value: Amir Joudaki
     - name: Location
       value: Zurich, SWITZERLAND
-    - name: Homepage
-      value: https://bmi.inf.ethz.ch/people/person/amir-joudaki
-    - name: LinkedIn
-      value: https://www.linkedin.com/in/amirjoudaki/
-    - name: GitHub
-      value: https://github.com/ajoudaki
 
 - title: Education
   type: time_table
   contents:
-    - title: Ph.D. in Artificial Intelligence
+    - title: Direct Ph.D. in Artificial Intelligence
       institution: ETH Zurich
-      year: Sept 2019 - Present
+      year: March 2019 - now
       location: Zurich, Switzerland
-      description:
-        - Thesis. Theoretical approaches to neural networks; biomedical applications of AI
-    - title: M.Sc. in Computer Science
-      institution: ETH Zurich
-      year: Sept 2017 - June 2019
-      location: Zurich, Switzerland
-      description:
-        - Thesis. Scalable algorithms for biological sequence analysis
-        - GPA. 5.7/6 (Top 10%)
+      description: 
+        - Focused on mathematical foundations of AI and AI for biomedicine. 
+        - MSc GPA. 5.68/6 (top 10%).
+
     - title: M.Sc. in Cognitive Neuroscience
       institution: International School for Advanced Studies (SISSA)
-      year: Sept 2014 - June 2016
+      year: Feb 2014 - Feb 2017
       location: Trieste, Italy
-      description:
-        - Thesis. Modeling activity of electrophysiological recordings in vivo in rats
+      description: 
+        - Thesis on electrophysiological recordings in vivo in rats.
+
     - title: B.Sc. in Computer Engineering
       institution: Sharif University of Technology
-      year: Sept 2008 - June 2011
+      year: Sept 2008 - Sept 2011
       location: Tehran, Iran
 
 - title: Experience
@@ -73,3 +63,27 @@
       client: ETH Zurich
       description:
         - Engaged in a collaborative project with researchers from ENS Paris and MIT, investigating a theoretical approach to neural networks.
+
+- title: Publications
+  type: nested_list
+  contents:
+    - title: Mathematical Foundations of AI
+      items:
+        - "Batch normalization without gradient explosion: Towards training without depth limits, Under review"
+        - "On the impact of activation and normalization in obtaining isometric embeddings at initialization, NeurIPS 2023"
+        - "On Bridging the Gap between Mean Field and Finite Width in Deep Random Neural Networks with Batch Normalization, ICML 2023"
+        - "Batch Normalization Orthogonalizes Representations in Deep Random Networks, spotlighted NeurIPS 2021 (top 3% of submissions)"
+
+    - title: Genomic Sequence Analysis
+      items:
+        - "Learning Genomic Sequence Representations using Graph Neural Networks over De Bruijn Graphs, NeurIPS workshop 2023"
+        - "Aligning distant sequences to graphs using long seed sketches, Journal of Genome Research 2023"
+
+    - title: Dimensionality Reduction
+      items:
+        - "Nonlinear Dimensionality Reduction via Path-Based Isometric Mapping, IEEE transactions on pattern analysis and machine intelligence"
+
+    - title: Functional Brain Networks Analysis
+      items:
+        - "Properties of functional brain networks affect frequency of psychogenic non-epileptic seizures, Frontiers in Human Neuroscience"
+        - "EEG-based functional brain networks: does the network size matter?, PLoS ONE"
