@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-12-18T12:30:37+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-12-18T13:43:14+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 </subtitle><entry><title type="html">Cool mathematical facts</title><link href="https://ajoudaki.github.io/blog/2023/cool-facts/" rel="alternate" type="text/html" title="Cool mathematical facts" /><published>2023-06-22T00:00:00+00:00</published><updated>2023-06-22T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2023/cool-facts</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2023/cool-facts/"><![CDATA[<h2 id="matrix-insights">Matrix Insights</h2>
 
 <ul>
@@ -10,30 +10,10 @@
     <ul>
       <li>Equation 1: \(Tr(A^k)=\sum_{i=1}^n \lambda_i(A)^k\)</li>
       <li>Equation 2: \(Tr((A^*A)^k) = \sum_{i=1}^n \sigma_i(A)^{2k}\)</li>
-      <li>
-        <table>
-          <tbody>
-            <tr>
-              <td>Equation 3: $$\log\det(A-z I_n)=\sum_{i=1}^n \log</td>
-              <td>\lambda_i(A)-z</td>
-              <td>=\sum_{i=1}^n\log</td>
-              <td>\sigma_i(A-z I)</td>
-              <td>$$</td>
-            </tr>
-          </tbody>
-        </table>
-      </li>
-      <li>
-        <table>
-          <tbody>
-            <tr>
-              <td>Equation 4: $$\log\det(A)=\sum_{i=1}^n</td>
-              <td>dist(X_i,span(X_1,\dots,X_{i-1}))</td>
-              <td>$$</td>
-            </tr>
-          </tbody>
-        </table>
-      </li>
+      <li>Equation 3: 
+\(\log\det(A-z I_n)=\sum_{i=1}^n \log|\lambda_i(A)-z|=\sum_{i=1}^n\log|\sigma_i(A-z I)|\)</li>
+      <li>Equation 4: 
+\(\log\det(A)=\sum_{i=1}^n|dist(X_i,span(X_1,\dots,X_{i-1}))|\)</li>
     </ul>
   </li>
 </ul>

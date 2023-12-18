@@ -199,19 +199,7 @@
       <d-byline></d-byline>
 
       <d-article>
-        <d-contents>
-          <nav class="l-text figcaption">
-          <h3>Contents</h3>
-            <div><a href="#equations">Equations</a></div>
-            <div><a href="#citations">Citations</a></div>
-            <div><a href="#footnotes">Footnotes</a></div>
-            <div><a href="#code-blocks">Code Blocks</a></div>
-            <div><a href="#interactive-plots">Interactive Plots</a></div>
-            <div><a href="#layouts">Layouts</a></div>
-            <div><a href="#other-typography">Other Typography?</a></div>
-            
-          </nav>
-        </d-contents>
+        
 
         <h2 id="matrix-insights">Matrix Insights</h2>
 
@@ -224,30 +212,10 @@
     <ul>
       <li>Equation 1: \(Tr(A^k)=\sum_{i=1}^n \lambda_i(A)^k\)</li>
       <li>Equation 2: \(Tr((A^*A)^k) = \sum_{i=1}^n \sigma_i(A)^{2k}\)</li>
-      <li>
-        <table>
-          <tbody>
-            <tr>
-              <td>Equation 3: $$\log\det(A-z I_n)=\sum_{i=1}^n \log</td>
-              <td>\lambda_i(A)-z</td>
-              <td>=\sum_{i=1}^n\log</td>
-              <td>\sigma_i(A-z I)</td>
-              <td>$$</td>
-            </tr>
-          </tbody>
-        </table>
-      </li>
-      <li>
-        <table>
-          <tbody>
-            <tr>
-              <td>Equation 4: $$\log\det(A)=\sum_{i=1}^n</td>
-              <td>dist(X_i,span(X_1,\dots,X_{i-1}))</td>
-              <td>$$</td>
-            </tr>
-          </tbody>
-        </table>
-      </li>
+      <li>Equation 3: 
+\(\log\det(A-z I_n)=\sum_{i=1}^n \log|\lambda_i(A)-z|=\sum_{i=1}^n\log|\sigma_i(A-z I)|\)</li>
+      <li>Equation 4: 
+\(\log\det(A)=\sum_{i=1}^n|dist(X_i,span(X_1,\dots,X_{i-1}))|\)</li>
     </ul>
   </li>
 </ul>
