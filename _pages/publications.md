@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /publications/
-title: publications
+title: Publications
 description: publications by categories in reversed chronological order (* equally contributed)
 years: [2023,2021,2020,2019,2015,2012] 
 nav: true
@@ -13,8 +13,8 @@ nav_order: 1
 - Alex Meterez<sup> * </sup>, <u>Amir Joudaki</u><sup> * </sup>, Francesco Orabona, Alex Immer, Gunnar Ratsch, Hadi Daneshmand, 
 "Batch normalization without gradient explosion: Towards training without depth limits", 
 _Under review_.
-- <u>Amir Joudaki</u>, Hadi Daneshmand Francis Bach, "On the impact of activation and normalization in obtaining isometric embeddings at initialization", _NeurIPS 2023_.
-- <u>Amir Joudaki</u>, Hadi Daneshmand Francis Bach, "On Bridging the Gap between Mean Field and Finite Width in Deep Random Neural Networks with Batch Normalization", _ICML 2023_.
+- <u>Amir Joudaki</u>, Hadi Daneshmand, Francis Bach, "On the impact of activation and normalization in obtaining isometric embeddings at initialization", _NeurIPS 2023_.
+- <u>Amir Joudaki</u>, Hadi Daneshmand, Francis Bach, "On Bridging the Gap between Mean Field and Finite Width in Deep Random Neural Networks with Batch Normalization", _ICML 2023_.
 - Hadi Daneshmand, <u>Amir Joudaki</u>, Francis Bach, "Batch Normalization Orthogonalizes Representations in Deep Random Networks",  _NeurIPS 2021_ **(spotlight, top 3% of submissiosn)**.
 - Alexandre Bense, <u>Amir Joudaki</u>, Tim G. J. Rudner, Vincent Fortuin, "PCA Subspaces Are Not Always Optimal for Bayesian Learning", _NeurIPS 2021 workshop_ (DistShift).
 
