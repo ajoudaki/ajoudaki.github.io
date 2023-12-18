@@ -8,3 +8,10 @@ github_repos:
   - ratschlab/tensor-sketch-alignment
   - mlcheap/esco_tagging
   - mlcheap/mlcheap-services
+  - mlcheap/ml-backend
+  - mlcheap/backend
+  - mlcheap/admin
+  - mlcheap/api
+  - mlcheap/webapp
+  - mlcheap/dashboard
+  - mlcheap/ml_deep_learning 
