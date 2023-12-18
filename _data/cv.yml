@@ -5,7 +5,8 @@
       value: Amir Joudaki
     - name: Location
       value: Zurich, SWITZERLAND
-
+    - name: Languages
+      value: English, Persian, German (A1)
 - title: Education
   type: time_table
   contents:
@@ -51,6 +52,24 @@
       description:
         - Developed a vehicle tracking and monitoring product using Qt/C++.
 
+
+- title: Awards
+  type: time_table
+  contents:
+    - year: 2017
+      items:
+        - Direct Doctorate Fellowship
+          - Among two out of more than one hundred students selected for direct PhD program at ETH computer science department
+    - year: 2011
+      items:
+        - Ranked 42nd
+          - Among more than 50,000 participants in National Higher Education Entrance Exam
+    - year: 2007
+      items:
+        - Ranked 369th
+          - Among more than 400,000 participants in National University Entrance Exam
+
+
 - title: Projects
   type: time_table
   contents:
@@ -59,10 +78,6 @@
       description:
         - Served as AI/NLP consultant, focusing on extracting occupations and skills from unstructured text and normalizing them to European Skills, Competences, and Occupations (ESCO) standards.
         - Designed a human-in-the-loop pipeline to validate model predictions, implemented as microservices deployed with Docker Compose.
-    - title: Theoretical Approach to Neural Networks
-      client: ETH Zurich
-      description:
-        - Engaged in a collaborative project with researchers from ENS Paris and MIT, investigating a theoretical approach to neural networks.
 
 - title: Publications
   type: nested_list
