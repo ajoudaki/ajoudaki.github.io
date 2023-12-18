@@ -1,13 +1,13 @@
 ---
 layout: about
-title: about
+title: About
 permalink: /
 subtitle: 
 
 profile:
   align: left
-  image: prof_pic2.png
-  image_circular: true # crops the image to make it circular
+  image: prof_pic3.png
+  image_circular: false # crops the image to make it circular
   address: # address
 
 news: false  # includes a list of news items
@@ -18,4 +18,4 @@ social: true  # includes social icons at the bottom of the page
 I'm a doctoral candidate in the [Biomedical Informatics (BMI)](https://bmi.inf.ethz.ch) group at ETH, where I work on mathematical foundations of neural networks, and biomedical applications of AI. Before joining ETH, I earned a BSc in Computer Engineering from Sharif University, an MPhil in Cognitive Neuroscience at SISSA, Italy, and an MSc in Computer Science from ETH Zurich. You can find my CV [here](/cv).
 
 
-**Research collaboration.** I'm very open to collaborative research efforts and mentoring future MSc students. Please have a look [here](/projects/) if you find somethign interesting. 
+**Research collaboration.** I'm very open to collaborative research efforts and mentoring future MSc students. Please have a look [here](/projects/) if you find something interesting. 
