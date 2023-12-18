@@ -13,15 +13,6 @@ authors:
 
 bibliography: refs.bib
 
-# Optionally, you can add a table of contents to your post.
-toc:
-  - name: Equations
-  - name: Citations
-  - name: Footnotes
-  - name: Code Blocks
-  - name: Interactive Plots
-  - name: Layouts
-  - name: Other Typography?
 
 # Below is an example of injecting additional post-specific styles.
 _styles: >
@@ -49,8 +40,10 @@ _styles: >
 - Valuable Linear Algebra Identities:
   - Equation 1: $$Tr(A^k)=\sum_{i=1}^n \lambda_i(A)^k$$
   - Equation 2: $$Tr((A^*A)^k) = \sum_{i=1}^n \sigma_i(A)^{2k}$$
-  - Equation 3: $$\log\det(A-z I_n)=\sum_{i=1}^n \log|\lambda_i(A)-z|=\sum_{i=1}^n\log|\sigma_i(A-z I)|$$
-  - Equation 4: $$\log\det(A)=\sum_{i=1}^n|dist(X_i,span(X_1,\dots,X_{i-1}))|$$
+  - Equation 3: 
+  $$\log\det(A-z I_n)=\sum_{i=1}^n \log|\lambda_i(A)-z|=\sum_{i=1}^n\log|\sigma_i(A-z I)|$$
+  - Equation 4: 
+  $$\log\det(A)=\sum_{i=1}^n|dist(X_i,span(X_1,\dots,X_{i-1}))|$$
 
 ## Mathematical Concepts
 
