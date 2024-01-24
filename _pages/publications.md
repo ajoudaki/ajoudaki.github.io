@@ -18,7 +18,7 @@ _Under review_.
 - Hadi Daneshmand, <u>Amir Joudaki</u>, Francis Bach, "Batch Normalization Orthogonalizes Representations in Deep Random Networks",  _NeurIPS 2021_ **(spotlight, top 3% of submissiosn)**.
 - Alexandre Bense, <u>Amir Joudaki</u>, Tim G. J. Rudner, Vincent Fortuin, "PCA Subspaces Are Not Always Optimal for Bayesian Learning", _NeurIPS 2021 workshop_ (DistShift).
 
-### Genomic Sequence Analysis
+### Genomics 
 - Kacper Kapusniak, Manuel Burger, Gunnar Ratsch, <u>Amir Joudaki</u>, "Learning Genomic Sequence Representations using Graph Neural Networks over De Bruijn Graphs", _NeurIPS workshop 2023 (Graph Learning Frontiers)_.
 - <u>Amir Joudaki</u> <sup> * </sup>, Alexandru Meterez<sup> * </sup>, Harun Mustafa, Ragnar Groot Koerkamp, Andre Kahles, Gunnar Raetsch, "Aligning distant sequences to graphs using long seed sketches", _Journal of Genome Research 2023 (Cold Spring Harbor Laboratory press)_.
 - <u>Amir Joudaki</u> , Gunnar Ratsch, Andre Kahles, "Fast Alignment-Free Similarity Estimation By Tensor Sketching", _proceedings of RECOMB 2021_.
@@ -27,7 +27,7 @@ _Under review_.
 ### Dimensionality Reduction
 - Amir Najafi, <u>Amir Joudaki</u> , "Nonlinear Dimensionality Reduction via Path-Based Isometric Mapping", IEEE _transactions on pattern analysis and machine intelligence, 38(7), 1452-1464_.
 
-### Functional Brain Networks Analysis
+### Neuroscience 
 - <u>Amir Joudaki</u> *, Elham Barzegaran*, Mahdi Jalili*, Andrea O. Rossetti, Richard S. Frackowiak, and Maria G. Knyazeva, "Properties of functional brain networks affect frequency of psychogenic non-epileptic seizures", _Frontiers in Human Neuroscience, 6:335_.
 - <u>Amir Joudaki</u> , Niloufar Salehi, Mahdi Jalili, Maria Knyazeva, "EEG-based functional brain networks: does the network size matter?", _PLoS ONE 7(4): e35673_.
 
