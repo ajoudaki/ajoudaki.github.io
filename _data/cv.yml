@@ -84,7 +84,7 @@
   contents:
     - title: Mathematical Foundations of AI
       items:
-        - "Batch normalization without gradient explosion: Towards training without depth limits, Under review"
+        - "Batch normalization without gradient explosion: Towards training without depth limits, ICLR 2024."
         - "On the impact of activation and normalization in obtaining isometric embeddings at initialization, NeurIPS 2023"
         - "On Bridging the Gap between Mean Field and Finite Width in Deep Random Neural Networks with Batch Normalization, ICML 2023"
         - "Batch Normalization Orthogonalizes Representations in Deep Random Networks, spotlighted NeurIPS 2021 (top 3% of submissions)"
