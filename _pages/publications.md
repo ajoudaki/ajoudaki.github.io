@@ -10,9 +10,11 @@ nav_order: 1
 
 
 ### Mathematical foundations of AI
+- <u>Amir Joudaki</u>, Thomas Hofmann, 
+"Emergence of globally attracting fixed points in deep neural networks with nonlinear activations", _AISTATS 2025_.
 - Alex Meterez<sup> * </sup>, <u>Amir Joudaki</u><sup> * </sup>, Francesco Orabona, Alex Immer, Gunnar Ratsch, Hadi Daneshmand, 
 "Batch normalization without gradient explosion: Towards training without depth limits", 
-_Under review_.
+_ICLR 2024_.
 - <u>Amir Joudaki</u>, Hadi Daneshmand, Francis Bach, "On the impact of activation and normalization in obtaining isometric embeddings at initialization", _NeurIPS 2023_.
 - <u>Amir Joudaki</u>, Hadi Daneshmand, Francis Bach, "On Bridging the Gap between Mean Field and Finite Width in Deep Random Neural Networks with Batch Normalization", _ICML 2023_.
 - Hadi Daneshmand, <u>Amir Joudaki</u>, Francis Bach, "Batch Normalization Orthogonalizes Representations in Deep Random Networks",  _NeurIPS 2021_ **(spotlight, top 3% of submissiosn)**.
