@@ -4,24 +4,28 @@
     - name: Full Name
       value: Amir Joudaki
     - name: Tagline
-      value: Foundations of AI, AI for biomedicine, NLP/LLMs
+      value: Mathematical understanding of deep neural networks
     - name: Location
       value: Zurich, SWITZERLAND
     - name: Languages
-      value: English, Persian, German (A1)
-    - name: Email
-      value: amir.joudaki@inf.ethz.ch
-    - name: Homepage
-      value: https://ajoudaki.github.io/
-    - name: LinkedIn
-      value: https://linkedin.com/in/AmirJoudaki/
+      value: English, Persian, German (A2)
+
+- title: Experience
+  type: time_table
+  contents:
+    - title: Postdoctoral Researcher
+      institution: ETH Zurich
+      year: Nov 2024 – now
+      location: Zurich, Switzerland
+      description:
+        - "Researching how deep nonlinear models learn by investigating module interactions, forward passes, backward gradients, and the evolution of neural kernels."
 
 - title: Education
   type: time_table
   contents:
-    - title: Direct Ph.D. in Artificial Intelligence
+    - title: Direct Ph.D. (Msc + Ph.D.) in Artificial Intelligence
       institution: ETH Zurich
-      year: Feb 2017 – now
+      year: Feb 2017 – 2024
       location: Zurich, Switzerland
       description:
         - "Highly selective program (<5% admissions) focused on the mathematical foundations of deep neural networks and AI for biomedicine."
@@ -39,15 +43,6 @@
       year: Sept 2008 – Sept 2011
       location: Tehran, Iran
 
-- title: Experience
-  type: time_table
-  contents:
-    - title: Postdoctoral Researcher
-      institution: ETH Zurich
-      year: Nov 2024 – now
-      location: Zurich, Switzerland
-      description:
-        - "Researching how deep nonlinear models learn by investigating module interactions, forward passes, backward gradients, and the evolution of neural kernels."
 
 - title: Awards
   type: time_table
