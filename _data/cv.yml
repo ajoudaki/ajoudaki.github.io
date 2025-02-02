@@ -3,102 +3,87 @@
   contents:
     - name: Full Name
       value: Amir Joudaki
+    - name: Tagline
+      value: Foundations of AI, AI for biomedicine, NLP/LLMs
     - name: Location
       value: Zurich, SWITZERLAND
     - name: Languages
       value: English, Persian, German (A1)
+    - name: Email
+      value: amir.joudaki@inf.ethz.ch
+    - name: Homepage
+      value: https://ajoudaki.github.io/
+    - name: LinkedIn
+      value: https://linkedin.com/in/AmirJoudaki/
+
 - title: Education
   type: time_table
   contents:
     - title: Direct Ph.D. in Artificial Intelligence
       institution: ETH Zurich
-      year: March 2019 - now
+      year: Feb 2017 – now
       location: Zurich, Switzerland
-      description: 
-        - Focused on mathematical foundations of AI and AI for biomedicine. 
-        - MSc GPA. 5.68/6 (top 10%).
-
+      description:
+        - "Highly selective program (<5% admissions) focused on the mathematical foundations of deep neural networks and AI for biomedicine."
+        - "PhD Thesis: 'On a mathematical understanding of deep neural networks'."
+        - "Authored 8 papers (6 first-authored) in top-tier venues; supervised over 10 MSc projects."
+        - "Supervisors: Gunnar Ratsch & Francis Bach."
     - title: M.Sc. in Cognitive Neuroscience
       institution: International School for Advanced Studies (SISSA)
-      year: Feb 2014 - Feb 2017
+      year: Feb 2014 – Jan 2017
       location: Trieste, Italy
-      description: 
-        - Thesis on electrophysiological recordings in vivo in rats.
-
+      description:
+        - "Thesis: 'Modeling activity of electrophysiological recordings in vivo in rats'."
     - title: B.Sc. in Computer Engineering
       institution: Sharif University of Technology
-      year: Sept 2008 - Sept 2011
+      year: Sept 2008 – Sept 2011
       location: Tehran, Iran
 
 - title: Experience
   type: time_table
   contents:
-    - title: Machine Learning Consultant
-      institution: SkillLab
-      year: Jan 2022 - July 2022
+    - title: Postdoctoral Researcher
+      institution: ETH Zurich
+      year: Nov 2024 – now
       location: Zurich, Switzerland
       description:
-        - Developed a proof-of-concept for training, labeling, and monitoring NLP tasks using PyTorch, Flask, Typescript, React, MongoDB; orchestrated as microservices in REST API and deployed using Docker containers.
-    - title: Research Assistant
-      institution: Sharif University of Technology
-      year: Jan 2013 - Dec 2013
-      location: Tehran, Iran
-      description:
-        - Conducted network-based analysis of EEG recordings for control and patient groups using MATLAB.
-    - title: Software Engineer Intern
-      institution: Rahtech Hooshmand Sharif
-      year: Sept 2011 - Dec 2012
-      location: Tehran, Iran
-      description:
-        - Developed a vehicle tracking and monitoring product using Qt/C++.
-
+        - "Researching how deep nonlinear models learn by investigating module interactions, forward passes, backward gradients, and the evolution of neural kernels."
 
 - title: Awards
   type: time_table
   contents:
     - year: 2017
       items:
-        - Direct Doctorate Fellowship
-          - Among two out of more than one hundred students selected for direct PhD program at ETH computer science department
+        - "Direct Doctorate Fellowship (selected as 1 of 2 out of >100 candidates for ETH Zurich’s direct PhD program)"
     - year: 2011
       items:
-        - Ranked 42nd
-          - Among more than 50,000 participants in National Higher Education Entrance Exam
+        - "Ranked 42nd in the National Higher Education Entrance Exam (among 50,000 participants)"
     - year: 2007
       items:
-        - Ranked 369th
-          - Among more than 400,000 participants in National University Entrance Exam
-
-
-- title: Projects
-  type: time_table
-  contents:
-    - title: Human-in-the-Loop Pipeline for Occupation and Skill Extraction
-      client: SkillLab
-      description:
-        - Served as AI/NLP consultant, focusing on extracting occupations and skills from unstructured text and normalizing them to European Skills, Competences, and Occupations (ESCO) standards.
-        - Designed a human-in-the-loop pipeline to validate model predictions, implemented as microservices deployed with Docker Compose.
+        - "Ranked 369th in the National University Entrance Exam (among 400,000 participants)"
 
 - title: Publications
   type: nested_list
   contents:
     - title: Mathematical Foundations of AI
       items:
-        - "Batch normalization without gradient explosion: Towards training without depth limits, ICLR 2024."
-        - "On the impact of activation and normalization in obtaining isometric embeddings at initialization, NeurIPS 2023"
-        - "On Bridging the Gap between Mean Field and Finite Width in Deep Random Neural Networks with Batch Normalization, ICML 2023"
-        - "Batch Normalization Orthogonalizes Representations in Deep Random Networks, spotlighted NeurIPS 2021 (top 3% of submissions)"
-
+        - "Emergence of globally attracting fixed points in deep neural networks with nonlinear activations (AISTATS, poster)"
+        - "Batch normalization without gradient explosion: Towards training without depth limits (ICLR 2024, poster)"
+        - "On the impact of activation and normalization in obtaining isometric embeddings at initialization (NeurIPS 2023, poster)"
+        - "On Bridging the Gap between Mean Field and Finite Width in Deep Random Neural Networks with Batch Normalization (ICML 2023, poster)"
+        - "Batch Normalization Orthogonalizes Representations in Deep Random Networks (spotlighted NeurIPS 2021, top 3% submissions)"
+        - "PCA Subspaces Are Not Always Optimal for Bayesian Learning (NeurIPS 2021 workshop, DistShift)"
     - title: Genomic Sequence Analysis
       items:
-        - "Learning Genomic Sequence Representations using Graph Neural Networks over De Bruijn Graphs, NeurIPS workshop 2023"
-        - "Aligning distant sequences to graphs using long seed sketches, Journal of Genome Research 2023"
-
+        - "Identifying Biological Priors and Structure in Single-Cell Foundation Models (ICML workshop 2024)"
+        - "Learning Genomic Sequence Representations using Graph Neural Networks over De Bruijn Graphs (NeurIPS workshop 2023)"
+        - "Aligning distant sequences to graphs using long seed sketches (Journal of Genome Research 2023)"
+        - "Fast Alignment-Free Similarity Estimation By Tensor Sketching (RECOMB 2021)"
+        - "Sparse Binary Relation Representations for Genome Graph (Journal of Computational Biology 27.4, 2020)"
     - title: Dimensionality Reduction
       items:
-        - "Nonlinear Dimensionality Reduction via Path-Based Isometric Mapping, IEEE transactions on pattern analysis and machine intelligence"
-
+        - "Nonlinear Dimensionality Reduction via Path-Based Isometric Mapping (IEEE TPAMI 38(7), 1452–1464)"
     - title: Functional Brain Networks Analysis
       items:
-        - "Properties of functional brain networks affect frequency of psychogenic non-epileptic seizures, Frontiers in Human Neuroscience"
-        - "EEG-based functional brain networks: does the network size matter?, PLoS ONE"
+        - "Properties of functional brain networks affect frequency of psychogenic non-epileptic seizures (Frontiers in Human Neuroscience, 6:335)"
+        - "EEG-based functional brain networks: does the network size matter? (PLoS ONE 7(4): e35673)"
