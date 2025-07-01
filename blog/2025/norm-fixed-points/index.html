@@ -189,15 +189,7 @@
 \(q_{l+1} = F(q_l) \equiv \sigma_w^2 E_{z \sim \mathcal{N}(0,1)}[f(\sqrt{q_l}z)^2] + \sigma_b^2\)
 This equation describes how the expected signal variance evolves as it propagates through the network. A central question in understanding these dynamics is the existence and nature of <strong>fixed points</strong>—variances $q^\star$ for which the signal strength remains constant, i.e., $F(q^\star) = q^\star$.</p>
 
-<table>
-  <tbody>
-    <tr>
-      <td>A fixed point $q^\star$ is <strong>locally attracting</strong> if $</td>
-      <td>F^\prime(q^\star)</td>
-      <td>&lt; 1$ and repulsive otherwise. This stability condition dictates the long-term behavior of the network’s signal norms, leading to two distinct possibilities:</td>
-    </tr>
-  </tbody>
-</table>
+<p>A fixed point $q^\star$ is <strong>locally attracting</strong> if $|F^\prime(q^\star)| &lt; 1$ and repulsive otherwise. This stability condition dictates the long-term behavior of the network’s signal norms, leading to two distinct possibilities:</p>
 
 <ol>
   <li>
@@ -317,17 +309,7 @@ $$
 
 <h4 id="a-remark-on-stability">A Remark on Stability</h4>
 
-<table>
-  <tbody>
-    <tr>
-      <td>The fixed points we constructed are not just numerous, but also stable. The function $F(q)$ is analytic (infinitely differentiable) because it is the result of convolution with a Gaussian kernel. For a smooth function intersecting the identity line multiple times, a simple geometric argument implies that if $F^\prime(q) \neq 1$ at the intersections, then attracting ($</td>
-      <td>F^\prime(q^\star)</td>
-      <td>&lt; 1$) and repelling ($</td>
-      <td>F^\prime(q^\star)</td>
-      <td>&gt; 1$) fixed points must alternate. Our construction, with its step-like $F(q)$, ensures that at each engineered fixed point $q^\star_k$, the derivative $F^\prime(q^\star_k)$ is extremely close to zero, making them all strongly attracting.</td>
-    </tr>
-  </tbody>
-</table>
+<p>The fixed points we constructed are not just numerous, but also stable. The function $F(q)$ is analytic (infinitely differentiable) because it is the result of convolution with a Gaussian kernel. For a smooth function intersecting the identity line multiple times, a simple geometric argument implies that if $F^\prime(q) \neq 1$ at the intersections, then attracting ($|F^\prime(q^\star)| &lt; 1$) and repelling ($|F^\prime(q^\star)| &gt; 1$) fixed points must alternate. Our construction, with its step-like $F(q)$, ensures that at each engineered fixed point $q^\star_k$, the derivative $F^\prime(q^\star_k)$ is extremely close to zero, making them all strongly attracting.</p>
 
 <hr>
 
