@@ -55,7 +55,7 @@ Here, $f$ is our activation function, and $\sigma_w^2$ and $\sigma_b^2$ are the 
 
 If you plot the function $F(q)$ for standard activations (like in the figure below), you'll see that it crosses the identity line ($y=q$) at only one non-zero point. This intersection is the single, attracting fixed point that governs the network's dynamics.
 
-{% include figure.html path="{{ '/assets/img/standard_activations_plot.png' | relative_url }}" title="Figure 1: The Fixed-Point Map for Standard Activations" caption="The fixed-point map $F(q)$ for standard activations. Each function displays a single non-zero attracting fixed point where its curve intersects the identity line." %}
+{% include figure.html path="/assets/img/standard_activations_plot.png" title="Figure 1: The Fixed-Point Map for Standard Activations" caption="The fixed-point map $F(q)$ for standard activations. Each function displays a single non-zero attracting fixed point where its curve intersects the identity line." %}
 
 ***
 
