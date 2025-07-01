@@ -32,8 +32,6 @@ _styles: >
 
 ---
 
-{% include figure.liquid loading="eager" path="assets/img/9.jpg" %}
-
 
 When we think about the signals traveling through a deep neural network, we often imagine a self-regulating system. The "mean-field theory" for infinitely wide networks tells us that as a signal passes from one layer to the next, its variance (a measure of its strength or "norm") tends to race towards a single, stable value. No matter how strong or weak the initial signal, the network's internal dynamics push it toward one characteristic operational regime.
 
@@ -92,7 +90,7 @@ The final step is to find the heights of these pulses, the coefficients $c_k$. T
 
 Using this construction for $N=5$ and $C=3$, we get the activation function and its corresponding fixed-point map shown below.
 
-{% include figure.html path="{{ '/assets/img/constructed_function_plot.png' | relative_url }}" title="Figure 2: Constructed Activation with 5 Stable Fixed Points" caption="The constructed activation function $f(x)$ for $N=5$ (top) and its corresponding fixed point map $F(q)$ (bottom). The map clearly shows 5 stable fixed points, as designed." %}
+{% include figure.html path="/assets/img/constructed_function_plot.png" title="Figure 2: Constructed Activation with 5 Stable Fixed Points" caption="The constructed activation function $f(x)$ for $N=5$ (top) and its corresponding fixed point map $F(q)$ (bottom). The map clearly shows 5 stable fixed points, as designed." %}
 
 The top panel shows our custom function, composed of five rectangular pulses at different scales. The bottom panel shows its fixed-point map, $F(q)$. Just as designed, the function crosses the identity line at exactly five points: $3^2, 3^4, 3^6, 3^8,$ and $3^{10}$. The sharp, step-like nature of the curve ensures that the derivative at each fixed point is near zero, making them all highly stable.
 
