@@ -1,5 +1,105 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-02-19T11:50:09+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
-</subtitle><entry><title type="html">How do you build 1/3 probability with a fair coin?</title><link href="https://ajoudaki.github.io/blog/2024/cool-probability/" rel="alternate" type="text/html" title="How do you build 1/3 probability with a fair coin?" /><published>2024-02-14T00:00:00+00:00</published><updated>2024-02-14T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2024/cool-probability</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2024/cool-probability/"><![CDATA[<p>Here is the question:</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-07-01T15:15:19+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+</subtitle><entry><title type="html">Beyond a Single Reality - Crafting Activation Functions with Many Stable ‘Norms’</title><link href="https://ajoudaki.github.io/blog/2025/norm-fixed-points/" rel="alternate" type="text/html" title="Beyond a Single Reality - Crafting Activation Functions with Many Stable ‘Norms’" /><published>2025-07-01T00:00:00+00:00</published><updated>2025-07-01T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/norm-fixed-points</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/norm-fixed-points/"><![CDATA[<p>When we think about the signals traveling through a deep neural network, we often imagine a self-regulating system. The “mean-field theory” for infinitely wide networks tells us that as a signal passes from one layer to the next, its variance (a measure of its strength or “norm”) tends to race towards a single, stable value. No matter how strong or weak the initial signal, the network’s internal dynamics push it toward one characteristic operational regime.</p>
+
+<p>This behavior is seen in most common activation functions like ReLU, Tanh, and others. It’s a neat and tidy picture, but it begs the question:</p>
+
+<blockquote>
+  <p><strong>Is this single-reality behavior a universal law, or can we design activation functions that support multiple stable operational modes?</strong></p>
+</blockquote>
+
+<p>It turns out, the answer is a resounding <strong>yes</strong>. This article provides a beautiful constructive proof showing that for any integer $N \ge 1$, we can create a well-behaved activation function that has $N$ distinct, stable fixed points for the signal’s variance.</p>
+
+<hr />
+
+<h3 id="the-standard-story-one-stable-point">The Standard Story: One Stable Point</h3>
+
+<p>Let’s quickly formalize this. In an infinitely wide network, the variance of the signal at layer $l+1$, let’s call it $q_{l+1}$, is a function of the variance at the previous layer, $q_l$. This relationship is defined by the map:</p>
+
+\[F(q) = \sigma_w^2 E[f(\sqrt{q}z)^2] + \sigma_b^2 \quad \text{where } z \sim \mathcal{N}(0,1)\]
+
+<p>Here, $f$ is our activation function, and $\sigma_w^2$ and $\sigma_b^2$ are the variances of the weights and biases. A <strong>stable fixed point</strong>, $q^<em>$, is a variance that doesn’t change from layer to layer, meaning it satisfies $F(q^</em>) = q^*$.</p>
+
+<p>If you plot the function $F(q)$ for standard activations (like in the figure below), you’ll see that it crosses the identity line ($y=q$) at only one non-zero point. This intersection is the single, attracting fixed point that governs the network’s dynamics.</p>
+
+<figure>
+
+  <picture>
+    
+    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/%7B%7B%20'/assets/img/standard_activations_plot'%20%7C%20relative_url%20%7D%7D-480.webp" />
+    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/%7B%7B%20'/assets/img/standard_activations_plot'%20%7C%20relative_url%20%7D%7D-800.webp" />
+    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/%7B%7B%20'/assets/img/standard_activations_plot'%20%7C%20relative_url%20%7D%7D-1400.webp" />
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/%7B%7B%20'/assets/img/standard_activations_plot.png'%20%7C%20relative_url%20%7D%7D" width="auto" height="auto" title="Figure 1: The Fixed-Point Map for Standard Activations" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture><figcaption class="caption">The fixed-point map $F(q)$ for standard activations. Each function displays a single non-zero attracting fixed point where its curve intersects the identity line.</figcaption>
+
+</figure>
+
+<hr />
+
+<h3 id="a-new-recipe-building-an-activation-with-n-fixed-points">A New Recipe: Building an Activation with N Fixed Points</h3>
+
+<p>So how do we break this mold? The core idea is surprisingly elegant. We’ll construct an activation function $f(x)$ as a sum of $N$ simpler functions, where each one is responsible for creating a single fixed point. The trick is to make these simple functions operate on completely different scales of the input.</p>
+
+<p>For simplicity, let’s assume the weight variance $\sigma_w^2=1$ and bias variance $\sigma_b^2=0$. Our goal is to solve $q = E[f(\sqrt{q}z)^2]$.</p>
+
+<p>We define our activation function as a sum of $N$ rectangular pulses, $f(x) = \sum_{k=1}^N f_k(x)$, where each pulse is non-zero only in a specific interval:</p>
+
+\[f_k(x) =
+\begin{cases}
+c_k &amp; \text{if } x \in S_k \\
+0 &amp; \text{otherwise}
+\end{cases}\]
+
+<p>The key is to choose the support intervals $S_k$ to be <strong>disjoint</strong>. We can achieve this by picking a separation parameter $C &gt; 2$ and defining our desired fixed points and their corresponding intervals as:</p>
+
+<ol>
+  <li><strong>Desired Fixed Points:</strong> $q^*_k = C^{2k}$ for $k=1, \dots, N$.</li>
+  <li><strong>Support Intervals:</strong> $S_k = [\sqrt{q^<em>_k}, 2\sqrt{q^</em>_k}] = [C^k, 2C^k]$.</li>
+</ol>
+
+<p>With $C&gt;2$, these intervals $[C, 2C], [C^2, 2C^2], \dots$ will never overlap. Because the pulses are disjoint, $f(x)^2 = \sum f_k(x)^2$, which simplifies the math immensely.</p>
+
+<p>The final step is to find the heights of these pulses, the coefficients $c_k$. This involves solving a system of linear equations. The article shows that as long as our separation parameter $C$ is large enough, the matrix in this system becomes diagonally dominant, which guarantees that a unique solution for the pulse heights exists.</p>
+
+<hr />
+
+<h3 id="seeing-is-believing">Seeing is Believing</h3>
+
+<p>Using this construction for $N=5$ and $C=3$, we get the activation function and its corresponding fixed-point map shown below.</p>
+
+<figure>
+
+  <picture>
+    
+    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/%7B%7B%20'/assets/img/constructed_function_plot'%20%7C%20relative_url%20%7D%7D-480.webp" />
+    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/%7B%7B%20'/assets/img/constructed_function_plot'%20%7C%20relative_url%20%7D%7D-800.webp" />
+    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/%7B%7B%20'/assets/img/constructed_function_plot'%20%7C%20relative_url%20%7D%7D-1400.webp" />
+    
+
+    <!-- Fallback to the original file -->
+    <img src="/%7B%7B%20'/assets/img/constructed_function_plot.png'%20%7C%20relative_url%20%7D%7D" width="auto" height="auto" title="Figure 2: Constructed Activation with 5 Stable Fixed Points" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+
+  </picture><figcaption class="caption">The constructed activation function $f(x)$ for $N=5$ (top) and its corresponding fixed point map $F(q)$ (bottom). The map clearly shows 5 stable fixed points, as designed.</figcaption>
+
+</figure>
+
+<p>The top panel shows our custom function, composed of five rectangular pulses at different scales. The bottom panel shows its fixed-point map, $F(q)$. Just as designed, the function crosses the identity line at exactly five points: $3^2, 3^4, 3^6, 3^8,$ and $3^{10}$. The sharp, step-like nature of the curve ensures that the derivative at each fixed point is near zero, making them all highly stable.</p>
+
+<hr />
+
+<h3 id="why-does-this-matter-">Why Does This Matter? 🤔</h3>
+
+<p>The ability to create activation functions with multiple stable fixed points is more than just a mathematical curiosity. It has profound implications for network design:</p>
+
+<ul>
+  <li><strong>Input-Dependent Processing:</strong> A network using such a function could operate in different stable modes depending on the norm of its input. Strong signals could be processed in one regime, while weaker signals are handled in another.</li>
+  <li><strong>Richer Representations:</strong> The network could potentially learn to map different types of inputs to different stable norms. This could create a more structured and separated representational space, potentially aiding in complex classification tasks.</li>
+</ul>
+
+<p>In essence, this construction allows us to move away from a “one-size-fits-all” network dynamic and towards a rich landscape of multiple, stable operational pathways. It’s a powerful new tool for engineers and researchers to design the intricate behavior of deep neural networks.</p>]]></content><author><name>Amir Joudaki</name></author><category term="deep-learning," /><category term="theory," /><category term="neural-networks" /><summary type="html"><![CDATA[A look into how we can design neural network activation functions that support multiple, distinct stable modes of operation, breaking the one-size-fits-all dynamics.]]></summary></entry><entry><title type="html">How do you build 1/3 probability with a fair coin?</title><link href="https://ajoudaki.github.io/blog/2024/cool-probability/" rel="alternate" type="text/html" title="How do you build 1/3 probability with a fair coin?" /><published>2024-02-14T00:00:00+00:00</published><updated>2024-02-14T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2024/cool-probability</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2024/cool-probability/"><![CDATA[<p>Here is the question:</p>
 
 <blockquote>
   <p>Suppose you have a fair coin. Given integers $a$ and $b$ where $a&lt; b,$ can you devise a strategy that produces an event with a failure success of $a / b$? You may toss the coin as many times as you like.</p>
