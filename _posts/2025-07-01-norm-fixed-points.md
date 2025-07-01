@@ -25,7 +25,7 @@ q_{l+1} = F(q_l) \equiv \sigma_w^2 E_{z \sim \mathcal{N}(0,1)}[f(\sqrt{q_l}z)^2]
 $$
 This equation describes how the expected signal variance evolves as it propagates through the network. A central question in understanding these dynamics is the existence and nature of **fixed points**—variances $q^\star$ for which the signal strength remains constant, i.e., $F(q^\star) = q^\star$.
 
-A fixed point $q^\star$ is **locally attracting** if $|F'(q^\star)| < 1$ and repulsive otherwise. This stability condition dictates the long-term behavior of the network's signal norms, leading to two distinct possibilities:
+A fixed point $q^\star$ is **locally attracting** if $|F^\prime(q^\star)| < 1$ and repulsive otherwise. This stability condition dictates the long-term behavior of the network's signal norms, leading to two distinct possibilities:
 
 1.  **Category 1: Single Globally Attracting Fixed Point.** The network possesses one attracting fixed point $q^\star$ (and possibly other repulsive ones). For almost any input norm, the layer-wise variance $q_l$ will converge to $q^\star$. In this regime, the network effectively "forgets" the initial scale of its input.
 2.  **Category 2: Multiple Attracting Fixed Points.** The network has several locally attracting fixed points, each with its own basin of attraction. The final converged norm depends on the initial input norm $q_0$. In this scenario, the network can "remember" information about the input's scale in its deeper layers.
@@ -100,7 +100,7 @@ Thus, as $C \to \infty$, $\mathbf{A}$ converges to a diagonal matrix with positi
 
 #### A Remark on Stability
 
-The fixed points we constructed are not just numerous, but also stable. The function $F(q)$ is analytic (infinitely differentiable) because it is the result of convolution with a Gaussian kernel. For a smooth function intersecting the identity line multiple times, a simple geometric argument implies that if $F'(q) \neq 1$ at the intersections, then attracting ($|F'(q^\star)| < 1$) and repelling ($|F'(q^\star)| > 1$) fixed points must alternate. Our construction, with its step-like $F(q)$, ensures that at each engineered fixed point $q^\star_k$, the derivative $F'(q^\star_k)$ is extremely close to zero, making them all strongly attracting.
+The fixed points we constructed are not just numerous, but also stable. The function $F(q)$ is analytic (infinitely differentiable) because it is the result of convolution with a Gaussian kernel. For a smooth function intersecting the identity line multiple times, a simple geometric argument implies that if $F^\prime(q) \neq 1$ at the intersections, then attracting ($|F^\prime(q^\star)| < 1$) and repelling ($|F^\prime(q^\star)| > 1$) fixed points must alternate. Our construction, with its step-like $F(q)$, ensures that at each engineered fixed point $q^\star_k$, the derivative $F^\prime(q^\star_k)$ is extremely close to zero, making them all strongly attracting.
 
 ---
 
