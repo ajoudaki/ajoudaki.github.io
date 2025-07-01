@@ -51,7 +51,7 @@ $$
 F(q) = \sigma_w^2 E[f(\sqrt{q}z)^2] + \sigma_b^2 \quad \text{where } z \sim \mathcal{N}(0,1)
 $$
 
-Here, $f$ is our activation function, and $\sigma_w^2$ and $\sigma_b^2$ are the variances of the weights and biases. A **stable fixed point**, $q^*$, is a variance that does not change from layer to layer, meaning it satisfies $F(q^*) = q^*$.
+Here, $f$ is our activation function, and $\sigma_w^2$ and $\sigma_b^2$ are the variances of the weights and biases. A **stable fixed point**, $q^\star$, is a variance that does not change from layer to layer, meaning it satisfies $F(q^\star) = q^\star$.
 
 If you plot the function $F(q)$ for standard activations (like in the figure below), you'll see that it crosses the identity line ($y=q$) at only one non-zero point. This intersection is the single, attracting fixed point that governs the network's dynamics.
 
@@ -77,8 +77,8 @@ $$
 
 The key is to choose the support intervals $S_k$ to be **disjoint**. We can achieve this by picking a separation parameter $C > 2$ and defining our desired fixed points and their corresponding intervals as:
 
-1.  **Desired Fixed Points:** $q^*_k = C^{2k}$ for $k=1, \ldots, N$.
-2.  **Support Intervals:** $S_k = [\sqrt{q^*_k}, 2\sqrt{q^*_k}] = [C^k, 2C^k]$.
+1. **Desired Fixed Points:** $q^\star_k = C^{2k}$ for $k=1, \ldots, N$.
+2. **Support Intervals:** $S_k = [\sqrt{q^\star_k}, 2\sqrt{q^\star_k}] = [C^k, 2C^k]$.
 
 With $C>2$, these intervals $[C, 2C], [C^2, 2C^2], \ldots$ will never overlap. Because the pulses are disjoint, $f(x)^2 = \sum f_k(x)^2$, which simplifies the math immensely.
 
