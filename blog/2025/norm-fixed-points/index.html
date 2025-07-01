@@ -216,7 +216,7 @@
 
 \[F(q) = \sigma_w^2 E[f(\sqrt{q}z)^2] + \sigma_b^2 \quad \text{where } z \sim \mathcal{N}(0,1)\]
 
-<p>Here, $f$ is our activation function, and $\sigma_w^2$ and $\sigma_b^2$ are the variances of the weights and biases. A <strong>stable fixed point</strong>, $q^<em>$, is a variance that doesn’t change from layer to layer, meaning it satisfies $F(q^</em>) = q^*$.</p>
+<p>Here, $f$ is our activation function, and $\sigma_w^2$ and $\sigma_b^2$ are the variances of the weights and biases. A <strong>stable fixed point</strong>, $q^<em>$, is a variance that does not change from layer to layer, meaning it satisfies $F(q^</em>) = q^*$.</p>
 
 <p>If you plot the function $F(q)$ for standard activations (like in the figure below), you’ll see that it crosses the identity line ($y=q$) at only one non-zero point. This intersection is the single, attracting fixed point that governs the network’s dynamics.</p>
 
@@ -256,12 +256,12 @@ c_k &amp; \text{if } x \in S_k \\
 
 <ol>
   <li>
-<strong>Desired Fixed Points:</strong> $q^*_k = C^{2k}$ for $k=1, \dots, N$.</li>
+<strong>Desired Fixed Points:</strong> $q^*_k = C^{2k}$ for $k=1, \ldots, N$.</li>
   <li>
 <strong>Support Intervals:</strong> $S_k = [\sqrt{q^<em>_k}, 2\sqrt{q^</em>_k}] = [C^k, 2C^k]$.</li>
 </ol>
 
-<p>With $C&gt;2$, these intervals $[C, 2C], [C^2, 2C^2], \dots$ will never overlap. Because the pulses are disjoint, $f(x)^2 = \sum f_k(x)^2$, which simplifies the math immensely.</p>
+<p>With $C&gt;2$, these intervals $[C, 2C], [C^2, 2C^2], \ldots$ will never overlap. Because the pulses are disjoint, $f(x)^2 = \sum f_k(x)^2$, which simplifies the math immensely.</p>
 
 <p>The final step is to find the heights of these pulses, the coefficients $c_k$. This involves solving a system of linear equations. The article shows that as long as our separation parameter $C$ is large enough, the matrix in this system becomes diagonally dominant, which guarantees that a unique solution for the pulse heights exists.</p>
 
