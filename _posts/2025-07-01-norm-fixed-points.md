@@ -47,9 +47,11 @@ It turns out, the answer is a resounding **yes**. This article provides a beauti
 
 Let's quickly formalize this. In an infinitely wide network, the variance of the signal at layer $l+1$, let's call it $q_{l+1}$, is a function of the variance at the previous layer, $q_l$. This relationship is defined by the map:
 
+<p>
 $$
 F(q) = \sigma_w^2 E[f(\sqrt{q}z)^2] + \sigma_b^2 \quad \text{where } z \sim \mathcal{N}(0,1)
 $$
+</p>
 
 Here, $f$ is our activation function, and $\sigma_w^2$ and $\sigma_b^2$ are the variances of the weights and biases. A **stable fixed point**, $q^\star$, is a variance that does not change from layer to layer, meaning it satisfies $F(q^\star) = q^\star$.
 
@@ -67,6 +69,7 @@ For simplicity, let's assume the weight variance $\sigma_w^2=1$ and bias varianc
 
 We define our activation function as a sum of $N$ rectangular pulses, $f(x) = \sum_{k=1}^N f_k(x)$, where each pulse is non-zero only in a specific interval:
 
+<p>
 $$
 f_k(x) =
 \begin{cases}
@@ -74,6 +77,7 @@ c_k & \text{if } x \in S_k \\
 0 & \text{otherwise}
 \end{cases}
 $$
+</p>
 
 The key is to choose the support intervals $S_k$ to be **disjoint**. We can achieve this by picking a separation parameter $C > 2$ and defining our desired fixed points and their corresponding intervals as:
 
