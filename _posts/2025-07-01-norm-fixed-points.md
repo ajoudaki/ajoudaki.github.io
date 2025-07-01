@@ -1,9 +1,9 @@
 ---
 layout: distill
-title: Beyond a Single Reality - Crafting Activation Functions with Many Stable 'Norms'
-description: A look into how we can design neural network activation functions that support multiple, distinct stable modes of operation, breaking the one-size-fits-all dynamics.
+title: "The Dynamics of Signal Norms in Deep Networks"
+description: "A theoretical exploration into the existence of activation functions with multiple norm-Stable fixed points"
 giscus_comments: true
-tags: deep-learning, theory, neural-networks
+tags: deep-learning, theory, neural-networks, mean-field
 date: 2025-07-01
 
 authors:
@@ -13,63 +13,46 @@ authors:
 
 bibliography: refs.bib
 
-# Below is an example of injecting additional post-specific styles.
-_styles: >
-  .fake-img {
-    background: #bbb;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 12px;
-  }
-  .fake-img p {
-    font-family: monospace;
-    color: white;
-    text-align: left;
-    margin: 12px 0;
-    text-align: center;
-    font-size: 16px;
-  }
+---
+
+### The Dynamics of Signal Norms in Deep Networks
+
+In the study of infinitely wide neural networks, mean-field theory provides a powerful framework for analyzing signal propagation. Consider a standard Multi-Layer Perceptron (MLP) where weights and biases are initialized as $w_{ij} \sim \mathcal{N}(0, \sigma_w^2/n_{in})$ and $b_i \sim \mathcal{N}(0, \sigma_b^2)$. In the infinite-width limit, the Central Limit Theorem dictates that the pre-activations at each layer become Gaussian. This allows us to track the evolution of the signal's squared norm (variance) deterministically.
+
+The variance at layer $l+1$, denoted $q_{l+1}$, is a function of the variance at the previous layer, $q_l$, given by the map:
+$$
+q_{l+1} = F(q_l) \equiv \sigma_w^2 E_{z \sim \mathcal{N}(0,1)}[f(\sqrt{q_l}z)^2] + \sigma_b^2
+$$
+This equation describes how the expected signal variance evolves as it propagates through the network. A central question in understanding these dynamics is the existence and nature of **fixed points**—variances $q^*$ for which the signal strength remains constant, i.e., $F(q^*) = q^*$.
+
+A fixed point $q^*$ is **locally attracting** if $|F'(q^*)| < 1$ and repulsive otherwise. This stability condition dictates the long-term behavior of the network's signal norms, leading to two distinct possibilities:
+
+1.  **Category 1: Single Globally Attracting Fixed Point.** The network possesses one attracting fixed point $q^*$ (and possibly other repulsive ones). For almost any input norm, the layer-wise variance $q_l$ will converge to $q^*$. In this regime, the network effectively "forgets" the initial scale of its input.
+2.  **Category 2: Multiple Attracting Fixed Points.** The network has several locally attracting fixed points, each with its own basin of attraction. The final converged norm depends on the initial input norm $q_0$. In this scenario, the network can "remember" information about the input's scale in its deeper layers.
+
+A numerical verification reveals that virtually all commonly used activation functions—such as ReLU, Tanh, and GeLU—belong to **Category 1**. They exhibit a single, globally attracting fixed point. While adjusting $\sigma_w^2$ and $\sigma_b^2$ applies an affine transformation to the $F(q)$ map, a visual inspection confirms that no such transformation can induce multiple stable fixed points for these standard functions.
+
+{% include figure.html path="{{ '/assets/img/standard_activations_plot.png' | relative_url }}" title="Figure 1: Dynamics of Standard Activations" caption="For standard activations, the map $F(q)$ (with $\sigma_w^2=1, \sigma_b^2=0$) intersects the identity line at a single attracting fixed point, confirming they belong to Category 1." %}
+
+This observation motivates our main inquiry: is the single fixed-point behavior a fundamental property, or is it merely a feature of the specific activations we choose to use? More formally:
+
+> **Is it possible to construct an activation function with an arbitrary number of attracting fixed points?**
+
+As we will now show constructively, the answer is yes.
 
 ---
 
+### A Construction for N Stable Fixed Points
 
-When we think about the signals traveling through a deep neural network, we often imagine a self-regulating system. The "mean-field theory" for infinitely wide networks tells us that as a signal passes from one layer to the next, its variance (a measure of its strength or "norm") tends to race towards a single, stable value. No matter how strong or weak the initial signal, the network's internal dynamics push it toward one characteristic operational regime.
+Our goal is to design an activation function $f(x)$ that yields $N$ distinct, positive, and stable solutions to $F(q) = q$. For simplicity, we develop the construction for the case where $\sigma_w^2=1$ and $\sigma_b^2=0$.
 
-This behavior is seen in most common activation functions like ReLU, Tanh, and others. It's a neat and tidy picture, but it begs the question:
+#### Intuition
 
-> **Is this single-reality behavior a universal law, or can we design activation functions that support multiple stable operational modes?**
+The core intuition is to combine several simple functions, each responsible for creating one fixed point. To prevent these functions from interfering with one another, we design them to operate on disjoint and exponentially spaced input scales. We use a set of rectangular "bumps." When the input norm $q$ is close to the region targeted by the $k$-th bump, the contributions from all other bumps ($k-1, k+1, \dots$) are negligible, effectively isolating the dynamics for each fixed point.
 
-It turns out, the answer is a resounding **yes**. This article provides a beautiful constructive proof showing that for any integer $N \ge 1$, we can create a well-behaved activation function that has $N$ distinct, stable fixed points for the signal's variance.
+#### Formal Construction
 
-***
-
-### The Standard Story: One Stable Point
-
-Let's quickly formalize this. In an infinitely wide network, the variance of the signal at layer $l+1$, let's call it $q_{l+1}$, is a function of the variance at the previous layer, $q_l$. This relationship is defined by the map:
-
-<p>
-$$
-F(q) = \sigma_w^2 E[f(\sqrt{q}z)^2] + \sigma_b^2 \quad \text{where } z \sim \mathcal{N}(0,1)
-$$
-</p>
-
-Here, $f$ is our activation function, and $\sigma_w^2$ and $\sigma_b^2$ are the variances of the weights and biases. A **stable fixed point**, $q^\star$, is a variance that does not change from layer to layer, meaning it satisfies $F(q^\star) = q^\star$.
-
-If you plot the function $F(q)$ for standard activations (like in the figure below), you'll see that it crosses the identity line ($y=q$) at only one non-zero point. This intersection is the single, attracting fixed point that governs the network's dynamics.
-
-{% include figure.html path="/assets/img/standard_activations_plot.png" title="Figure 1: The Fixed-Point Map for Standard Activations" caption="The fixed-point map $F(q)$ for standard activations. Each function displays a single non-zero attracting fixed point where its curve intersects the identity line." %}
-
-***
-
-### A New Recipe: Building an Activation with N Fixed Points
-
-So how do we break this mold? The core idea is surprisingly elegant. We'll construct an activation function $f(x)$ as a sum of $N$ simpler functions, where each one is responsible for creating a single fixed point. The trick is to make these simple functions operate on completely different scales of the input.
-
-For simplicity, let's assume the weight variance $\sigma_w^2=1$ and bias variance $\sigma_b^2=0$. Our goal is to solve $q = E[f(\sqrt{q}z)^2]$.
-
-We define our activation function as a sum of $N$ rectangular pulses, $f(x) = \sum_{k=1}^N f_k(x)$, where each pulse is non-zero only in a specific interval:
-
-<p>
+Let the activation function be a sum of $N$ disjoint rectangular pulses: $f(x) = \sum_{k=1}^N f_k(x)$, where
 $$
 f_k(x) =
 \begin{cases}
@@ -77,34 +60,48 @@ c_k & \text{if } x \in S_k \\
 0 & \text{otherwise}
 \end{cases}
 $$
-</p>
+Since the supports $S_k$ are disjoint, we have $f(x)^2 = \sum_{k=1}^N f_k(x)^2$. This orthogonality is key. The fixed-point equation $q = E[f(\sqrt{q}z)^2]$ becomes:
+$$
+q = \sum_{k=1}^N E[f_k(\sqrt{q}z)^2] = \sum_{k=1}^N c_k^2 \cdot P(\sqrt{q}z \in S_k)
+$$
+We choose our desired fixed points $q^*_j$ and support intervals $S_k$ to be exponentially spaced, governed by a separation parameter $C > 2$:
+1.  **Desired Fixed Points:** $q^*_j = C^{2j}$ for $j=1, \dots, N$.
+2.  **Support Intervals:** $S_k = [\sqrt{q^*_k}, 2\sqrt{q^*_k}] = [C^k, 2C^k]$.
 
-The key is to choose the support intervals $S_k$ to be **disjoint**. We can achieve this by picking a separation parameter $C > 2$ and defining our desired fixed points and their corresponding intervals as:
+This choice ensures $S_j \cap S_k = \emptyset$ for $j \neq k$. To enforce that these $q^*_j$ are indeed fixed points, the pulse heights $c_k^2$ must satisfy the following system of $N$ linear equations for each $j \in \{1, \dots, N\}$:
+$$
+q^*_j = \sum_{k=1}^N c_k^2 \cdot P(\sqrt{q^*_j}z \in S_k)
+$$
+Let's define the vector of squared coefficients $\mathbf{c^2} = [c_1^2, \dots, c_N^2]^T$ and the vector of fixed points $\mathbf{q^*} = [q^*_1, \dots, q^*_N]^T$. The system can be written in matrix form as $\mathbf{q^*} = \mathbf{A} \mathbf{c^2}$, where the matrix entries $A_{jk}$ are:
+$$
+A_{jk} = P(\sqrt{q^*_j}z \in S_k) = P(z \in [C^{k-j}, 2C^{k-j}]) = \Phi(2C^{k-j}) - \Phi(C^{k-j})
+$$
+where $\Phi$ is the CDF of the standard normal distribution.
 
-1. **Desired Fixed Points:** $q^\star_k = C^{2k}$ for $k=1, \ldots, N$.
-2. **Support Intervals:** $S_k = [\sqrt{q^\star_k}, 2\sqrt{q^\star_k}] = [C^k, 2C^k]$.
+#### Proof of Existence
 
-With $C>2$, these intervals $[C, 2C], [C^2, 2C^2], \ldots$ will never overlap. Because the pulses are disjoint, $f(x)^2 = \sum f_k(x)^2$, which simplifies the math immensely.
+To guarantee a unique, positive solution for $\mathbf{c^2}$ exists, the matrix $\mathbf{A}$ must be invertible. Let's analyze its entries in the limit of large separation, $C \to \infty$:
+* **Diagonal elements ($j=k$):** $A_{jj} = \Phi(2) - \Phi(1) \approx 0.1359$.
+* **Off-diagonal elements ($j \neq k$):** The term $C^{k-j}$ approaches either $\infty$ or $0$.
+    * If $k > j$, then $C^{k-j} \to \infty$, and $A_{jk} \to \Phi(\infty) - \Phi(\infty) = 0$.
+    * If $k < j$, then $C^{k-j} \to 0$, and $A_{jk} \to \Phi(0) - \Phi(0) = 0$.
 
-The final step is to find the heights of these pulses, the coefficients $c_k$. This involves solving a system of linear equations. The article shows that as long as our separation parameter $C$ is large enough, the matrix in this system becomes diagonally dominant, which guarantees that a unique solution for the pulse heights exists.
+Thus, as $C \to \infty$, $\mathbf{A}$ converges to a diagonal matrix with positive entries on the diagonal, rendering it strictly diagonally dominant and therefore invertible. This guarantees the existence of a unique solution for the coefficients $\mathbf{c^2}$ for a sufficiently large $C$. Since $N$ was chosen arbitrarily, we can construct an activation function with any number of fixed points.
 
-***
+{% include figure.html path="{{ '/assets/img/constructed_function_plot.png' | relative_url }}" title="Figure 2: Constructed Activation with 5 Stable Fixed Points" caption="The constructed function $f(x)$ for $N=5, C=3$ (top) and its fixed-point map $F(q)$ (bottom). The map exhibits 5 distinct intersections with the identity line, corresponding to the engineered fixed points." %}
 
-### Seeing is Believing
+#### A Remark on Stability
 
-Using this construction for $N=5$ and $C=3$, we get the activation function and its corresponding fixed-point map shown below.
+The fixed points we constructed are not just numerous, but also stable. The function $F(q)$ is analytic (infinitely differentiable) because it is the result of convolution with a Gaussian kernel. For a smooth function intersecting the identity line multiple times, a simple geometric argument implies that if $F'(q) \neq 1$ at the intersections, then attracting ($|F'(q^*)| < 1$) and repelling ($|F'(q^*)| > 1$) fixed points must alternate. Our construction, with its step-like $F(q)$, ensures that at each engineered fixed point $q^*_k$, the derivative $F'(q^*_k)$ is extremely close to zero, making them all strongly attracting.
 
-{% include figure.html path="/assets/img/constructed_function_plot.png" title="Figure 2: Constructed Activation with 5 Stable Fixed Points" caption="The constructed activation function $f(x)$ for $N=5$ (top) and its corresponding fixed point map $F(q)$ (bottom). The map clearly shows 5 stable fixed points, as designed." %}
+---
 
-The top panel shows our custom function, composed of five rectangular pulses at different scales. The bottom panel shows its fixed-point map, $F(q)$. Just as designed, the function crosses the identity line at exactly five points: $3^2, 3^4, 3^6, 3^8,$ and $3^{10}$. The sharp, step-like nature of the curve ensures that the derivative at each fixed point is near zero, making them all highly stable.
+### Conclusion and Future Directions
 
-***
+We have demonstrated that while common activation functions exhibit a single globally attracting fixed point for signal variance, it is possible to constructively design activation functions with an arbitrary number of stable fixed points. This finding moves the dynamics of signal norms from a "one-size-fits-all" regime to a rich landscape where the network's behavior can depend on the input's scale.
 
-### Why Does This Matter? 🤔
+This opens several interesting avenues for future research:
+* What are the sufficient conditions on an activation function $f$ that guarantee its corresponding map $F(q)$ has only one globally attracting fixed point? While conditions on $F(q)$ (e.g., convexity) are straightforward, mapping them back to simple properties of $f$ is non-trivial.
+* Can we construct other families of multi-fixed-point activations, for example, with fixed points clustered in a finite interval like $[0, 1]$ instead of being exponentially spaced?
 
-The ability to create activation functions with multiple stable fixed points is more than just a mathematical curiosity. It has profound implications for network design:
-
-* **Input-Dependent Processing:** A network using such a function could operate in different stable modes depending on the norm of its input. Strong signals could be processed in one regime, while weaker signals are handled in another.
-* **Richer Representations:** The network could potentially learn to map different types of inputs to different stable norms. This could create a more structured and separated representational space, potentially aiding in complex classification tasks.
-
-In essence, this construction allows us to move away from a "one-size-fits-all" network dynamic and towards a rich landscape of multiple, stable operational pathways. It's a powerful new tool for engineers and researchers to design the intricate behavior of deep neural networks.
+Interestingly, this rich, function-dependent behavior of **variance dynamics** stands in stark contrast to that of **covariance dynamics**. In a related work ("Emergence of Globally Attracting Fixed Points in Deep Neural Networks With Nonlinear Activations," AISTATS 2025), we show that if one considers the evolution of the *covariance* between two different inputs (assuming unit variance is maintained at each layer), the dynamical map *always* has a single, globally attracting fixed point. This universality holds for *any* non-linear activation function. This highlights a fascinating dichotomy: signal variance dynamics are customizable and activation-dependent, whereas signal covariance dynamics are universal and robust.
