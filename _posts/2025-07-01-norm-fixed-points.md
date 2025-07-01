@@ -32,7 +32,7 @@ _styles: >
 
 ---
 
-{% include figure.liquid loading="eager" path="assets/img/9.jpg" class="img-fluid rounded z-depth-1" %}
+{% include figure.liquid loading="eager" path="assets/img/9.jpg" %}
 
 
 When we think about the signals traveling through a deep neural network, we often imagine a self-regulating system. The "mean-field theory" for infinitely wide networks tells us that as a signal passes from one layer to the next, its variance (a measure of its strength or "norm") tends to race towards a single, stable value. No matter how strong or weak the initial signal, the network's internal dynamics push it toward one characteristic operational regime.
