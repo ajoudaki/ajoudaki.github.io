@@ -48,11 +48,12 @@ Our goal is to design an activation function $f(x)$ that yields $N$ distinct, po
 
 #### Intuition
 
-The core intuition is to combine several simple functions, each responsible for creating one fixed point. To prevent these functions from interfering with one another, we design them to operate on disjoint and exponentially spaced input scales. We use a set of rectangular "bumps." When the input norm $q$ is close to the region targeted by the $k$-th bump, the contributions from all other bumps ($k-1, k+1, \dots$) are negligible, effectively isolating the dynamics for each fixed point.
+The core intuition is to combine several simple functions, each responsible for creating one fixed point. To prevent these functions from interfering with one another, we design them to operate on disjoint and exponentially spaced input scales. We use a set of rectangular "bumps." When the input norm $q$ is close to the region targeted by the $k$-th bump, the contributions from all other bumps ($k-1, k+1, \ldots$) are negligible, effectively isolating the dynamics for each fixed point.
 
 #### Formal Construction
 
 Let the activation function be a sum of $N$ disjoint rectangular pulses: $f(x) = \sum_{k=1}^N f_k(x)$, where
+<p>
 $$
 f_k(x) =
 \begin{cases}
@@ -60,22 +61,29 @@ c_k & \text{if } x \in S_k \\
 0 & \text{otherwise}
 \end{cases}
 $$
+</p>
 Since the supports $S_k$ are disjoint, we have $f(x)^2 = \sum_{k=1}^N f_k(x)^2$. This orthogonality is key. The fixed-point equation $q = E[f(\sqrt{q}z)^2]$ becomes:
+<p>
 $$
 q = \sum_{k=1}^N E[f_k(\sqrt{q}z)^2] = \sum_{k=1}^N c_k^2 \cdot P(\sqrt{q}z \in S_k)
 $$
+</p>
 We choose our desired fixed points $q^\star_j$ and support intervals $S_k$ to be exponentially spaced, governed by a separation parameter $C > 2$:
-1.  **Desired Fixed Points:** $q^\star_j = C^{2j}$ for $j=1, \dots, N$.
+1.  **Desired Fixed Points:** $q^\star_j = C^{2j}$ for $j=1, \ldots, N$.
 2.  **Support Intervals:** $S_k = [\sqrt{q^\star_k}, 2\sqrt{q^\star_k}] = [C^k, 2C^k]$.
 
-This choice ensures $S_j \cap S_k = \emptyset$ for $j \neq k$. To enforce that these $q^\star_j$ are indeed fixed points, the pulse heights $c_k^2$ must satisfy the following system of $N$ linear equations for each $j \in \{1, \dots, N\}$:
+This choice ensures $S_j \cap S_k = \emptyset$ for $j \neq k$. To enforce that these $q^\star_j$ are indeed fixed points, the pulse heights $c_k^2$ must satisfy the following system of $N$ linear equations for each $j \in \{1, \ldots, N\}$:
+<p>
 $$
 q^\star_j = \sum_{k=1}^N c_k^2 \cdot P(\sqrt{q^\star_j}z \in S_k)
 $$
-Let's define the vector of squared coefficients $\mathbf{c^2} = [c_1^2, \dots, c_N^2]^T$ and the vector of fixed points $\mathbf{q^\star} = [q^\star_1, \dots, q^\star_N]^T$. The system can be written in matrix form as $\mathbf{q^\star} = \mathbf{A} \mathbf{c^2}$, where the matrix entries $A_{jk}$ are:
+</p>
+Let's define the vector of squared coefficients $\mathbf{c^2} = [c_1^2, \ldots, c_N^2]^T$ and the vector of fixed points $\mathbf{q^\star} = [q^\star_1, \ldots, q^\star_N]^T$. The system can be written in matrix form as $\mathbf{q^\star} = \mathbf{A} \mathbf{c^2}$, where the matrix entries $A_{jk}$ are:
+<p>
 $$
 A_{jk} = P(\sqrt{q^\star_j}z \in S_k) = P(z \in [C^{k-j}, 2C^{k-j}]) = \Phi(2C^{k-j}) - \Phi(C^{k-j})
 $$
+</p>
 where $\Phi$ is the CDF of the standard normal distribution.
 
 #### Proof of Existence
