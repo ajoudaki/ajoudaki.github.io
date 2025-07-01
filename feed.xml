@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-07-01T16:27:11+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-07-01T16:27:45+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 </subtitle><entry><title type="html">The Dynamics of Signal Norms in Deep Networks</title><link href="https://ajoudaki.github.io/blog/2025/norm-fixed-points/" rel="alternate" type="text/html" title="The Dynamics of Signal Norms in Deep Networks" /><published>2025-07-01T00:00:00+00:00</published><updated>2025-07-01T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/norm-fixed-points</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/norm-fixed-points/"><![CDATA[<h3 id="the-dynamics-of-signal-norms-in-deep-networks">The Dynamics of Signal Norms in Deep Networks</h3>
 
 <p>In the study of infinitely wide neural networks, mean-field theory provides a powerful framework for analyzing signal propagation. Consider a standard Multi-Layer Perceptron (MLP) where weights and biases are initialized as $w_{ij} \sim \mathcal{N}(0, \sigma_w^2/n_{in})$ and $b_i \sim \mathcal{N}(0, \sigma_b^2)$. In the infinite-width limit, the Central Limit Theorem dictates that the pre-activations at each layer become Gaussian. This allows us to track the evolution of the signal’s squared norm (variance) deterministically.</p>
@@ -28,13 +28,13 @@ This equation describes how the expected signal variance evolves as it propagate
 
   <picture>
     
-    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/%7B%7B%20'/assets/img/standard_activations_plot'%20%7C%20relative_url%20%7D%7D-480.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/%7B%7B%20'/assets/img/standard_activations_plot'%20%7C%20relative_url%20%7D%7D-800.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/%7B%7B%20'/assets/img/standard_activations_plot'%20%7C%20relative_url%20%7D%7D-1400.webp" />
+    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/standard_activations_plot-480.webp" />
+    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/standard_activations_plot-800.webp" />
+    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/standard_activations_plot-1400.webp" />
     
 
     <!-- Fallback to the original file -->
-    <img src="/%7B%7B%20'/assets/img/standard_activations_plot.png'%20%7C%20relative_url%20%7D%7D" width="auto" height="auto" title="Figure 1: Dynamics of Standard Activations" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+    <img src="/assets/img/standard_activations_plot.png" width="auto" height="auto" title="Figure 1: Dynamics of Standard Activations" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
 
   </picture><figcaption class="caption">For standard activations, the map $F(q)$ (with $\sigma_w^2=1, \sigma_b^2=0$) intersects the identity line at a single attracting fixed point, confirming they belong to Category 1.</figcaption>
 
@@ -115,13 +115,13 @@ $$
 
   <picture>
     
-    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/%7B%7B%20'/assets/img/constructed_function_plot'%20%7C%20relative_url%20%7D%7D-480.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/%7B%7B%20'/assets/img/constructed_function_plot'%20%7C%20relative_url%20%7D%7D-800.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/%7B%7B%20'/assets/img/constructed_function_plot'%20%7C%20relative_url%20%7D%7D-1400.webp" />
+    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/constructed_function_plot-480.webp" />
+    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/constructed_function_plot-800.webp" />
+    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/constructed_function_plot-1400.webp" />
     
 
     <!-- Fallback to the original file -->
-    <img src="/%7B%7B%20'/assets/img/constructed_function_plot.png'%20%7C%20relative_url%20%7D%7D" width="auto" height="auto" title="Figure 2: Constructed Activation with 5 Stable Fixed Points" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+    <img src="/assets/img/constructed_function_plot.png" width="auto" height="auto" title="Figure 2: Constructed Activation with 5 Stable Fixed Points" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
 
   </picture><figcaption class="caption">The constructed function $f(x)$ for $N=5, C=3$ (top) and its fixed-point map $F(q)$ (bottom). The map exhibits 5 distinct intersections with the identity line, corresponding to the engineered fixed points.</figcaption>
 
