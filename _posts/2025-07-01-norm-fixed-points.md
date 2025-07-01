@@ -32,7 +32,7 @@ A fixed point $q^\star$ is **locally attracting** if $|F'(q^\star)| < 1$ and rep
 
 A numerical verification reveals that virtually all commonly used activation functions—such as ReLU, Tanh, and GeLU—belong to **Category 1**. They exhibit a single, globally attracting fixed point. While adjusting $\sigma_w^2$ and $\sigma_b^2$ applies an affine transformation to the $F(q)$ map, a visual inspection confirms that no such transformation can induce multiple stable fixed points for these standard functions.
 
-{% include figure.html path="{{ '/assets/img/standard_activations_plot.png' | relative_url }}" title="Figure 1: Dynamics of Standard Activations" caption="For standard activations, the map $F(q)$ (with $\sigma_w^2=1, \sigma_b^2=0$) intersects the identity line at a single attracting fixed point, confirming they belong to Category 1." %}
+{% include figure.html path="/assets/img/standard_activations_plot.png" title="Figure 1: Dynamics of Standard Activations" caption="For standard activations, the map $F(q)$ (with $\sigma_w^2=1, \sigma_b^2=0$) intersects the identity line at a single attracting fixed point, confirming they belong to Category 1." %}
 
 This observation motivates our main inquiry: is the single fixed-point behavior a fundamental property, or is it merely a feature of the specific activations we choose to use? More formally:
 
@@ -96,7 +96,7 @@ To guarantee a unique, positive solution for $\mathbf{c^2}$ exists, the matrix $
 
 Thus, as $C \to \infty$, $\mathbf{A}$ converges to a diagonal matrix with positive entries on the diagonal, rendering it strictly diagonally dominant and therefore invertible. This guarantees the existence of a unique solution for the coefficients $\mathbf{c^2}$ for a sufficiently large $C$. Since $N$ was chosen arbitrarily, we can construct an activation function with any number of fixed points.
 
-{% include figure.html path="{{ '/assets/img/constructed_function_plot.png' | relative_url }}" title="Figure 2: Constructed Activation with 5 Stable Fixed Points" caption="The constructed function $f(x)$ for $N=5, C=3$ (top) and its fixed-point map $F(q)$ (bottom). The map exhibits 5 distinct intersections with the identity line, corresponding to the engineered fixed points." %}
+{% include figure.html path="/assets/img/constructed_function_plot.png" title="Figure 2: Constructed Activation with 5 Stable Fixed Points" caption="The constructed function $f(x)$ for $N=5, C=3$ (top) and its fixed-point map $F(q)$ (bottom). The map exhibits 5 distinct intersections with the identity line, corresponding to the engineered fixed points." %}
 
 #### A Remark on Stability
 
