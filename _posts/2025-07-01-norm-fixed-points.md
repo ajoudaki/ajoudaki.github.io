@@ -47,11 +47,13 @@ It turns out, the answer is a resounding **yes**. This article provides a beauti
 
 Let's quickly formalize this. In an infinitely wide network, the variance of the signal at layer $l+1$, let's call it $q_{l+1}$, is a function of the variance at the previous layer, $q_l$. This relationship is defined by the map:
 
+<p>
 $$
 F(q) = \sigma_w^2 E[f(\sqrt{q}z)^2] + \sigma_b^2 \quad \text{where } z \sim \mathcal{N}(0,1)
 $$
+</p>
 
-Here, $f$ is our activation function, and $\sigma_w^2$ and $\sigma_b^2$ are the variances of the weights and biases. A **stable fixed point**, $q^*$, is a variance that doesn't change from layer to layer, meaning it satisfies $F(q^*) = q^*$.
+Here, $f$ is our activation function, and $\sigma_w^2$ and $\sigma_b^2$ are the variances of the weights and biases. A **stable fixed point**, $q^*$, is a variance that does not change from layer to layer, meaning it satisfies $F(q^*) = q^*$.
 
 If you plot the function $F(q)$ for standard activations (like in the figure below), you'll see that it crosses the identity line ($y=q$) at only one non-zero point. This intersection is the single, attracting fixed point that governs the network's dynamics.
 
@@ -67,6 +69,7 @@ For simplicity, let's assume the weight variance $\sigma_w^2=1$ and bias varianc
 
 We define our activation function as a sum of $N$ rectangular pulses, $f(x) = \sum_{k=1}^N f_k(x)$, where each pulse is non-zero only in a specific interval:
 
+<p>
 $$
 f_k(x) =
 \begin{cases}
@@ -74,13 +77,14 @@ c_k & \text{if } x \in S_k \\
 0 & \text{otherwise}
 \end{cases}
 $$
+</p>
 
 The key is to choose the support intervals $S_k$ to be **disjoint**. We can achieve this by picking a separation parameter $C > 2$ and defining our desired fixed points and their corresponding intervals as:
 
-1.  **Desired Fixed Points:** $q^*_k = C^{2k}$ for $k=1, \dots, N$.
+1.  **Desired Fixed Points:** $q^*_k = C^{2k}$ for $k=1, \ldots, N$.
 2.  **Support Intervals:** $S_k = [\sqrt{q^*_k}, 2\sqrt{q^*_k}] = [C^k, 2C^k]$.
 
-With $C>2$, these intervals $[C, 2C], [C^2, 2C^2], \dots$ will never overlap. Because the pulses are disjoint, $f(x)^2 = \sum f_k(x)^2$, which simplifies the math immensely.
+With $C>2$, these intervals $[C, 2C], [C^2, 2C^2], \ldots$ will never overlap. Because the pulses are disjoint, $f(x)^2 = \sum f_k(x)^2$, which simplifies the math immensely.
 
 The final step is to find the heights of these pulses, the coefficients $c_k$. This involves solving a system of linear equations. The article shows that as long as our separation parameter $C$ is large enough, the matrix in this system becomes diagonally dominant, which guarantees that a unique solution for the pulse heights exists.
 
