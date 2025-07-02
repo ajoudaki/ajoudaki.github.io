@@ -1,0 +1,6 @@
+<!-- Custom script loader for page-specific scripts -->
+{% if page.include_scripts %}
+  {% for script in page.include_scripts %}
+    <script src="{{ script }}" defer></script>
+  {% endfor %}
+{% endif %}

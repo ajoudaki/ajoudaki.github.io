@@ -1,0 +1,21 @@
+<div style="margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;">
+  <div style="margin-bottom: 15px;">
+    <strong>Interactive Figure 1: Dynamics of Standard Activations</strong>
+    <br><em>For standard activations, the map F(q) intersects the identity line at a single attracting fixed point, confirming they belong to Category 1. Use the controls to explore different parameter values.</em>
+  </div>
+  
+  <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; font-size: 0.9em;">
+    <div>
+      <label for="sigma-w-blog">σ_w²:</label>
+      <input type="range" id="sigma-w-blog" min="0.1" max="5" step="0.1" value="1" style="width: 100px; margin: 0 5px;">
+      <span id="sigma-w-value-blog">1.0</span>
+    </div>
+    <div>
+      <label for="sigma-b-blog">σ_b²:</label>
+      <input type="range" id="sigma-b-blog" min="0" max="3" step="0.1" value="0" style="width: 100px; margin: 0 5px;">
+      <span id="sigma-b-value-blog">0.0</span>
+    </div>
+  </div>
+  
+  <div id="plot-blog" style="width: 100%; height: 450px;"></div>
+</div>
