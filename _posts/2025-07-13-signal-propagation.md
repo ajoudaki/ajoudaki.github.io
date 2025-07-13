@@ -68,7 +68,8 @@ $$
 In the limit $$n_{l+1} \to \infty$$, this converges to its expectation over the random choice of parameters at layer $$l$$:
 $$
 \begin{align}
-\lim_{n_{l+1} \to \infty} \frac{1}{n_{l+1}}\sum_{i=1}^{n_{l+1}} (z_i^{l+1})^2 &= \mathbb{E}_{W^l, b^l}[(z_i^{l+1})^2] \cr
+\lim_{n_{l+1} \to \infty}& \frac{1}{n_{l+1}}\sum_{i=1}^{n_{l+1}} (z_i^{l+1})^2 \cr
+&= \mathbb{E}_{W^l, b^l}[(z_i^{l+1})^2] \cr
 &= \mathbb{E}\left[\left(\sum_j W_{ij}^l h_j^l + b_i^l\right)^2\right] \cr
 &= \sum_j \mathbb{E}[(W_{ij}^l)^2]\mathbb{E}[(h_j^l)^2] + \mathbb{E}[(b_i^l)^2] \quad \text{(iid and zero mean)} \cr
 &= \sum_{j=1}^{n_l} \frac{\sigma_w^2}{n_l} \mathbb{E}[(h_j^l)^2] + \sigma_b^2 \cr
@@ -253,7 +254,8 @@ $$
 **Proof.** We compute the variance of $$\delta^{l-1}$$ assuming the weights $$W^l$$ are independent of the forward-pass weights (a standard approximation).
 $$
 \begin{align}
-\tilde{q}_{aa}^{l-1} = \mathbb{E}[(\delta_j^{l-1})^2] &= \mathbb{E}\left[\left(\phi'(z_j^{l-1}) \sum_i W_{ij}^l \delta_i^l\right)^2\right] \cr
+\tilde{q}_{aa}^{l-1} &= \mathbb{E}[(\delta_j^{l-1})^2] \cr
+&= \mathbb{E}\left[\left(\phi'(z_j^{l-1}) \sum_i W_{ij}^l \delta_i^l\right)^2\right] \cr
 &= \mathbb{E}[(\phi'(z_j^{l-1}))^2] \cdot \mathbb{E}\left[\left(\sum_i W_{ij}^l \delta_i^l\right)^2\right] \quad \text{(independence)} \cr
 &= \mathbb{E}[(\phi')^2] \sum_i \mathbb{E}[(W_{ij}^l)^2] \mathbb{E}[(\delta_i^l)^2] \quad \text{(independence of } W_{ij} \text{)} \cr
 &= \mathbb{E}[(\phi')^2] \sum_{i=1}^{n_l} \frac{\sigma_w^2}{n_l} \tilde{q}_{aa}^l \cr
