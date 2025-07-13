@@ -1,5 +1,5 @@
 ---
-layout: distill
+layout: post 
 title: How do you build 1/3 probability with a fair coin?
 description: 
 giscus_comments: true

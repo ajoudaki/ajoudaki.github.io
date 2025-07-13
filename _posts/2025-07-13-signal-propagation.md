@@ -1,5 +1,5 @@
 ---
-layout: distill
+layout: post 
 title: "Theory of Signal Propagation in Deep Networks"
 description: A review of the most important papers in theory of signal propagation 
 date: 2025-07-13
