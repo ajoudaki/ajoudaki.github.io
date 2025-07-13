@@ -70,7 +70,7 @@ $$
 \begin{align}
 \lim_{n_{l+1} \to \infty} \frac{1}{n_{l+1}}\sum_{i=1}^{n_{l+1}} (z_i^{l+1})^2 &= \mathbb{E}_{W^l, b^l}[(z_i^{l+1})^2] \cr
 &= \mathbb{E}\left[\left(\sum_j W_{ij}^l h_j^l + b_i^l\right)^2\right] \cr
-&= \sum_j \mathbb{E}[(W_{ij}^l)^2]\mathbb{E}[(h_j^l)^2] + \mathbb{E}[(b_i^l)^2] \quad \text{(due to independence and zero means)} \cr
+&= \sum_j \mathbb{E}[(W_{ij}^l)^2]\mathbb{E}[(h_j^l)^2] + \mathbb{E}[(b_i^l)^2] \quad \text{(iid and zero mean)} \cr
 &= \sum_{j=1}^{n_l} \frac{\sigma_w^2}{n_l} \mathbb{E}[(h_j^l)^2] + \sigma_b^2 \cr
 &= \sigma_w^2 \left( \frac{1}{n_l}\sum_{j=1}^{n_l}\mathbb{E}[(h_j^l)^2] \right) + \sigma_b^2
 \end{align}

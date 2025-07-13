@@ -1,7 +1,7 @@
 ---
 layout: distill
-title: "The Dynamics of Signal Norms in Deep Networks"
-description: "A theoretical exploration into the existence of activation functions with multiple norm-Stable fixed points"
+title: "On the global stability of activation variance"
+description: "Can an activation have multiple variance stable points? This post proves it affirmitively. "
 giscus_comments: true
 tags: deep-learning, theory, neural-networks, mean-field
 date: 2025-07-01
