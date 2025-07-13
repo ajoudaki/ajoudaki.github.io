@@ -31,7 +31,7 @@
     <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="https://ajoudaki.github.io/blog/2025/signal-propagation-deep-networks/">
+    <link rel="canonical" href="https://ajoudaki.github.io/blog/2025/signal-propagation/">
     
     <!-- Dark Mode -->
     
@@ -229,7 +229,7 @@ In the limit \(n_{l+1} \to \infty\), this converges to its expectation over the 
 \(\begin{align}
 \lim_{n_{l+1} \to \infty} \frac{1}{n_{l+1}}\sum_{i=1}^{n_{l+1}} (z_i^{l+1})^2 &amp;= \mathbb{E}_{W^l, b^l}[(z_i^{l+1})^2] \cr
 &amp;= \mathbb{E}\left[\left(\sum_j W_{ij}^l h_j^l + b_i^l\right)^2\right] \cr
-&amp;= \sum_j \mathbb{E}[(W_{ij}^l)^2]\mathbb{E}[(h_j^l)^2] + \mathbb{E}[(b_i^l)^2] \quad \text{(due to independence and zero means)} \cr
+&amp;= \sum_j \mathbb{E}[(W_{ij}^l)^2]\mathbb{E}[(h_j^l)^2] + \mathbb{E}[(b_i^l)^2] \quad \text{(iid and zero mean)} \cr
 &amp;= \sum_{j=1}^{n_l} \frac{\sigma_w^2}{n_l} \mathbb{E}[(h_j^l)^2] + \sigma_b^2 \cr
 &amp;= \sigma_w^2 \left( \frac{1}{n_l}\sum_{j=1}^{n_l}\mathbb{E}[(h_j^l)^2] \right) + \sigma_b^2
 \end{align}\)
