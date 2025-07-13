@@ -1,22 +1,18 @@
 ---
 layout: distill
 title: "Theory of Signal Propagation in Deep Networks"
-description: >
-  The ability to train very deep neural networks hinges on a fundamental property: the stable propagation of signals forward through the network and gradients backward. If signals or gradients either vanish or explode exponentially with depth, learning becomes impossible. This report presents a unified theoretical framework that connects network architecture, random matrix theory, and classical kernel methods to understand and control signal propagation in deep networks. It synthesizes the key findings from seminal papers on this topic, presenting them from a first-principles perspective with detailed mathematical derivations to form a self-contained guide.
+description: A review of the most important papers in theory of signal propagation 
 date: 2025-07-13
 tags: deep-learning theory signal-propagation neural-tangent-kernel
 giscus_comments: true
 authors:
   - name: Amir Joudaki
-    url: "https://ajoudaki.github.io"
     affiliations:
       name: ETH Zurich
 
 bibliography: refs.bib
 
 ---
-
-## Introduction
 
 The research journey to understand signal propagation has revealed profound connections between network architecture, random matrix theory, and classical kernel methods. We build this theory from the ground up, starting with the initial problem, moving to a mean-field description of signal propagation, and culminating in the modern understanding of infinite-width networks as kernel machines governed by the Neural Tangent Kernel (NTK).
 
@@ -183,25 +179,26 @@ In the infinite-width limit ($n_{l-1} \to \infty$), the average over neurons bec
 The recurrence relation for the correlation $c^l = q_{ab}^l / \sqrt{q_{aa}^l q_{bb}^l}$ defines a 1D map $c^{l-1} \mapsto c^l = F(c^{l-1})$. The behavior of this map dictates information propagation:
 
 - **Ordered Phase:** If $c \to 1$, different inputs become indistinguishable. The network cannot separate different data points because their representations collapse onto each other.
-- **Chaotic Phase:** If $c \to c^* < 1$, even very similar inputs become decorrelated. The network acts like a random hash function, destroying the input space's topology. It cannot generalize because it doesn't recognize that nearby inputs should have similar outputs.
+- **Chaotic Phase:** If $c \to c^\star < 1$, even very similar inputs become decorrelated. The network acts like a random hash function, destroying the input space's topology. It cannot generalize because it doesn't recognize that nearby inputs should have similar outputs.
 
-The stability of the $c^*=1$ fixed point is controlled by the derivative of the map at $c=1$. This derivative is denoted $\chi_1$.
+The stability of the $c^\star=1$ fixed point is controlled by the derivative of the map at $c=1$. This derivative is denoted $\chi_1$.
 
 **Lemma (The Criticality Parameter $\chi_1$).** The stability of the ordered phase is determined by:
 $$
-\chi_1 = \frac{\partial c^l}{\partial c^{l-1}}\bigg|_{c^{l-1}=1} = \sigma_w^2 \mathbb{E}_{z \sim \mathcal{N}(0, q^*)}[(\phi'(z))^2]
+\chi_1 = \frac{\partial c^l}{\partial c^{l-1}}\bigg|_{c^{l-1}=1} = \sigma_w^2 \mathbb{E}_{z \sim \mathcal{N}(0, q^\star)}[(\phi'(z))^2]
 $$
-where $q^*$ is the fixed-point variance, i.e., $q^* = \lim_{l \to \infty} q_{aa}^l$.
+where $q^\star$ is the fixed-point variance, i.e., $q^\star = \lim_{l \to \infty} q_{aa}^l$.
 
 **Proof.** We linearize the map $c^l = F(c^{l-1})$ around $c^{l-1}=1$. Let $c^{l-1} = 1 - \epsilon$.
-The covariance is $q_{ab}^{l-1} = (1-\epsilon)\sqrt{q_{aa}^{l-1}q_{bb}^{l-1}} \approx (1-\epsilon)q^*$.
-The joint distribution of $(z(x_a), z(x_b))$ is a 2D Gaussian with covariance $\begin{psmallmatrix} q^* & (1-\epsilon)q^* \\ (1-\epsilon)q^* & q^* \end{psmallmatrix}$.
-We can write $z(x_b) = (1-\epsilon)z(x_a) + \sqrt{1-(1-\epsilon)^2} \eta \approx (1-\epsilon)z(x_a) + \sqrt{2\epsilon} \eta$, where $\eta \sim \mathcal{N}(0, q^*)$ is independent of $z(x_a)$.
+The covariance is $q_{ab}^{l-1} = (1-\epsilon)\sqrt{q_{aa}^{l-1}q_{bb}^{l-1}} \approx (1-\epsilon)q^\star$.
+The joint distribution of $(z(x_a), z(x_b))$ is a 2D Gaussian with covariance 
+$$\begin{pmatrix} q^\star & (1-\epsilon)q^\star \cr (1-\epsilon)q^\star & q^\star \end{pmatrix}$$.
+We can write $z(x_b) = (1-\epsilon)z(x_a) + \sqrt{1-(1-\epsilon)^2} \eta \approx (1-\epsilon)z(x_a) + \sqrt{2\epsilon} \eta$, where $\eta \sim \mathcal{N}(0, q^\star)$ is independent of $z(x_a)$.
 We need to compute $q_{ab}^l = \sigma_w^2 \mathbb{E}[\phi(z(x_a))\phi(z(x_b))] + \sigma_b^2$. We expand $\phi(z(x_b))$ around $z(x_a)$:
 $$
 \begin{align}
 \phi(z(x_b)) &\approx \phi(z(x_a) - \epsilon z(x_a) + \sqrt{2\epsilon}\eta) \cr
-&\approx \phi(z(x_a)) + (-\epsilon z(x_a) + \sqrt{2\epsilon}\eta)\phi'(z(x_a)) + \frac{1}{2}(2\epsilon \eta^2)\phi''(z(x_a)) + \dots
+&\approx \phi(z(x_a)) + (-\epsilon z(x_a) + \sqrt{2\epsilon}\eta)\phi'(z(x_a)) + \frac{1}{2}(2\epsilon \eta^2)\phi''(z(x_a)) + \ldots
 \end{align}
 $$
 Plugging this into the expectation for $q_{ab}^l$ and keeping terms up to first order in $\epsilon$:
@@ -210,25 +207,25 @@ $$
 \mathbb{E}[\phi(z_a)\phi(z_b)] &\approx \mathbb{E}[\phi(z_a)^2] - \epsilon\mathbb{E}[z_a \phi(z_a)\phi'(z_a)] + \epsilon\mathbb{E}[\eta^2 \phi(z_a)\phi''(z_a)] \cr
 \end{align}
 $$
-Using Stein's Lemma, $\mathbb{E}[z_a g(z_a)] = q^* \mathbb{E}[g'(z_a)]$, on the second term, and $\mathbb{E}[\eta^2]=q^*$:
+Using Stein's Lemma, $\mathbb{E}[z_a g(z_a)] = q^\star \mathbb{E}[g'(z_a)]$, on the second term, and $\mathbb{E}[\eta^2]=q^\star$:
 $$
 \begin{align}
-\mathbb{E}[z_a \phi(z_a)\phi'(z_a)] &= q^* \mathbb{E}[\phi(z_a)\phi'(z_a) + z_a(\phi'(z_a)^2 + \phi(z_a)\phi''(z_a))] \cr
+\mathbb{E}[z_a \phi(z_a)\phi'(z_a)] &= q^\star \mathbb{E}[\phi(z_a)\phi'(z_a) + z_a(\phi'(z_a)^2 + \phi(z_a)\phi''(z_a))] \cr
 \end{align}
 $$
-This is complicated. A simpler way is to differentiate the integral expression for $q_{ab}^l$ w.r.t $q_{ab}^{l-1}$ and evaluate at $q_{ab}^{l-1}=q^*$.
+This is complicated. A simpler way is to differentiate the integral expression for $q_{ab}^l$ w.r.t $q_{ab}^{l-1}$ and evaluate at $q_{ab}^{l-1}=q^\star$.
 $$
 \begin{align}
 \frac{\partial q_{ab}^l}{\partial q_{ab}^{l-1}} &= \sigma_w^2 \frac{\partial}{\partial q_{ab}^{l-1}} \mathbb{E}[\phi(z_a)\phi(z_b)] = \sigma_w^2 \mathbb{E}[\phi'(z_a)\phi'(z_b)] \cr
 \end{align}
 $$
-At the fixed point $q_{ab}^{l-1}=q^*$, we have $z_a=z_b$, so:
+At the fixed point $q_{ab}^{l-1}=q^\star$, we have $z_a=z_b$, so:
 $$
 \begin{align}
-\frac{\partial q_{ab}^l}{\partial q_{ab}^{l-1}}\bigg|_{q_{ab}^{l-1}=q^*} &= \sigma_w^2 \mathbb{E}[\phi'(z_a)^2] = \chi_1
+\frac{\partial q_{ab}^l}{\partial q_{ab}^{l-1}}\bigg|_{q_{ab}^{l-1}=q^\star} &= \sigma_w^2 \mathbb{E}[\phi'(z_a)^2] = \chi_1
 \end{align}
 $$
-Since $c^l \approx q_{ab}^l/q^*$, we have $\frac{\partial c^l}{\partial c^{l-1}} \approx \frac{\partial q_{ab}^l}{\partial q_{ab}^{l-1}}$, giving the result.
+Since $c^l \approx q_{ab}^l/q^\star$, we have $\frac{\partial c^l}{\partial c^{l-1}} \approx \frac{\partial q_{ab}^l}{\partial q_{ab}^{l-1}}$, giving the result.
 
 **Definition (Phase Classification).**
 $$
@@ -281,21 +278,22 @@ $$
 where the kernel $K^{L+1}$ is the same covariance function derived from the mean-field recurrence.
 
 **Proof.** **Proof Sketch:** The proof is by induction on the layer depth $l$.
-1. **Base Case ($l=1$):** The pre-activations $z^1(x) = W^0 x + b^0$ are a sum of Gaussian random variables (the parameters), weighted by the input $x$. For any finite set of inputs $\{x_1, \dots, x_k\}$, the collection of random vectors $\{z^1(x_1), \dots, z^1(x_k)\}$ is a linear transformation of a single large Gaussian vector of all parameters, and is therefore jointly Gaussian. This satisfies the definition of a GP.
-2. **Inductive Step:** Assume $z^l(x)$ is a GP. Then $h^l(x) = \phi(z^l(x))$ is a non-linearly transformed GP. The next pre-activations are $z^{l+1}(x) = \sum_j W_{ij}^l h_j^l(x) + b_i^l$. This is a sum over $n_l$ terms. As $n_l \to \infty$, the Central Limit Theorem implies that for any finite set of inputs, the pre-activations $\{z^{l+1}(x_1), \dots, z^{l+1}(x_k)\}$ will be jointly Gaussian. Thus, $z^{l+1}(x)$ is also a GP.
+1. **Base Case ($l=1$):** The pre-activations $z^1(x) = W^0 x + b^0$ are a sum of Gaussian random variables (the parameters), weighted by the input $x$. For any finite set of inputs $\{x_1, \ldots, x_k\}$, the collection of random vectors $\{z^1(x_1), \ldots, z^1(x_k)\}$ is a linear transformation of a single large Gaussian vector of all parameters, and is therefore jointly Gaussian. This satisfies the definition of a GP.
+2. **Inductive Step:** Assume $z^l(x)$ is a GP. Then $h^l(x) = \phi(z^l(x))$ is a non-linearly transformed GP. The next pre-activations are $z^{l+1}(x) = \sum_j W_{ij}^l h_j^l(x) + b_i^l$. This is a sum over $n_l$ terms. As $n_l \to \infty$, the Central Limit Theorem implies that for any finite set of inputs, the pre-activations $\{z^{l+1}(x_1), \ldots, z^{l+1}(x_k)\}$ will be jointly Gaussian. Thus, $z^{l+1}(x)$ is also a GP.
 
 The covariance function of this process is precisely the object $q_{ab}^l$ we tracked in the mean-field theory, which is why it is called a GP kernel. A function $K(x,x')$ is a valid covariance kernel if the Gram matrix $[K(x_i, x_j)]_{i,j}$ is positive semi-definite for any set of points $\{x_i\}$. This holds for the NNGP kernel because it is constructed from expectations of outer products, $\mathbb{E}[f(x)f(x')^T]$, which are inherently positive semi-definite.
 
 ### Bayesian Prediction with the NNGP
 
-This equivalence allows for fully Bayesian inference without ever training a network. Given a training set $\mathcal{D} = \{(x_i, t_i)\}_{i=1}^n$ and assuming Gaussian observation noise $\epsilon \sim \mathcal{N}(0, \sigma_\epsilon^2)$, we can predict the output $z^*$ for a new test point $x^*$. The joint distribution of training targets and the test prediction is Gaussian. The predictive distribution $P(z^* | \mathcal{D}, x^*)$ is also Gaussian, with a posterior mean and variance given by:
+This equivalence allows for fully Bayesian inference without ever training a network. Given a training set 
+$\mathcal{D} = \{(x_i, t_i)\}^n_{i=1}$ and assuming Gaussian observation noise $\epsilon \sim \mathcal{N}(0, \sigma_\epsilon^2)$, we can predict the output $z^\star$ for a new test point $x^\star$. The joint distribution of training targets and the test prediction is Gaussian. The predictive distribution $P(z^\star | \mathcal{D}, x^\star)$ is also Gaussian, with a posterior mean and variance given by:
 $$
 \begin{align}
-\overline{\mu} &= K_{x^*,\mathcal{D}}(K_{\mathcal{D},\mathcal{D}}+\sigma_{\epsilon}^{2}\mathbb{I}_{n})^{-1}t \cr
+\overline{\mu} &= K_{x^\star,\mathcal{D}}(K_{\mathcal{D},\mathcal{D}}+\sigma_{\epsilon}^{2}\mathbb{I}_{n})^{-1}t \cr
 \overline{K} &= K_{x^{*},x^{*}} - K_{x^{*},\mathcal{D}}(K_{\mathcal{D},\mathcal{D}}+\sigma_{\epsilon}^{2}\mathbb{I}_{n})^{-1}K_{x^{*},\mathcal{D}}^{T}
 \end{align}
 $$
-**Intuition:** The predicted mean $\overline{\mu}$ is a weighted average of the training targets $t$. The weights are computed by solving a linear system that asks: "How much does the output at each training point $x_j$ influence the output at the test point $x^*$?" This influence is measured by the kernel $K(x^*, x_j)$, while correcting for redundancies between the training points themselves (the $(K_{\mathcal{D},\mathcal{D}} + \sigma_\epsilon^2 I)^{-1}$ term). The posterior variance $\overline{K}$ measures our uncertainty; it starts at the prior variance $K_{x^*,x^*}$ and is reduced by an amount corresponding to the information gained from the training data.
+**Intuition:** The predicted mean $\overline{\mu}$ is a weighted average of the training targets $t$. The weights are computed by solving a linear system that asks: "How much does the output at each training point $x_j$ influence the output at the test point $x^\star$?" This influence is measured by the kernel $K(x^\star, x_j)$, while correcting for redundancies between the training points themselves (the $(K_{\mathcal{D},\mathcal{D}} + \sigma_\epsilon^2 I)^{-1}$ term). The posterior variance $\overline{K}$ measures our uncertainty; it starts at the prior variance $K_{x^\star,x^\star}$ and is reduced by an amount corresponding to the information gained from the training data.
 
 ## The Neural Tangent Kernel: Dynamics of Training
 
@@ -363,9 +361,9 @@ where $K^{(L+1)}$ is the NNGP kernel and $\dot{K}^{(L+1)}(x,x') = \mathbb{E}_{z 
    &= \delta_{kk'} \left( \sum_{i=1}^{n_L} \frac{1}{n_L} h^L_i(x)h^L_i(x') + 1 \right)
    \end{align}
    $$
-   In the limit $n_L \to \infty$, the sum becomes an expectation by the Law of Large Numbers. Assuming $\sigma_b^2=1$ for this part of the kernel (or generally, $\beta^2$ as in the original paper), this term converges to $\delta_{kk'} K^{(L+1)}(x,x')$. This is the NNGP kernel.
+   In the limit $n_L \to \infty$, the sum becomes an expectation by the Law of Large Numbers. Assuming $\sigma^2_b=1$ for this part of the kernel (or generally, $\beta^2$ as in the original paper), this term converges to $\delta_{kk'} K^{(L+1)}(x,x')$. This is the NNGP kernel.
    
-3. **Lower Layers Contribution:** Now consider the gradient with respect to a parameter $\tilde{\theta}_p$ in the lower layers. By the chain rule:
+3. **Lower Layers Contribution:** Now consider the gradient with respect to a parameter $\tilde\theta_p$ in the lower layers. By the chain rule:
    $$
    \nabla_{\tilde{\theta}_p} f_k(x) = \frac{\partial f_k}{\partial h^L} \frac{\partial h^L}{\partial z^L} \frac{\partial z^L}{\partial \tilde{\theta}_p} = \sum_{i=1}^{n_L} \frac{1}{\sqrt{n_L}} W_{ki}^L \phi'(z_i^L(x)) \nabla_{\tilde{\theta}_p} z_i^L(x)
    $$
@@ -376,7 +374,7 @@ where $K^{(L+1)}$ is the NNGP kernel and $\dot{K}^{(L+1)}(x,x') = \mathbb{E}_{z 
    &= \frac{1}{n_L} \sum_{i,j} W_{ki}^L W_{k'j}^L \phi'(z_i^L(x))\phi'(z_j^L(x')) \left( \sum_p \nabla_p z_i^L(x) \cdot \nabla_p z_j^L(x') \right)
    \end{align}
    $$
-   In the infinite-width limit, the weights $W^L$ are independent of the lower-layer gradients. Also, $\nabla_p z_i^L$ and $\nabla_p z_j^L$ are independent for $i \neq j$. So the sum collapses to $i=j$ and $\mathbb{E}[W_{ki}^L W_{k'j}^L] = \delta_{kk'} \delta_{ij} \sigma_w^2/n_L$. The term $\sum_p (\nabla_p z_i^L(x) \cdot \nabla_p z_i^L(x'))$ is the NTK of the $L$-layer subnetwork, $\Theta^{(L)}$. Taking the expectation over the random variables at layer $L$, we get:
+   In the infinite-width limit, the weights $W^L$ are independent of the lower-layer gradients. Also, $\nabla_p z^L_i$ and $\nabla_p z^L_i$ are independent for $i \neq j$. So the sum collapses to $i=j$ and $\mathbb{E}[W^L_{ki} W^L_{k'j}] = \delta_{kk'} \delta_{ij} \sigma^2_w/n_L$. The term $\sum_p (\nabla_p z^L_i(x) \cdot \nabla_p z^L_i(x'))$ is the NTK of the $L$-layer subnetwork, $\Theta^{(L)}$. Taking the expectation over the random variables at layer $L$, we get:
    $$
     \delta_{kk'} \left(\frac{1}{n_L} \sum_i \frac{\sigma_w^2}{n_L} \Theta^{(L)}(x,x') \phi'(z_i^L(x))\phi'(z_i^L(x'))\right) \xrightarrow{n_L \to \infty} \delta_{kk'} \sigma_w^2 \Theta_\infty^{(L)}(x,x') \dot{K}^{(L+1)}(x,x')
    $$
