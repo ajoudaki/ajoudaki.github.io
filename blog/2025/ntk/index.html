@@ -179,7 +179,21 @@
       <d-byline></d-byline>
 
       <d-article>
-        
+        <d-contents>
+          <nav class="l-text figcaption">
+          <h3>Contents</h3>
+            <div><a href="#setup-the-infinite-width-mean-field-regime">Setup: The Infinite-Width (Mean-Field) regime</a></div>
+            <div><a href="#kernel-in-the-mean-field-regime">Kernel in the Mean Field Regime</a></div>
+            <div><a href="#recursion-for-the-mean-influence-m-k-l-l">Recursion for the Mean Influence M(k,l,L)</a></div>
+            <div><a href="#induction-basis-for-m">Induction Basis for M</a></div>
+            <div><a href="#the-variance-of-kernel-shifts">The Variance of Kernel Shifts</a></div>
+            <div><a href="#putting-it-all-together">Putting It All Together</a></div>
+            <div><a href="#a-more-nuanced-first-moment-calculation">A More Nuanced First Moment Calculation</a></div>
+            <div><a href="#our-refined-strategy">Our refined Strategy</a></div>
+            <div><a href="#concluding-remarks">Concluding Remarks</a></div>
+            
+          </nav>
+        </d-contents>
 
         <p>Neural Tangent Kernel or NTK by <a class="citation" href="#jacot2018">(Jacot et al., 2018)</a> is arguably of the first very deep theoretical insights about neural networks in the mean field (infinitely wide) regime. While nowadays its importance has been surpassed by the feature learning (muP) regime, it is nevertheless one of the classical papers that are worth fully understanding for any researcher in the deep learning community with theoretical inclications. However, I have heard from virtually everyone I have talked that that the paper is very hard if not impossible to read, which is of course a big pity. To be very honest, my initial attempt at reading the paper was also met with a lot of hickups. So at some point, I decided to “reinvent the wheel” by proving essentially all the key results of the paper, without reading the paper. This note is the result of my efforts. While there might be some mistakes here and there (which I would be thankful if your report to me! ), I believe the method shown here replicates all the technical results of the NTK paper.  The key aspect of these derivations is that they are completely from scratch. I do not assume anything beyond a few basic mathematical facts, namely the law of large numers, CLT, and a few tricks about expectation of Gaussians (Stein lemma).</p>
 
@@ -643,7 +657,7 @@ C^{k+1}_{\phi',\phi'} &amp; \frac{1}{d_k} C^{k+1}_{\phi,\phi} (\mu^{k+1}_{\phi''
         <d-citation-list></d-citation-list>
       </d-appendix>
 
-      <d-bibliography src="/assets/bibliography/"></d-bibliography><div id="giscus_thread" style="max-width: 800px; margin: 0 auto;">
+      <d-bibliography src="/assets/bibliography/2018-12-22-distill.bib"></d-bibliography><div id="giscus_thread" style="max-width: 800px; margin: 0 auto;">
   <script>
     let giscusTheme = localStorage.getItem("theme");
     let giscusAttributes = {
