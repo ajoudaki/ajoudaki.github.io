@@ -258,9 +258,9 @@ b^{l}_i &amp;\sim \mathcal{N}(0, \sigma_b^2)
 <p><strong>Definition (Kernel Shift).</strong> The first, second, and variance of the kernel shift are defined as:</p>
 
 \[\begin{align}
-M_{k,l} &amp;:= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j} \right] \quad \text{(first moment)}\\ 
-Q_{k,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}  \mathbb{E}\left[\left(\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j}\right)^2\right] \quad \text{(second moment)}\\
-V_{k,l} &amp;:= Q_{k,l}  - M_{k,l}^2 \quad \text{(variance)}
+M_{k,l} &amp;:= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j} \right] &amp;&amp;\text{(first moment)}\\ 
+Q_{k,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}  \mathbb{E}\left[\left(\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j}\right)^2\right] &amp;&amp; \text{(second moment)}\\
+V_{k,l} &amp;:= Q_{k,l}  - M_{k,l}^2 &amp;&amp; \text{(variance)}
 \end{align}\]
 
 <p>Intuitively, we can understand these two terms as the average shift in representation of layer $l$, in expectation ($M$), and variance ($V$).</p>
