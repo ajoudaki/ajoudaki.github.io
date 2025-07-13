@@ -1,5 +1,5 @@
 ---
-layout: post 
+layout: distill 
 title: "Theory of Signal Propagation in Deep Networks"
 description: A review of the most important papers in theory of signal propagation 
 date: 2025-07-13
@@ -13,11 +13,21 @@ authors:
 
 bibliography: refs.bib
 
+toc:
+  - name: "Setup"
+  - name: "The Foundational Problem: Vanishing and Exploding Gradients"
+    subsections:
+      - name: "LSTM: A Solution for Recurrent Networks"
+      - name: "Glorot & Bengio Initialization for Feedforward Networks"
+  - name: "Deep Signal Propagation and the Edge of Chaos"
+  - name: "Bayesian Prediction with the NNGP"
+  - name: "The Neural Tangent Kernel: Dynamics of Training"
+
 ---
 
-The research journey to understand signal propagation has revealed profound connections between network architecture, random matrix theory, and classical kernel methods. We build this theory from the ground up, starting with the initial problem, moving to a mean-field description of signal propagation, and culminating in the modern understanding of infinite-width networks as kernel machines governed by the Neural Tangent Kernel (NTK).
+### Setup
 
-### Unified Notation
+The research journey to understand signal propagation has revealed profound connections between network architecture, random matrix theory, and classical kernel methods. We build this theory from the ground up, starting with the initial problem, moving to a mean-field description of signal propagation, and culminating in the modern understanding of infinite-width networks as kernel machines governed by the Neural Tangent Kernel (NTK).
 
 Let's establish a consistent set of symbols for our discussion.
 
