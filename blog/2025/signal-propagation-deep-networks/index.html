@@ -241,15 +241,15 @@ As we also take \(n_l \to \infty\), the term in the parenthesis becomes an expec
 
 <h3 id="lstm-a-solution-for-recurrent-networks">LSTM: A Solution for Recurrent Networks</h3>
 
-<p>In recurrent neural networks (RNNs), which can be seen as very deep networks unfolded in time, the problem is particularly acute. The backpropagated error signal at a given time step is a product of many Jacobian matrices from future time steps. As analyzed by Hochreiter (1991), this product causes the error to either vanish or blow up exponentially.</p>
+<p>In recurrent neural networks (RNNs), which can be seen as very deep networks unfolded in time, the problem is particularly acute. The backpropagated error signal at a given time step is a product of many Jacobian matrices from future time steps. As analyzed by <a class="citation" href="#hochreiter1991">(Hochreiter, 1991)</a>, this product causes the error to either vanish or blow up exponentially.</p>
 
-<p><strong>Remark (Constant Error Carousel).</strong> The <strong>Long Short-Term Memory (LSTM)</strong> network was introduced by Hochreiter &amp; Schmidhuber (1997) to solve this exact problem. Its core innovation is the <strong>Constant Error Carousel (CEC)</strong> – a linear unit with a fixed self-connection of weight 1.0. The internal state updates additively: \(s_c(t) = s_c(t-1) + \text{input}\), ensuring that the derivative of the state with respect to its previous state is one:
+<p><strong>Remark (Constant Error Carousel).</strong> The <strong>Long Short-Term Memory (LSTM)</strong> network was introduced by <a class="citation" href="#hochreiter1997">(Hochreiter &amp; Schmidhuber, 1997)</a> to solve this exact problem. Its core innovation is the <strong>Constant Error Carousel (CEC)</strong> – a linear unit with a fixed self-connection of weight 1.0. The internal state updates additively: \(s_c(t) = s_c(t-1) + \text{input}\), ensuring that the derivative of the state with respect to its previous state is one:
 \(\frac{\partial s_c(t)}{\partial s_c(t-1)} = 1\)
 This guarantees that error can flow backward through many time steps without its magnitude being scaled up or down, thus preventing the vanishing and exploding gradient problem. Gating mechanisms are then introduced to control the flow of information into and out of this stable memory cell.</p>
 
 <h3 id="glorot--bengio-initialization-for-feedforward-networks">Glorot &amp; Bengio Initialization for Feedforward Networks</h3>
 
-<p>For feedforward networks, a similar but distinct problem exists. Glorot &amp; Bengio (2010) analyzed how the variance of activations and gradients changes as they propagate through the layers. The key idea is to maintain stable training by ensuring that the variance of outputs of each layer equals the variance of its inputs.</p>
+<p>For feedforward networks, a similar but distinct problem exists. <a class="citation" href="#glorot2010">(Glorot &amp; Bengio, 2010)</a> analyzed how the variance of activations and gradients changes as they propagate through the layers. The key idea is to maintain stable training by ensuring that the variance of outputs of each layer equals the variance of its inputs.</p>
 
 <p>Consider a network in the linear regime of its activation functions (\(\phi'(z) \approx 1\)).</p>
 
@@ -271,7 +271,7 @@ For a uniform distribution \(U[-a, a]\), this corresponds to \(a = \sqrt{\frac{6
 
 <h2 id="deep-signal-propagation-and-the-edge-of-chaos">Deep Signal Propagation and the Edge of Chaos</h2>
 
-<p>The theory developed by Schoenholz et al. (2017) moved beyond variance-based heuristics to develop a precise mean-field theory for wide, randomly initialized networks.</p>
+<p>The theory developed by <a class="citation" href="#schoenholz2017">(Schoenholz et al., 2017)</a> moved beyond variance-based heuristics to develop a precise mean-field theory for wide, randomly initialized networks.</p>
 
 <h3 id="mean-field-theory-for-signal-covariance">Mean-Field Theory for Signal Covariance</h3>
 
@@ -398,7 +398,7 @@ This reveals a beautiful duality:</p>
 
 <h2 id="the-neural-network-gaussian-process-nngp">The Neural Network Gaussian Process (NNGP)</h2>
 
-<p>As first noted by Neal (1994) and rigorously extended by Lee et al. (2018), the mean-field theory has a profound consequence: in the infinite-width limit, the entire network function becomes a draw from a Gaussian Process.</p>
+<p>As first noted by <a class="citation" href="#neal1994">(Neal, 1994)</a> and rigorously extended by <a class="citation" href="#lee2018">(Lee et al., 2018)</a>, the mean-field theory has a profound consequence: in the infinite-width limit, the entire network function becomes a draw from a Gaussian Process.</p>
 
 <p><strong>Definition (Gaussian Process (GP)).</strong> A Gaussian Process is a collection of random variables, any finite number of which have a joint Gaussian distribution. A GP is completely specified by its mean function \(\mu(x) = \mathbb{E}[f(x)]\) and its covariance (or kernel) function \(K(x, x') = \mathbb{E}[(f(x)-\mu(x))(f(x')-\mu(x'))]\).</p>
 
@@ -428,7 +428,7 @@ where the kernel \(K^{L+1}\) is the same covariance function derived from the me
 
 <h2 id="the-neural-tangent-kernel-dynamics-of-training">The Neural Tangent Kernel: Dynamics of Training</h2>
 
-<p>The GP correspondence describes networks at initialization. Jacot et al. (2018) answered the crucial question: what happens during training?</p>
+<p>The GP correspondence describes networks at initialization. <a class="citation" href="#jacot2018">(Jacot et al., 2018)</a> answered the crucial question: what happens during training?</p>
 
 <h3 id="from-gradient-descent-to-kernel-gradient-descent">From Gradient Descent to Kernel Gradient Descent</h3>
 
@@ -516,6 +516,303 @@ In the infinite-width limit, the weights \(W^L\) are independent of the lower-la
 </ol>
 
 <p>The hyperparameters (\(\sigma_w^2, \sigma_b^2\)) that place a network at the “edge of chaos” are precisely those that define a well-behaved, non-degenerate kernel, allowing effective learning and generalization through structured exploration of function space. This progression from heuristic fixes to a complete kernel description represents one of the most significant theoretical advances in modern deep learning, bridging the gap between the practical art of training neural networks and their rigorous mathematical theory.</p>
+
+<h2 id="references">References</h2>
+
+<ol class="bibliography">
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="hochreiter1991" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Untersuchungen zu dynamischen neuronalen Netzen</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Sepp Hochreiter</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Diploma thesis, Institut für Informatik, Lehrstuhl Prof. Brauer, Technische Universität München</em>, 1991
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="hochreiter1997" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Long short-term memory</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Sepp Hochreiter, and Jürgen Schmidhuber</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Neural computation</em>, 1997
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="glorot2010" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Understanding the difficulty of training deep feedforward neural networks</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Xavier Glorot, and Yoshua Bengio</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>In Proceedings of the thirteenth international conference on artificial intelligence and statistics</em>, 2010
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="schoenholz2017" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Deep information propagation</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Samuel S Schoenholz, Justin Gilmer, Surya Ganguli, and
+          <span class="more-authors" title="click to view 1 more author" onclick="
+                var element = $(this);
+                element.attr('title', '');
+                var more_authors_text = element.text() == '1 more author' ? 'Jascha Sohl-Dickstein' : '1 more author';
+                var cursorPosition = 0;
+                var textAdder = setInterval(function(){
+                  element.text(more_authors_text.substring(0, cursorPosition + 1));
+                  if (++cursorPosition == more_authors_text.length){
+                    clearInterval(textAdder);
+                  }
+              }, '10');
+              ">1 more author</span>
+</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>arXiv preprint arXiv:1611.01232</em>, 2017
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="neal1994" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Priors for infinite networks</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Radford M Neal</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          1994
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="lee2018" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Deep neural networks as gaussian processes</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Jaehoon Lee, Yasaman Bahri, Roman Novak, and
+          <span class="more-authors" title="click to view 3 more authors" onclick="
+                var element = $(this);
+                element.attr('title', '');
+                var more_authors_text = element.text() == '3 more authors' ? 'Samuel S Schoenholz, Jeffrey Pennington, Jascha Sohl-Dickstein' : '3 more authors';
+                var cursorPosition = 0;
+                var textAdder = setInterval(function(){
+                  element.text(more_authors_text.substring(0, cursorPosition + 1));
+                  if (++cursorPosition == more_authors_text.length){
+                    clearInterval(textAdder);
+                  }
+              }, '10');
+              ">3 more authors</span>
+</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>arXiv preprint arXiv:1711.00165</em>, 2018
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="jacot2018" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Neural tangent kernel: Convergence and generalization in neural networks</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Arthur Jacot, Franck Gabriel, and Clément Hongler</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Advances in neural information processing systems</em>, 2018
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+</ol>
 
       </d-article>
 
