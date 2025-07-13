@@ -181,13 +181,13 @@
       <d-article>
         
 
-        <p>This document presents a rigorous derivation of the main Neural Tangent Kernel (NTK) results from first principles. We analyze the infinite-width behavior of fully-connected neural networks and derive precise conditions under which different layers exhibit frozen or evolving dynamics during training. The analysis includes subtle arguments about expectation, pairing, and leading-order analysis that are crucial for understanding the NTK regime.</p>
+        <p>Neural Tangent Kernel or NTK by <a class="citation" href="#jacot2018">(Jacot et al., 2018)</a> is arguably of the first very deep theoretical insights about neural networks in the mean field (infinitely wide) regime. While nowadays its importance has been surpassed by the feature learning (muP) regime, it is nevertheless one of the classical papers that are worth fully understanding for any researcher in the deep learning community with theoretical inclications. However, I have heard from virtually everyone I have talked that that the paper is very hard if not impossible to read, which is of course a big pity. To be very honest, my initial attempt at reading the paper was also met with a lot of hickups. So at some point, I decided to “reinvent the wheel” by proving essentially all the key results of the paper, without reading the paper. This note is the result of my efforts. While there might be some mistakes here and there (which I would be thankful if your report to me! ), I believe the method shown here replicates all the technical results of the NTK paper.  The key aspect of these derivations is that they are completely from scratch. I do not assume anything beyond a few basic mathematical facts, namely the law of large numers, CLT, and a few tricks about expectation of Gaussians (Stein lemma).</p>
 
-<h3 id="setup-the-infinite-width-network-and-kernel-dynamics">Setup: The Infinite-Width Network and Kernel Dynamics</h3>
+<p>Towards the end of the document there is an exposition is my effort to verify or correct an assumption that I had made in my first attempt about independence of backwards from forwards. These effects manifest themselves in our algebraic framework as “non-diagonal” terms in the backward kernel (meaning interactions between backwards that correspond to different units). These are exactly the terms that we will ignore if we assume independence of forward and backward, which allows us to use the expectation of product rule and get a very simple straightforward solution. The issue that I originally thought it exists was that the number of these interactiosn could be of the same order as they are decaying, meaning that they could contribute significanlty to the backward kernel. The calculations, which went admittedly a lot longer than I had hoped for, showed the opposite. Meaning, they proved these corrections are in fact an order of magnitude smller than the main terms. I still kept these notes for anyone interested. But feel free to ignore them if not.</p>
+
+<h3 id="setup-the-infinite-width-mean-field-regime">Setup: The Infinite-Width (Mean-Field) regime</h3>
 
 <p>We begin by defining the precise mathematical setting for our analysis.</p>
-
-<h3 id="network-loss-and-parameters">Network, Loss, and Parameters</h3>
 
 <p>We consider a fully-connected neural network with an input layer, \(L-1\) hidden layers with widths \(n_1,\dots, n_{L-1}\), and a scalar output layer \(n_L=1\), for a total of \(L\) layers of activations.</p>
 
