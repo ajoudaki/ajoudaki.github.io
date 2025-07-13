@@ -371,7 +371,8 @@ where $$K^{(L+1)}$$ is the NNGP kernel and $$\dot{K}^{(L+1)}(x,x') = \mathbb{E}_
    The dot product for the $$(k,k')$$ entry of the NTK is:
    $$
    \begin{align}
-   [\nabla_{\tilde{\theta}} f(x) \cdot \nabla_{\tilde{\theta}} f(x')]_{kk'} &= \sum_p \left(\sum_i \frac{W_{ki}^L}{\sqrt{n_L}}\phi'(z_i^L(x))\nabla_p z_i^L(x)\right) \left(\sum_j \frac{W_{k'j}^L}{\sqrt{n_L}}\phi'(z_j^L(x'))\nabla_p z_j^L(x')\right) \cr
+   [\nabla_{\tilde{\theta}} &f(x) \cdot \nabla_{\tilde{\theta}} f(x')]_{kk'}\cr
+    &= \sum_p \left(\sum_i \frac{W_{ki}^L}{\sqrt{n_L}}\phi'(z_i^L(x))\nabla_p z_i^L(x)\right) \left(\sum_j \frac{W_{k'j}^L}{\sqrt{n_L}}\phi'(z_j^L(x'))\nabla_p z_j^L(x')\right) \cr
    &= \frac{1}{n_L} \sum_{i,j} W_{ki}^L W_{k'j}^L \phi'(z_i^L(x))\phi'(z_j^L(x')) \left( \sum_p \nabla_p z_i^L(x) \cdot \nabla_p z_j^L(x') \right)
    \end{align}
    $$
