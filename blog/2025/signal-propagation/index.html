@@ -488,7 +488,8 @@ In the limit \(n_L \to \infty\), the sum becomes an expectation by the Law of La
 \(\nabla_{\tilde{\theta}_p} f_k(x) = \frac{\partial f_k}{\partial h^L} \frac{\partial h^L}{\partial z^L} \frac{\partial z^L}{\partial \tilde{\theta}_p} = \sum_{i=1}^{n_L} \frac{1}{\sqrt{n_L}} W_{ki}^L \phi'(z_i^L(x)) \nabla_{\tilde{\theta}_p} z_i^L(x)\)
 The dot product for the \((k,k')\) entry of the NTK is:
 \(\begin{align}
-[\nabla_{\tilde{\theta}} f(x) \cdot \nabla_{\tilde{\theta}} f(x')]_{kk'} &amp;= \sum_p \left(\sum_i \frac{W_{ki}^L}{\sqrt{n_L}}\phi'(z_i^L(x))\nabla_p z_i^L(x)\right) \left(\sum_j \frac{W_{k'j}^L}{\sqrt{n_L}}\phi'(z_j^L(x'))\nabla_p z_j^L(x')\right) \cr
+[\nabla_{\tilde{\theta}} &amp;f(x) \cdot \nabla_{\tilde{\theta}} f(x')]_{kk'}\cr
+ &amp;= \sum_p \left(\sum_i \frac{W_{ki}^L}{\sqrt{n_L}}\phi'(z_i^L(x))\nabla_p z_i^L(x)\right) \left(\sum_j \frac{W_{k'j}^L}{\sqrt{n_L}}\phi'(z_j^L(x'))\nabla_p z_j^L(x')\right) \cr
 &amp;= \frac{1}{n_L} \sum_{i,j} W_{ki}^L W_{k'j}^L \phi'(z_i^L(x))\phi'(z_j^L(x')) \left( \sum_p \nabla_p z_i^L(x) \cdot \nabla_p z_j^L(x') \right)
 \end{align}\)
 In the infinite-width limit, the weights \(W^L\) are independent of the lower-layer gradients. Also, \(\nabla_p z^L_i\) and \(\nabla_p z^L_i\) are independent for \(i \neq j\). So the sum collapses to \(i=j\) and \(\mathbb{E}[W^L_{ki} W^L_{k'j}] = \delta_{kk'} \delta_{ij} \sigma^2_w/n_L\). The term \(\sum_p (\nabla_p z^L_i(x) \cdot \nabla_p z^L_i(x'))\) is the NTK of the \(L\)-layer subnetwork, \(\Theta^{(L)}\). Taking the expectation over the random variables at layer \(L\), we get:
