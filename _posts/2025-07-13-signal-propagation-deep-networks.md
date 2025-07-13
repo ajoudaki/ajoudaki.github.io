@@ -5,6 +5,7 @@ description: A review of the most important papers in theory of signal propagati
 date: 2025-07-13
 tags: deep-learning theory signal-propagation neural-tangent-kernel
 giscus_comments: true
+related_publications: true
 authors:
   - name: Amir Joudaki
     affiliations:
@@ -82,9 +83,9 @@ The earliest challenge in training deep networks was the instability of the back
 
 ### LSTM: A Solution for Recurrent Networks
 
-In recurrent neural networks (RNNs), which can be seen as very deep networks unfolded in time, the problem is particularly acute. The backpropagated error signal at a given time step is a product of many Jacobian matrices from future time steps. As analyzed by Hochreiter (1991), this product causes the error to either vanish or blow up exponentially.
+In recurrent neural networks (RNNs), which can be seen as very deep networks unfolded in time, the problem is particularly acute. The backpropagated error signal at a given time step is a product of many Jacobian matrices from future time steps. As analyzed by {% cite hochreiter1991 %}, this product causes the error to either vanish or blow up exponentially.
 
-**Remark (Constant Error Carousel).** The **Long Short-Term Memory (LSTM)** network was introduced by Hochreiter & Schmidhuber (1997) to solve this exact problem. Its core innovation is the **Constant Error Carousel (CEC)** -- a linear unit with a fixed self-connection of weight 1.0. The internal state updates additively: $$s_c(t) = s_c(t-1) + \text{input}$$, ensuring that the derivative of the state with respect to its previous state is one:
+**Remark (Constant Error Carousel).** The **Long Short-Term Memory (LSTM)** network was introduced by {% cite hochreiter1997 %} to solve this exact problem. Its core innovation is the **Constant Error Carousel (CEC)** -- a linear unit with a fixed self-connection of weight 1.0. The internal state updates additively: $$s_c(t) = s_c(t-1) + \text{input}$$, ensuring that the derivative of the state with respect to its previous state is one:
 $$
 \frac{\partial s_c(t)}{\partial s_c(t-1)} = 1
 $$
@@ -92,7 +93,7 @@ This guarantees that error can flow backward through many time steps without its
 
 ### Glorot & Bengio Initialization for Feedforward Networks
 
-For feedforward networks, a similar but distinct problem exists. Glorot & Bengio (2010) analyzed how the variance of activations and gradients changes as they propagate through the layers. The key idea is to maintain stable training by ensuring that the variance of outputs of each layer equals the variance of its inputs.
+For feedforward networks, a similar but distinct problem exists. {% cite glorot2010 %} analyzed how the variance of activations and gradients changes as they propagate through the layers. The key idea is to maintain stable training by ensuring that the variance of outputs of each layer equals the variance of its inputs.
 
 Consider a network in the linear regime of its activation functions ($$\phi'(z) \approx 1$$).
 
@@ -124,7 +125,7 @@ For a uniform distribution $$U[-a, a]$$, this corresponds to $$a = \sqrt{\frac{6
 
 ## Deep Signal Propagation and the Edge of Chaos
 
-The theory developed by Schoenholz et al. (2017) moved beyond variance-based heuristics to develop a precise mean-field theory for wide, randomly initialized networks.
+The theory developed by {% cite schoenholz2017 %} moved beyond variance-based heuristics to develop a precise mean-field theory for wide, randomly initialized networks.
 
 ### Mean-Field Theory for Signal Covariance
 
@@ -267,7 +268,7 @@ This reveals a beautiful duality:
 
 ## The Neural Network Gaussian Process (NNGP)
 
-As first noted by Neal (1994) and rigorously extended by Lee et al. (2018), the mean-field theory has a profound consequence: in the infinite-width limit, the entire network function becomes a draw from a Gaussian Process.
+As first noted by {% cite neal1994 %} and rigorously extended by {% cite lee2018 %}, the mean-field theory has a profound consequence: in the infinite-width limit, the entire network function becomes a draw from a Gaussian Process.
 
 **Definition (Gaussian Process (GP)).** A Gaussian Process is a collection of random variables, any finite number of which have a joint Gaussian distribution. A GP is completely specified by its mean function $$\mu(x) = \mathbb{E}[f(x)]$$ and its covariance (or kernel) function $$K(x, x') = \mathbb{E}[(f(x)-\mu(x))(f(x')-\mu(x'))]$$.
 
@@ -297,7 +298,7 @@ $$
 
 ## The Neural Tangent Kernel: Dynamics of Training
 
-The GP correspondence describes networks at initialization. Jacot et al. (2018) answered the crucial question: what happens during training?
+The GP correspondence describes networks at initialization. {% cite jacot2018 %} answered the crucial question: what happens during training?
 
 ### From Gradient Descent to Kernel Gradient Descent
 
@@ -393,3 +394,7 @@ This theoretical journey provides a coherent narrative for understanding deep le
 3. **Kernel equivalence results** show that this physical theory has profound mathematical consequences. In the infinite-width limit, neural networks become equivalent to well-understood statistical models: they are Gaussian Processes at initialization and perform kernel regression with the Neural Tangent Kernel during training.
 
 The hyperparameters ($$\sigma_w^2, \sigma_b^2$$) that place a network at the "edge of chaos" are precisely those that define a well-behaved, non-degenerate kernel, allowing effective learning and generalization through structured exploration of function space. This progression from heuristic fixes to a complete kernel description represents one of the most significant theoretical advances in modern deep learning, bridging the gap between the practical art of training neural networks and their rigorous mathematical theory.
+
+## References
+
+{% bibliography --cited %}
