@@ -14,17 +14,16 @@ authors:
 bibliography: refs.bib
 
 toc:
-  - name: "Why Mean Field?"
-  - name: "Preliminary"  
-  - ame: "LSTM: A Solution for Recurrent Networks"
-  - name: "Glorot & Bengio Initialization for Feedforward Networks"
-  - name: "Deep Signal Propagation and the Edge of Chaos"
-  - name: "Bayesian Prediction with the NNGP"
-  - name: "The Neural Tangent Kernel: Dynamics of Training"
+  - name: "Intro"
+  - name: "LSTM"
+  - name: "Glorot initialization"
+  - name: "Deep Signal Propagation"
+  - name: "Neural Net Gaussian Process (NNGP)"
+  - name: "NTK"
 
 ---
 
-### Intro
+## Intro
 
 This post is dedicated to a review of the most classical results in theory of deep neural networks from the point of view of infintely wide networks, aka the mean field regime. Mean-field study of neural networks focuses on studying the macro-statistical properties of neural networks, when width or number of features converges to infinity. This approach originates from statistical physics, where study of macrostatistics of molecules and atoms is a lot more effective in explaining them rather than modeling each one individually. Mean field analysis of neural networks dates back at least two decades, appearing in the first introduction of LSTM paper.
 
@@ -51,7 +50,7 @@ Taking this analogy to neural networks, we strive for an idealized model of comp
 
 Despite the amazing progress of the last 1-1.5 decades of research, there are so many deep and fascinating questions that remain fully open. First, the question of finite vs mean field analses still remains a hot and not fully resolved area. But even deeper and more open are questions about learning. While the muP regime does lead to deterministic learning regime, it does not tell us what features are we learning, or how do we converge to solutions such that we don't overfit. 
 
-### Preliminary
+## Preliminaries
 
 One of the challenges I had while reading these papers was the constant changing of symbols and notations. So I thought introducing and using a consistent notation will go a long way to make them more readable. 
 
@@ -117,7 +116,7 @@ As we also take $$n_l \to \infty$$, the term in the parenthesis becomes an expec
 
 The earliest challenge in training deep networks was the instability of the backpropagation algorithm.
 
-### LSTM: A Solution for Recurrent Networks
+### LSTM
 
 In recurrent neural networks (RNNs), which can be seen as very deep networks unfolded in time, the problem is particularly acute. The backpropagated error signal at a given time step is a product of many Jacobian matrices from future time steps. As analyzed by {% cite hochreiter1991 %}, this product causes the error to either vanish or blow up exponentially.
 
@@ -127,7 +126,7 @@ $$
 $$
 This guarantees that error can flow backward through many time steps without its magnitude being scaled up or down, thus preventing the vanishing and exploding gradient problem. Gating mechanisms are then introduced to control the flow of information into and out of this stable memory cell.
 
-### Glorot & Bengio Initialization for Feedforward Networks
+### Glorot Initialization
 
 For feedforward networks, a similar but distinct problem exists. {% cite glorot2010 %} analyzed how the variance of activations and gradients changes as they propagate through the layers. The key idea is to maintain stable training by ensuring that the variance of outputs of each layer equals the variance of its inputs.
 
@@ -159,7 +158,7 @@ $$
 $$
 For a uniform distribution $$U[-a, a]$$, this corresponds to $$a = \sqrt{\frac{6}{n_{l-1} + n_l}}$$.
 
-## Deep Signal Propagation and the Edge of Chaos
+## Deep Signal Propagation
 
 The theory developed by {% cite schoenholz2017 %} moved beyond variance-based heuristics to develop a precise mean-field theory for wide, randomly initialized networks.
 
@@ -303,7 +302,7 @@ This reveals a beautiful duality:
 - Chaotic phase ($$\chi_1 > 1$$): Exploding gradients 
 - Edge of chaos ($$\chi_1 = 1$$): Stable training
 
-## The Neural Network Gaussian Process (NNGP)
+## Neural Net Gaussian Process (NNGP)
 
 As first noted by {% cite neal1994 %} and rigorously extended by {% cite lee2018 %}, the mean-field theory has a profound consequence: in the infinite-width limit, the entire network function becomes a draw from a Gaussian Process.
 
@@ -321,7 +320,7 @@ where the kernel $$K^{L+1}$$ is the same covariance function derived from the me
 
 The covariance function of this process is precisely the object $$q_{ab}^l$$ we tracked in the mean-field theory, which is why it is called a GP kernel. A function $$K(x,x')$$ is a valid covariance kernel if the Gram matrix $$[K(x_i, x_j)]_{i,j}$$ is positive semi-definite for any set of points $$\{x_i\}$$. This holds for the NNGP kernel because it is constructed from expectations of outer products, $$\mathbb{E}[f(x)f(x')^T]$$, which are inherently positive semi-definite.
 
-### Bayesian Prediction with the NNGP
+### The NNGP kernel 
 
 This equivalence allows for fully Bayesian inference without ever training a network. Given a training set 
 $$\mathcal{D} = \{(x_i, t_i)\}^n_{i=1}$$ and assuming Gaussian observation noise $$\epsilon \sim \mathcal{N}(0, \sigma_\epsilon^2)$$, we can predict the output $$z^\star$$ for a new test point $$x^\star$$. The joint distribution of training targets and the test prediction is Gaussian. The predictive distribution $$P(z^\star | \mathcal{D}, x^\star)$$ is also Gaussian, with a posterior mean and variance given by:
@@ -333,7 +332,7 @@ $$
 $$
 **Intuition:** The predicted mean $$\overline{\mu}$$ is a weighted average of the training targets $$t$$. The weights are computed by solving a linear system that asks: "How much does the output at each training point $$x_j$$ influence the output at the test point $$x^\star$$?" This influence is measured by the kernel $$K(x^\star, x_j)$$, while correcting for redundancies between the training points themselves (the $$(K_{\mathcal{D},\mathcal{D}} + \sigma_\epsilon^2 I)^{-1}$$ term). The posterior variance $$\overline{K}$$ measures our uncertainty; it starts at the prior variance $$K_{x^\star,x^\star}$$ and is reduced by an amount corresponding to the information gained from the training data.
 
-## The Neural Tangent Kernel: Dynamics of Training
+## NTK
 
 The GP correspondence describes networks at initialization. {% cite jacot2018 %} answered the crucial question: what happens during training?
 
