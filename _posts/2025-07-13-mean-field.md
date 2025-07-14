@@ -1,6 +1,6 @@
 ---
 layout: distill 
-title: "Theory of Signal Propagation in Deep Networks"
+title: "The Mean-Field View of Deep Learning"
 description: A review of the most important papers in theory of signal propagation 
 date: 2025-07-13
 tags: deep-learning theory signal-propagation neural-tangent-kernel
@@ -14,22 +14,47 @@ authors:
 bibliography: refs.bib
 
 toc:
-  - name: "Setup"
-  - name: "The Foundational Problem: Vanishing and Exploding Gradients"
-    subsections:
-      - name: "LSTM: A Solution for Recurrent Networks"
-      - name: "Glorot & Bengio Initialization for Feedforward Networks"
+  - name: "Preliminary"  
+  - name: "Why Mean Field?"
+  - ame: "LSTM: A Solution for Recurrent Networks"
+  - name: "Glorot & Bengio Initialization for Feedforward Networks"
   - name: "Deep Signal Propagation and the Edge of Chaos"
   - name: "Bayesian Prediction with the NNGP"
   - name: "The Neural Tangent Kernel: Dynamics of Training"
 
 ---
 
-### Setup
+### Intro
 
-The research journey to understand signal propagation has revealed profound connections between network architecture, random matrix theory, and classical kernel methods. We build this theory from the ground up, starting with the initial problem, moving to a mean-field description of signal propagation, and culminating in the modern understanding of infinite-width networks as kernel machines governed by the Neural Tangent Kernel (NTK).
+This post is dedicated to a review of the most classical results in theory of deep neural networks from the point of view of infintely wide networks, aka the mean field regime. Mean-field study of neural networks focuses on studying the macro-statistical properties of neural networks, when width or number of features converges to infinity. This approach originates from statistical physics, where study of macrostatistics of molecules and atoms is a lot more effective in explaining them rather than modeling each one individually. Mean field analysis of neural networks dates back at least two decades, appearing in the first introduction of LSTM paper.
 
-Let's establish a consistent set of symbols for our discussion.
+As itme went on, it also encompassed also study of neural kerenel (aka NNGP or conjugate kerneel, defined below). The field experienced a sudden jump with NTK paper, because it suddenly expanded the scope from initializatoin to the entire training dynamics. This result was later found out to be an over simplification of the true training dynamics of neural networks. Lazy regime, which was coined later about the learning regime that NTK operates in, was found to be an undesirable regime to operate in, and quite far from optimal regime that a network should operate in. Later, another mean field regime was discovered that maintained the deterministic limiting behavior of NTK, but with determinstic updates to the kernel.
+
+I have covered some papers already and will try to improve the blog post and add more papers as I read them. Before we delve into these classical studies and more technical details, us take a step back and ask a few philosophical questions. 
+
+
+### Why Mean Field?
+
+Let us start with the most basic question:
+
+> Why are we interested in a mean field view of neural networks?
+
+This is an almost philosophical question. Arguably the primary and historical motivation behind mean field analysis was the same as it was for statistical physics, which is to view systems with many highily complex and random parts, from a macro-statistical deterministic point of view. In other words, the primary motivation is to simply make sense of complicated things. However, I would argue that a second motivation for this type of analysis has emerged that is distinct from the physics-inspired approaches. The two prominent mean field learning regimes, ie, NTK lazy regime and muP feature learning regimes, are deterministic. In other words, the secondary philosophical goal of these analyses is to have a nueral computation model that is deterministic, and not dependent on the inital randomness. In other words, as the width or feature size grows, the effect of different sources of randomness is completely cancelled out during training, and  training dynamics, with regard to kernel and output predictions, becomes entirely deterministic This leads us to the second question:
+
+> Why are we interested in an determinstic model for neural computation in the limit? 
+
+Let us go back to the only existing rigorous model of computation, ie, Turing machines. For decades if not centries, algorithms and calculators existed in various primitive forms, but before invention of Turing machines they were in a kind of vaccum. But after inception of Turing machines are an idealized and fully theoretical model of computattion, they paved the way for a decades-long effort to implement this machine and optimize it.
+
+From a very high level point of view, we can view all our engineering and building efforts as making practical compromises between cost and accuracy. This is simply inconcievable without a model of computation.  For example, the idealized Turing has unlimited memory and unlimited precision, and does not have to worry about errors in reading or writing, or its memory being wiped off. But when building real computers, we have to think carefully about the cost-benefits of all these details, with the ideal Turing machine as a backdrop for our analysis. Note that if we don't ahve such a an idealized model, we also have no precise notion of compromise or trade-offs neither. This lack of precise notion of approximation makes the engineering process much more messy and challenging.  
+
+Taking this analogy to neural networks, we strive for an idealized model of computation that is as powerful as possible, and any finite size models are approximations of it.  Equipped with an idealized model of computation for neural networks, we can start thinking about how various choices, namely size of the model, in the context of cost-accuracy trade-offs. In other words, knowing that the idealized system is the maximum capacity we can hope for, we aim to approximate that idealized model with as little resources as possible.
+
+Despite the amazing progress of the last 1-1.5 decades of research, there are so many deep and fascinating questions that remain fully open. First, the question of finite vs mean field analses still remains a hot and not fully resolved area. But even deeper and more open are questions about learning. While the muP regime does lead to deterministic learning regime, it does not tell us what features are we learning, or how do we converge to solutions such that we don't overfit. 
+
+### Preliminary
+
+One of the challenges I had while reading these papers was the constant changing of symbols and notations. So I thought introducing and using a consistent notation will go a long way to make them more readable. 
+
 
 **Definition (Network Architecture).** A fully-connected network has $$L$$ hidden layers, indexed $$l=0$$ (input) to $$L+1$$ (output).
 - $$n_l$$: The number of neurons (width) at layer $$l$$.
