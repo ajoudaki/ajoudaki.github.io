@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>NTK: A First Principles Derivation | Amir  Joudaki</title>
     <meta name="author" content="Amir  Joudaki">
-    <meta name="description" content="A first principles derivation of the classic NTK result (no magics), with an analysis that already suggests the scaling for feature learning">
+    <meta name="description" content="A first principles derivation of the classic NTK result (no magic), with an analysis that already suggests the scaling for feature learning">
     <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
 
 
@@ -74,7 +74,7 @@
 <d-front-matter>
     <script async type="text/json">{
       "title": "NTK: A First Principles Derivation",
-      "description": "A first principles derivation of the classic NTK result (no magics), with an analysis that already suggests the scaling for feature learning",
+      "description": "A first principles derivation of the classic NTK result (no magic), with an analysis that already suggests the scaling for feature learning",
       "published": "July 13, 2025",
       "authors": [
         {
@@ -173,7 +173,7 @@
 
       <d-title>
         <h1>NTK: A First Principles Derivation</h1>
-        <p>A first principles derivation of the classic NTK result (no magics), with an analysis that already suggests the scaling for feature learning</p>
+        <p>A first principles derivation of the classic NTK result (no magic), with an analysis that already suggests the scaling for feature learning</p>
       </d-title>
 
       <d-byline></d-byline>
@@ -182,24 +182,26 @@
         <d-contents>
           <nav class="l-text figcaption">
           <h3>Contents</h3>
-            <div><a href="#setup-the-infinite-width-mean-field-regime">Setup: The Infinite-Width (Mean-Field) regime</a></div>
-            <div><a href="#kernel-in-the-mean-field-regime">Kernel in the Mean Field Regime</a></div>
-            <div><a href="#recursion-for-the-mean-influence-m-k-l">Recursion for the Mean Influence M_{k,l}</a></div>
-            <div><a href="#induction-basis-for-m">Induction Basis for M</a></div>
+            <div><a href="#setup-the-infinite-width-mean-field-regime">Setup: The Infinite-Width (Mean-Field) Regime</a></div>
+            <div><a href="#kernel-in-the-mean-field-regime">Kernel in the Mean-Field Regime</a></div>
+            <div><a href="#recursion-for-the-mean-influence-m-k-l">Recursion for the Mean Influence $M_{k,l}$</a></div>
+            <div><a href="#induction-basis-for-m">Induction Basis for $M$</a></div>
             <div><a href="#the-variance-of-kernel-shifts">The Variance of Kernel Shifts</a></div>
             <div><a href="#putting-it-all-together">Putting It All Together</a></div>
             <div><a href="#a-more-nuanced-first-moment-calculation">A More Nuanced First Moment Calculation</a></div>
-            <div><a href="#our-refined-strategy">Our refined Strategy</a></div>
+            <div><a href="#our-refined-strategy">Our Refined Strategy</a></div>
             <div><a href="#concluding-remarks">Concluding Remarks</a></div>
             
           </nav>
         </d-contents>
 
-        <p>Neural Tangent Kernel or NTK by <a class="citation" href="#jacot2018">(Jacot et al., 2018)</a> is arguably of the first very deep theoretical insights about neural networks in the mean field (infinitely wide) regime. While nowadays its importance has been surpassed by the feature learning (muP) regime, it is nevertheless one of the classical papers that are worth fully understanding for any researcher in the deep learning community with theoretical inclications. However, I have heard from virtually everyone I have talked that that the paper is very hard if not impossible to read, which is of course a big pity. To be very honest, my initial attempt at reading the paper was also met with a lot of hickups. So at some point, I decided to “reinvent the wheel” by proving essentially all the key results of the paper, without reading the paper. This note is the result of my efforts. While there might be some mistakes here and there (which I would be thankful if your report to me! ), I believe the method shown here replicates all the technical results of the NTK paper.  The key aspect of these derivations is that they are completely from scratch. I do not assume anything beyond a few basic mathematical facts, namely the law of large numers, CLT, and a few tricks about expectation of Gaussians (Stein lemma).</p>
+        <p>Neural Tangent Kernel or NTK by <a class="citation" href="#jacot2018">(Jacot et al., 2018)</a> is arguably one of the first very deep theoretical insights about neural networks in the mean-field (infinitely wide) regime. While nowadays its importance has been surpassed by the feature learning (muP) regime, it is nevertheless one of the classical papers that are worth fully understanding for any researcher in the deep learning community with theoretical inclinations. However, I have heard from virtually everyone I have talked to that the paper is very hard, if not impossible, to read, which is of course a big pity. To be very honest, my initial attempt at reading the paper was also met with a lot of hiccups. So at some point, I decided to “reinvent the wheel” by proving essentially all the key results of the paper, without reading the paper. This note is the result of my efforts. While there might be some mistakes here and there (which I would be thankful if you report them to me!), I believe the method shown here replicates all the technical results of the NTK paper. The key aspect of these derivations is that they are completely from scratch. I do not assume anything beyond a few basic mathematical facts, namely the law of large numbers, CLT, and a few tricks about the expectation of Gaussians (Stein’s lemma).</p>
 
-<p>Towards the end of the document there is an exposition is my effort to verify or correct an assumption that I had made in my first attempt about independence of backwards from forwards. These effects manifest themselves in our algebraic framework as “non-diagonal” terms in the backward kernel (meaning interactions between backwards that correspond to different units). These are exactly the terms that we will ignore if we assume independence of forward and backward, which allows us to use the expectation of product rule and get a very simple straightforward solution. The issue that I originally thought it exists was that the number of these interactiosn could be of the same order as they are decaying, meaning that they could contribute significanlty to the backward kernel. The calculations, which went admittedly a lot longer than I had hoped for, showed the opposite. Meaning, they proved these corrections are in fact an order of magnitude smller than the main terms. I still kept these notes for anyone interested. But feel free to ignore them if not.</p>
+<p>Towards the end of the document, there is an exposition of my effort to verify or correct an assumption that I had made in my first attempt about the independence of backwards from forwards. These effects manifest themselves in our algebraic framework as “non-diagonal” terms in the backward kernel (meaning interactions between backwards that correspond to different units). These are exactly the terms that we will ignore if we assume independence of forward and backward, which allows us to use the expectation of product rule and get a very simple straightforward solution. The issue that I originally thought existed was that the number of these interactions could be of the same order as they are decaying, meaning that they could contribute significantly to the backward kernel. The calculations, which admittedly went a lot longer than I had hoped for, showed the opposite. Meaning, they proved these corrections are in fact an order of magnitude smaller than the main terms. I still kept these notes for anyone interested. But feel free to ignore them if not.</p>
 
-<h3 id="setup-the-infinite-width-mean-field-regime">Setup: The Infinite-Width (Mean-Field) regime</h3>
+<hr>
+
+<h3 id="setup-the-infinite-width-mean-field-regime">Setup: The Infinite-Width (Mean-Field) Regime</h3>
 
 <p>We begin by defining the precise mathematical setting for our analysis.</p>
 
@@ -227,15 +229,17 @@ W^{l}_{ij} &amp;\sim \mathcal{N}(0, \sigma_w^2 / d_{l}) \\
 b^{l}_i &amp;\sim \mathcal{N}(0, \sigma_b^2)
 \end{align}\)</p>
 
-<h3 id="kernel-in-the-mean-field-regime">Kernel in the Mean Field Regime</h3>
+<hr>
 
-<p>The kernel at layer $l$ between $x$ and $x’$ is defined as the average inner product of their layer $l$ pre-activations: 
+<h3 id="kernel-in-the-mean-field-regime">Kernel in the Mean-Field Regime</h3>
+
+<p>The kernel at layer $l$ between $x$ and $x’$ is defined as the average inner product of their layer $l$ pre-activations:
 \(\Sigma^l(x,x') := \frac{1}{d_l} \langle z^l(x), z^l(x') \rangle\)</p>
 
-<p>It is straightforward to show the following forward recursion for the kernel in the mean field regime:
+<p>It is straightforward to show the following forward recursion for the kernel in the mean-field regime:
 \(\begin{align}
 \Sigma^0(x,x') &amp;:= \sigma_w^2 \frac{1}{d_0} x^\top x' + \sigma_b^2\\
-\Sigma^{l+1}(x,x') &amp;:= \sigma_w^2 \mathbb{E}\left[\phi(z)\phi(z')\right]  + \sigma_b^2 \quad \text{where } (z,z')\sim \mathcal{N}(0,\Sigma^l(x,x'))
+\Sigma^{l+1}(x,x') &amp;:= \sigma_w^2 \mathbb{E}\left[\phi(z)\phi(z')\right] + \sigma_b^2 \quad \text{where } (z,z')\sim \mathcal{N}(0,\Sigma^l(x,x'))
 \end{align}\)</p>
 
 <p>Similar to the NTK paper, we can use a more specialized notation to denote the derivatives kernel at a specified layer:
@@ -249,7 +253,7 @@ b^{l}_i &amp;\sim \mathcal{N}(0, \sigma_b^2)
 
 <p>where $\langle \cdot, \cdot \rangle_{W^{k-1}}$ denotes the Frobenius inner product over all elements of the weight matrix $W^{k-1}$. Using the outer product rule for gradients ($\nabla_W (Wa) = a^\top I$), this decomposes into:</p>
 
-\[\dot{\Theta}_{k,l} = \langle h^{k-1}(x), h^{k-1}(x') \rangle  \frac{1}{d_l} \sum_{i=1}^{d_l}  \left\langle \frac{\partial z^l_i(x)}{\partial z^k}, \frac{\partial z^L(x')}{\partial z^k} \right\rangle_{z^k}\]
+\[\dot{\Theta}_{k,l} = \langle h^{k-1}(x), h^{k-1}(x') \rangle \frac{1}{d_l} \sum_{i=1}^{d_l} \left\langle \frac{\partial z^l_i(x)}{\partial z^k}, \frac{\partial z^L(x')}{\partial z^k} \right\rangle_{z^k}\]
 
 <p>The first term, $\langle h^{k-1}(x), h^{k-1}(x’) \rangle$, is the inner product of activations from the forward pass. At large width $d$, this term is well-behaved and of order $O(d)$. Our focus is therefore on the second term, which involves the Jacobians of the backward passes.</p>
 
@@ -258,39 +262,41 @@ b^{l}_i &amp;\sim \mathcal{N}(0, \sigma_b^2)
 <p><strong>Definition (Kernel Shift).</strong> The first, second, and variance of the kernel shift are defined as:</p>
 
 \[\begin{align}
-M_{k,l} &amp;:= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j} \right] &amp;&amp;\text{(first moment)}\\ 
-Q_{k,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}  \mathbb{E}\left[\left(\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j}\right)^2\right] &amp;&amp; \text{(second moment)}\\
-V_{k,l} &amp;:= Q_{k,l}  - M_{k,l}^2 &amp;&amp; \text{(variance)}
+M_{k,l} &amp;:= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j} \right] &amp;&amp;\text{(first moment)}\\
+Q_{k,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\left(\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j}\right)^2\right] &amp;&amp; \text{(second moment)}\\
+V_{k,l} &amp;:= Q_{k,l} - M_{k,l}^2 &amp;&amp; \text{(variance)}
 \end{align}\]
 
 <p>Intuitively, we can understand these two terms as the average shift in representation of layer $l$, in expectation ($M$), and variance ($V$).</p>
 
-<p><strong>Remark.</strong> The averaging over indices $i$ represents computing the sample mean and sample variance over the features. However, because due to symmetry in these indices, all expected terms in $i$ will be equal result, meaning that we can simply replace this by a formula that fixes one $i$ and removes summation and averaging. The reason for keeping the averaging in place will be revealed later. In short, this has to do with the recursive step of the proof, and the average formulation allows us to arrive at a clean inductive step.</p>
+<p><strong>Remark.</strong> The averaging over indices $i$ represents computing the sample mean and sample variance over the features. However, due to symmetry in these indices, all expected terms in $i$ will result in equal values, meaning that we can simply replace this by a formula that fixes one $i$ and removes summation and averaging. The reason for keeping the averaging in place will be revealed later. In short, this has to do with the recursive step of the proof, and the average formulation allows us to arrive at a clean inductive step.</p>
 
 <p>We will derive recursions for $M$ and $V$ to determine their scaling with width.</p>
+
+<hr>
 
 <h3 id="recursion-for-the-mean-influence-m_kl">Recursion for the Mean Influence $M_{k,l}$</h3>
 
 <p>A very important and clear fact is the Jacobian of two successive layers:</p>
 
-\[\partial z^{l+1}_i = \sum_{j=1}^{d_l} W^l_{ij} \phi(z^l_j) + b_i 
-\implies 
+\[\partial z^{l+1}_i = \sum_{j=1}^{d_l} W^l_{ij} \phi(z^l_j) + b_i
+\implies
 \frac{\partial z^{l+1}_i}{\partial z^l_j} = W^l_{ij}\phi'(z^l_j)\]
 
-<p>Substituting this into the definition of $M_{k,l}$, we can expand the formula from $k$ to next layer $k+1$:</p>
+<p>Substituting this into the definition of $M_{k,l}$, we can expand the formula from $k$ to the next layer $k+1$:</p>
 
 \[\begin{align}
 M_{k,l} &amp;:= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j} \right]\\
-&amp;= \frac{1}{d_l}\sum_{i,j} \mathbb{E}\left[   \left( \sum_{s} \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} \frac{\partial z^{k+1}_s(x)}{\partial z^k_j} \right) \left( \sum_{r} \frac{\partial z^L(x')}{\partial z^{k+1}_r(x')} \frac{\partial z^{k+1}_r(x')}{\partial z^{k}_j} \right) \right] \\
-&amp;= \frac{1}{d_l}\sum_{i,j} \mathbb{E}\left[   \left( \sum_{s} \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} W^k_{sj} \phi'(z^k_j(x)) \right) \left( \sum_{r} \frac{\partial z^L(x')}{\partial z^{k+1}_r} W^k_{rj} \phi'(z^k_j(x')) \right) \right] \\
+&amp;= \frac{1}{d_l}\sum_{i,j} \mathbb{E}\left[ \left( \sum_{s} \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} \frac{\partial z^{k+1}_s(x)}{\partial z^k_j} \right) \left( \sum_{r} \frac{\partial z^L(x')}{\partial z^{k+1}_r(x')} \frac{\partial z^{k+1}_r(x')}{\partial z^{k}_j} \right) \right] \\
+&amp;= \frac{1}{d_l}\sum_{i,j} \mathbb{E}\left[ \left( \sum_{s} \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} W^k_{sj} \phi'(z^k_j(x)) \right) \left( \sum_{r} \frac{\partial z^L(x')}{\partial z^{k+1}_r} W^k_{rj} \phi'(z^k_j(x')) \right) \right] \\
 &amp;= \frac{1}{d_l} \sum_{i,j,s,r} \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} \frac{\partial z^L(x')}{\partial z^{k+1}_r} \phi'(z^k_j(x))\phi'(z^k_j(x')) W^k_{sj} W^k_{rj} \right]
 \end{align}\]
 
-<p><strong>The independence of weight elements</strong>: This is the first subtle argument in our proof method, which argues that we can move the expectation w.r.t weights forward to act only on the terms involving layer $k$ weights. This is justified because in the mean-field limit ($d \to \infty$), succeeding layers are asymptotically independent of any single weight element $W^k_{sj}$. This might present itself as contradictory, given the obvious dependence of layer $z^{k+1}$ and succeeding layers on weight matrix $W^k$. The nuance is in the distinction between the entire matrix vs the individual elements of the matrix. Because of the way that we initialize the weights from $\mathcal{N}(0,1/d)$, the influence of every individual element of $W^k$ on the succeeding layer $z^{k+1}$ decays with $d$, which means that the $W^{k}_{ij}$ terms are effectively independent of all other terms in the formula above. This allows us to use the product rule for expectation of independent random variables:</p>
+<p><strong>The independence of weight elements</strong>: This is the first subtle argument in our proof method, which argues that we can move the expectation with respect to weights forward to act only on the terms involving layer $k$ weights. This is justified because in the mean-field limit ($d \to \infty$), succeeding layers are asymptotically independent of any single weight element $W^k_{sj}$. This might present itself as contradictory, given the obvious dependence of layer $z^{k+1}$ and succeeding layers on weight matrix $W^k$. The nuance is in the distinction between the entire matrix vs. the individual elements of the matrix. Because of the way that we initialize the weights from $\mathcal{N}(0,1/d)$, the influence of every individual element of $W^k$ on the succeeding layer $z^{k+1}$ decays with $d$, which means that the $W^{k}_{ij}$ terms are effectively independent of all other terms in the formula above. This allows us to use the product rule for expectation of independent random variables:</p>
 
 \[M_{k,l} = \frac{1}{d_l} \sum_{i,j,s,r} \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} \frac{\partial z^L(x')}{\partial z^{k+1}_r} \phi'(z^k_j(x))\phi'(z^k_j(x')) \right] \mathbb{E}[W^k_{sj} W^k_{rj}]\]
 
-<p><strong>The pairing of weights</strong>. Since weight elements are assumed to be drawn i.i.d. and zero-mean, the expectation $\mathbb{E}[W^k_{sj} W^k_{rj}]$ is non-zero only if the weights are paired with each other to form random variables of even power. This can only happen if and only if we have $r=s$, which requires their indices to match:
+<p><strong>The pairing of weights</strong>. Since weight elements are assumed to be drawn i.i.d. and zero-mean, the expectation $\mathbb{E}[W^k_{sj} W^k_{rj}]$ is non-zero only if the weights are paired with each other to form random variables of even power. This can happen if and only if we have $r=s$, which requires their indices to match:
 \(\mathbb{E}[W^k_{sj} W^k_{rj}] = \delta_{sr} \frac{\sigma_w^2}{d_k}\)</p>
 
 <p>Since all other terms vanish, we can enforce this pairing by setting $r = s$ in our summation:
@@ -298,21 +304,23 @@ M_{k,l} &amp;:= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\sum_{j=1}^{d_k} 
 
 <p>Note that here the pairing argument was trivial because we only had two weight elements to begin with.</p>
 
-<p><strong>CLT</strong>: We can move the summation over $j$ forward and rearranging the terms we have:
-\(\frac{1}{d_l} \sum_{i,s}  \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} \frac{\partial z^L(x')}{\partial z^{k+1}_s} \left(\frac{\sigma_w^2}{d_k}\sum_{j=1}^{d_k} \phi'(z^k_j(x))\phi'(z^k_j(x')) \right)\right]\)</p>
+<p><strong>CLT</strong>: We can move the summation over $j$ forward and rearrange the terms:
+\(\frac{1}{d_l} \sum_{i,s} \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} \frac{\partial z^L(x')}{\partial z^{k+1}_s} \left(\frac{\sigma_w^2}{d_k}\sum_{j=1}^{d_k} \phi'(z^k_j(x))\phi'(z^k_j(x')) \right)\right]\)</p>
 
 <p>Given that the averaging involving $j$ in the second term involves terms that are i.i.d, this sample average converges to its expectation in the limit of $d_l\to\infty$:
-\(M_{k,l} = \frac{1}{d_l} \sum_{i,s}  \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} \frac{\partial z^L(x')}{\partial z^{k+1}_s}\right]\left[\sigma_w^2 \mathbb{E} \left[\phi'(z)\phi'(z')\right]\right]\)
+\(M_{k,l} = \frac{1}{d_l} \sum_{i,s} \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} \frac{\partial z^L(x')}{\partial z^{k+1}_s}\right]\left[\sigma_w^2 \mathbb{E} \left[\phi'(z)\phi'(z')\right]\right]\)
 where $(z,z’)\sim \mathcal{N}\left(0, \Sigma^{k-1}(x,x’)\right)$.</p>
 
 <p>Using our notation for derivatives kernel and if we rearrange the constants around we arrive at:
-\(M_{k,l} = \dot \Sigma^{k}(x,x') \frac{1}{d_l} \sum_{i,s}  \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} \frac{\partial z^L(x')}{\partial z^{k+1}_s} \right]\)</p>
+\(M_{k,l} = \dot \Sigma^{k}(x,x') \frac{1}{d_l} \sum_{i,s} \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial z^{k+1}_s} \frac{\partial z^L(x')}{\partial z^{k+1}_s} \right]\)</p>
 
 <p>If we carefully inspect the formula above, we can recognize the recursive formula inside the second term which finishes our first recursive step:
 \(M_{k,l} = \dot \Sigma^{k}(x,x') M_{k+1,l}\)</p>
 
 <p>To complete the proof we have to also prove some basis for our recursion. It is clear from our setup and proof that this is restricted to cases where $k+1\le l$. Therefore, a natural basis for this particular inductive argument is $k=l$. Thus, we can unroll this recursion from $k$ to $l$:
 \(M_{k,l} = M_{l,l} \prod_{i=k}^{l-1}\dot \Sigma^{i}(x,x')\)</p>
+
+<hr>
 
 <h3 id="induction-basis-for-m">Induction Basis for $M$</h3>
 
@@ -322,18 +330,18 @@ where $(z,z’)\sim \mathcal{N}\left(0, \Sigma^{k-1}(x,x’)\right)$.</p>
 <p>Now we can create the basis by setting $k=l$. It is clear from the partial derivatives that only the $i=j$ term survives:
 \(M_{l,l} = \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[ \frac{\partial z^L(x')}{\partial z^l_i} \right]\)</p>
 
-<p>We can now divide it to two cases depending on $l=L$ or not:</p>
+<p>We can now divide it into two cases depending on $l=L$ or not:</p>
 
 <ol>
   <li>
-    <p><strong>$l=L$ case:</strong> This is trivial case, because now we simply have one index $i=1$ and $d_L = 1$, and the partial derivative is simply $1$. Therefore we have:
+    <p><strong>$l=L$ case:</strong> This is a trivial case, because now we simply have one index $i=1$ and $d_L = 1$, and the partial derivative is simply $1$. Therefore we have:
 \(M_{L,L} = 1\)</p>
   </li>
   <li>
     <p><strong>$l&lt;L$ case:</strong> We can use the same unrolling trick used above to now induct over $l$ upwards. From now on, because we’re only working with $x’$, we will drop it from our terms:
 \(\begin{align}
 M_{l,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[ \frac{\partial z^L}{\partial z^l_i} \right]\\
-&amp;=\frac{1}{d_l} \sum_{i,j} \mathbb{E}\left[\frac{\partial z^L}{\partial z^{l+1}_j} \frac{\partial z^{l+1}_j}{\partial z^l_i}\right]    \\
+&amp;=\frac{1}{d_l} \sum_{i,j} \mathbb{E}\left[\frac{\partial z^L}{\partial z^{l+1}_j} \frac{\partial z^{l+1}_j}{\partial z^l_i}\right] \\
 &amp;=\frac{1}{d_l} \sum_{i,j} \mathbb{E} \left[\frac{\partial z^L}{\partial z^{l+1}_j} W_{ji}^l\phi'(z^l_i)\right]
 \end{align}\)</p>
   </li>
@@ -348,7 +356,7 @@ M_{l,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[ \frac{\partial z^
 \prod_{i=k}^{L-1} \dot\Sigma^i(x,x') &amp; l=L
 \end{cases}\)</p>
 
-<p>To finalize the first moment kernel evolution, we have to compute the product with forward of layer $k-1$ and apply our learning rate. Choosing the layer-specific learning rate $\eta$ per layer. Here, we make one of the most important and consequential decisions of our setup w.r.t learning rate which will dictate our learning rate regime from here onward. We will assume that while we are tending all our middle layers to infinity, we inverse inversely scale learning rate per layer as $\eta_l \propto \eta_0 /d_l$, where $\eta_0$ is some master learning rate that can be width-invariant constant.</p>
+<p>To finalize the first moment kernel evolution, we have to compute the product with the forward of layer $k-1$ and apply our learning rate. Choosing the layer-specific learning rate $\eta$ per layer. Here, we make one of the most important and consequential decisions of our setup with respect to learning rate which will dictate our learning rate regime from here onward. We will assume that while we are tending all our middle layers to infinity, we inversely scale learning rate per layer as $\eta_l \propto \eta_0 /d_l$, where $\eta_0$ is some master learning rate that can be a width-invariant constant.</p>
 
 <p>Thus, the combined effect of learning rate, forward products, and backward product can be written as $\eta_0 /d_{k-1} \langle h^{k-1}(x), h^{k-1}(x’)\rangle$ multiplied by the backward result $M_{k,l}$. Recall that our forward recursion gives us $\Sigma^{k-1}(x,x’)$ implying that $\frac{1}{d_{k-1}} \langle h^{k-1}(x), h^{k-1}(x’)\rangle \to \Sigma^{k-1}(x,x’)$ as $d_{k-1}$ grows. Thus we can replace the average with expectation again to obtain:
 \(\mathbb{E} [\dot\Theta_{k,l}] = \begin{cases}
@@ -362,7 +370,9 @@ M_{l,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[ \frac{\partial z^
 
 <p>The product terms are tightly related to an important concept in signal propagation.</p>
 
-<p><strong>Remark.</strong> Observe that if set $x=x’$, the derivative kernel $\dot\Sigma^l(x,x’)$ will take the more familiar term of $\mathbb{E} [\phi’(z)^2]$ where $z \sim \mathcal{N}(0,q_l)$, where $q_l$ denotes the variance of layer $l$ pre-activations, itself obeying $q_{l+1} = \mathbb{E} [\phi(\sqrt{q_l}z)^2]$. If we assume that the variance sequence converge in depth to some fixed point $q_l \to q^*$, as depth grows, this value is referred to as $\chi_1$ in the deep signal propagation and edge of chaos literature. This implies that the mean shift in last layer’s kernel evolution is always bounded by $(\chi_1)^{L-l}$. Otherwise, if we configure a neural network to operate at the edge of chaos $\chi_1 = 1$, the kernel first moment of shift is always bounded by $1$.</p>
+<p><strong>Remark.</strong> Observe that if we set $x=x’$, the derivative kernel $\dot\Sigma^l(x,x’)$ will take the more familiar term of $\mathbb{E} [\phi’(z)^2]$ where $z \sim \mathcal{N}(0,q_l)$, where $q_l$ denotes the variance of layer $l$ pre-activations, itself obeying $q_{l+1} = \mathbb{E} [\phi(\sqrt{q_l}z)^2]$. If we assume that the variance sequence converges in depth to some fixed point $q_l \to q^*$, as depth grows, this value is referred to as $\chi_1$ in the deep signal propagation and edge of chaos literature. This implies that the mean shift in the last layer’s kernel evolution is always bounded by $(\chi_1)^{L-l}$. Otherwise, if we configure a neural network to operate at the edge of chaos $\chi_1 = 1$, the kernel first moment of shift is always bounded by $1$.</p>
+
+<hr>
 
 <h3 id="the-variance-of-kernel-shifts">The Variance of Kernel Shifts</h3>
 
@@ -371,15 +381,15 @@ M_{l,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[ \frac{\partial z^
 <p>Our strategy to analyze the second moment is highly similar to the one for first moment. However, it will be more involved due to the presence of a double summation as a result of squaring in the second moment.</p>
 
 \[\begin{align}
-Q_{k,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}  \mathbb{E}\left[\left(\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j}\right)^2\right]  \\
-&amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}  
+Q_{k,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\left(\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j}\right)^2\right] \\
+&amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}
 \mathbb{E}\left[\sum_{j,r,s}
 \frac{\partial z^l_i(x)}{\partial z^{k+1}_r}
-\frac{\partial z^{k+1}_r(x)}{\partial z^k_j} 
+\frac{\partial z^{k+1}_r(x)}{\partial z^k_j}
 \frac{\partial z^L(x')}{\partial z^{k+1}_s}
 \frac{\partial z^{k+1}_s(x')}{\partial z^k_j}
 \right] \\
-&amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}  
+&amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}
 \mathbb{E}\left[\sum_{j,r,s}
 \frac{\partial z^l_i(x)}{\partial z^{k+1}_r}
 W_{rj}^k\phi'(z^k_j(x))
@@ -390,15 +400,15 @@ W_{sj}^k\phi'(z^k_j(x'))
 
 <p>Now, if we are to follow our strategy from before we have to again expand our indices, introducing $j’,r’,s’$, to account for the power of two. To follow our main strategy, we will isolate all the terms involving $z^k$ or $W^k$ on the right-most side, resulting in the summation:</p>
 
-\[\frac{1}{d_l}\mathbb{E} \sum 
+\[\frac{1}{d_l}\mathbb{E} \sum
 \left(\frac{\partial z^l_i(x)}{\partial z^{k+1}_r}
 \frac{\partial z^L(x')}{\partial z^{k+1}_s}
 \frac{\partial z^l_{i}(x)}{\partial z^{k+1}_{r'}}
-\frac{\partial z^L(x')}{\partial z^{k+1}_{s'}} \right)\cdot 
+\frac{\partial z^L(x')}{\partial z^{k+1}_{s'}} \right)\cdot
 \left( \phi'(z^k_j(x))
 \phi'(z^k_j(x'))
 \phi'(z^k_{j'}(x))
-\phi'(z^k_{j'}(x')) \right) \left(W_{rj}^k W_{sj}^k 
+\phi'(z^k_{j'}(x')) \right) \left(W_{rj}^k W_{sj}^k
 W_{r'j'}^k W_{s'j'}^k \right)\]
 
 <p>where the summation is over all indices $i,j,r,s,j’,r’,s’$.</p>
@@ -406,12 +416,12 @@ W_{r'j'}^k W_{s'j'}^k \right)\]
 <p>At this point, we can use the fact of independence of weight elements from the rest to isolate the weight product terms. Here, we use Wick’s theorem to convert our fourth-order expectation to a simpler form based on the formula $\mathbb{E} [X_1 X_2 X_3 X_4] = \mathbb{E} [X_1 X_2] \mathbb{E} [X_3 X_4] + \mathbb{E} [X_1 X_3] \mathbb{E} [X_2 X_4] + \mathbb{E} [X_1 X_4] \mathbb{E} [X_2 X_3]$. We have:</p>
 
 \[\begin{align}
-&amp;\mathbb{E} \left(W_{rj}^k W_{sj}^k 
+&amp;\mathbb{E} \left(W_{rj}^k W_{sj}^k
 W_{r'j'}^k W_{s'j'}^k \right) = \\
-&amp;\qquad \mathbb{E} [W_{rj}^k W_{sj}^k] \mathbb{E} [W_{r'j'}^k W_{s'j'}^k] 
-+ \mathbb{E} [W_{rj}^k  
-W_{r'j'}^k ] \mathbb{E} [ W_{sj}^k W_{s'j'}^k  ]
-+ \mathbb{E} [W_{rj}^k W_{s'j'}^k] \mathbb{E} [W_{sj}^k 
+&amp;\qquad \mathbb{E} [W_{rj}^k W_{sj}^k] \mathbb{E} [W_{r'j'}^k W_{s'j'}^k]
++ \mathbb{E} [W_{rj}^k
+W_{r'j'}^k ] \mathbb{E} [ W_{sj}^k W_{s'j'}^k ]
++ \mathbb{E} [W_{rj}^k W_{s'j'}^k] \mathbb{E} [W_{sj}^k
 W_{r'j'}^k ]
 \end{align}\]
 
@@ -423,7 +433,7 @@ W_{r'j'}^k ]
   <li>
 <strong>Second term:</strong> $r=r’, j=j’, s=s’$. Thus we have $d_k d_{k+1}^2$ remaining terms.</li>
   <li>
-<strong>Third term:</strong> $r=s’, j=j’, s=r’$: this is symmetric to the second term is also $d_k d_{k+1}^2$ counts.</li>
+<strong>Third term:</strong> $r=s’, j=j’, s=r’$: this is symmetric to the second term and is also $d_k d_{k+1}^2$ counts.</li>
 </ol>
 
 <p>This calculation reveals that the first configuration will be the leading order, with the second and third term $O(1/d_k)$ relative to the first term.</p>
@@ -436,27 +446,27 @@ W_{r'j'}^k ]
 \phi'(z^k_j(x'))
 \phi'(z^k_{j'}(x))
 \phi'(z^k_{j'}(x')) \right) \\
-&amp;\qquad=  \left(\frac{\sigma_w^2}{d_k}\sum_{j=1}^{d_k}\phi'(z^k_j(x))
+&amp;\qquad= \left(\frac{\sigma_w^2}{d_k}\sum_{j=1}^{d_k}\phi'(z^k_j(x))
 \phi'(z^k_j(x'))\right)^2\\
 &amp;\qquad= (\dot\Sigma^k(x,x'))^2
 \end{align}\]
 
-<p>where in the last step we again used the CLT and used the definition of derivative kernel. Note that at this point, we can assume that the second leading order $O(1/d_k)$ smaller than this term due to the terms that we ignored.</p>
+<p>where in the last step we again used the CLT and used the definition of derivative kernel. Note that at this point, we can assume that the second leading order $O(1/d_k)$ is smaller than this term due to the terms that we ignored.</p>
 
 <p>We can now plug this result into our main second moment formula:
-\(\begin{align} 
-Q_{k,l} &amp;= \dot\Sigma^k(x,x')^2\frac{1}{d_l}\mathbb{E} \sum_{i,r,r'} 
+\(\begin{align}
+Q_{k,l} &amp;= \dot\Sigma^k(x,x')^2\frac{1}{d_l}\mathbb{E} \sum_{i,r,r'}
 \left(
 \frac{\partial z^l_i(x)}{\partial z^{k+1}_r}
 \frac{\partial z^L(x')}{\partial z^{k+1}_r}
 \frac{\partial z^l_{i}(x)}{\partial z^{k+1}_{r'}}
-\frac{\partial z^L(x')}{\partial z^{k+1}_{r'}} 
+\frac{\partial z^L(x')}{\partial z^{k+1}_{r'}}
 \right)\\
-&amp;= \dot\Sigma^k(x,x')^2\frac{1}{d_l}\mathbb{E} \sum_{i=1}^{d_l} 
+&amp;= \dot\Sigma^k(x,x')^2\frac{1}{d_l}\mathbb{E} \sum_{i=1}^{d_l}
 \left(
 \left[\sum_{r=1}^{d_{k+1}}
 \frac{\partial z^l_i(x)}{\partial z^{k+1}_r}
-\frac{\partial z^L(x')}{\partial z^{k+1}_{r}} 
+\frac{\partial z^L(x')}{\partial z^{k+1}_{r}}
 \right]^2\right)\\
 &amp;=\dot\Sigma^k(x,x')^2 Q_{k+1,l}
 \end{align}\)</p>
@@ -464,34 +474,34 @@ Q_{k,l} &amp;= \dot\Sigma^k(x,x')^2\frac{1}{d_l}\mathbb{E} \sum_{i,r,r'}
 <p>Where in the last step we again have identified our recursive formula in the step above it. We can now roll this induction step forward until arriving at $Q_{l,l}$:
 \(Q_{k,l} = Q_{l,l}\prod_{i=k}^{l-1}(\dot\Sigma^i(x,x'))^2\)</p>
 
-<p>It is important to note that this is the leading order, and the approximation will factor will be $O(1/d_k)$ relative to this result.</p>
+<p>It is important to note that this is the leading order, and the approximation factor will be $O(1/d_k)$ relative to this result.</p>
 
-<p>To arrive at a concrete result, we again have to find a basis. For that, we have to consider $Q_{l,l}$ case separately.</p>
+<p>To arrive at a concrete result, we again have to find a basis. For that, we have to consider the $Q_{l,l}$ case separately.</p>
 
 \[\begin{align}
-Q_{l,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}  \mathbb{E}\left[\left(\sum_{j=1}^{d_l} \frac{\partial z^l_i(x)}{\partial z^l_j} \frac{\partial z^L(x')}{\partial z^l_j}\right)^2\right]  \\
-&amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}  \mathbb{E}\left[\left(\frac{\partial z^L(x')}{\partial z^l_i}\right)^2\right]  
+Q_{l,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\left(\sum_{j=1}^{d_l} \frac{\partial z^l_i(x)}{\partial z^l_j} \frac{\partial z^L(x')}{\partial z^l_j}\right)^2\right] \\
+&amp;= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\left(\frac{\partial z^L(x')}{\partial z^l_i}\right)^2\right]
 \end{align}\]
 
 <p>First, note that if $l=L$ then we have only one term $d_L=1$ and that term is identity, implying $Q_{L,L} = 1$. We can again expand this by chain rule and roll it forward. We can now ignore the argument $x’$ as there is no counterpart:</p>
 
 \[\begin{align}
-Q_{l,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}  \mathbb{E}\left[\left(\sum_j \frac{\partial z^L}{\partial z^{l+1}_j}\frac{\partial z^{l+1}_j}{\partial z^l_i}\right)^2\right]  \\
-&amp;= \frac{1}{d_l} \sum_{i=1}^{d_l}  \mathbb{E}\left[\left(\sum_j \frac{\partial z^L}{\partial z^{l+1}_j}W_{ji}^l\phi'(z_i^l)\right)^2\right]  \\
-&amp;= \frac{1}{d_l} \sum_{i,j,j'}  \mathbb{E}\left[ \frac{\partial z^L}{\partial z^{l+1}_j}W_{ji}^l\phi'(z_i^l)\frac{\partial z^L}{\partial z^{l+1}_{j'}}W_{j'i}^l\phi'(z_i^l)\right]  \\    
-&amp;= \frac{1}{d_l} \sum_{i,j,j'}  \mathbb{E}\left[ \frac{\partial z^L}{\partial z^{l+1}_j}\frac{\partial z^L}{\partial z^{l+1}_{j'}} \phi'(z_i^l)\phi'(z_i^l) \right]\cdot \mathbb{E} \left[W_{ji}^lW_{j'i}^l\right]  \\
-&amp;= \frac{1}{d_l} \sum_{i,j}  \mathbb{E}\left[ \left(\frac{\partial z^L}{\partial z^{l+1}_j}\right)^2 (\phi'(z_i^l))^2\right] \cdot \mathbb{E}[(W_{ji}^l)^2] \\
-&amp;= \frac{1}{d_l} \sum_{i,j}  \mathbb{E}\left[ \left(\frac{\partial z^L}{\partial z^{l+1}_j}\right)^2 (\phi'(z_i^l))^2\right] \frac{\sigma_w^2}{d_l} \\    
-&amp;= \frac{1}{d_l} \sum_{j}  \mathbb{E}\left[ \left(\frac{\partial z^L}{\partial z^{l+1}_j}\right)^2 \right] \left(\frac{\sigma_w^2}{d_l}\sum_i (\phi'(z_i^l))^2\right)
+Q_{l,l} &amp;= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\left(\sum_j \frac{\partial z^L}{\partial z^{l+1}_j}\frac{\partial z^{l+1}_j}{\partial z^l_i}\right)^2\right] \\
+&amp;= \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\left(\sum_j \frac{\partial z^L}{\partial z^{l+1}_j}W_{ji}^l\phi'(z_i^l)\right)^2\right] \\
+&amp;= \frac{1}{d_l} \sum_{i,j,j'} \mathbb{E}\left[ \frac{\partial z^L}{\partial z^{l+1}_j}W_{ji}^l\phi'(z_i^l)\frac{\partial z^L}{\partial z^{l+1}_{j'}}W_{j'i}^l\phi'(z_i^l)\right] \\
+&amp;= \frac{1}{d_l} \sum_{i,j,j'} \mathbb{E}\left[ \frac{\partial z^L}{\partial z^{l+1}_j}\frac{\partial z^L}{\partial z^{l+1}_{j'}} \phi'(z_i^l)\phi'(z_i^l) \right]\cdot \mathbb{E} \left[W_{ji}^lW_{j'i}^l\right] \\
+&amp;= \frac{1}{d_l} \sum_{i,j} \mathbb{E}\left[ \left(\frac{\partial z^L}{\partial z^{l+1}_j}\right)^2 (\phi'(z_i^l))^2\right] \cdot \mathbb{E}[(W_{ji}^l)^2] \\
+&amp;= \frac{1}{d_l} \sum_{i,j} \mathbb{E}\left[ \left(\frac{\partial z^L}{\partial z^{l+1}_j}\right)^2 (\phi'(z_i^l))^2\right] \frac{\sigma_w^2}{d_l} \\
+&amp;= \frac{1}{d_l} \sum_{j} \mathbb{E}\left[ \left(\frac{\partial z^L}{\partial z^{l+1}_j}\right)^2 \right] \left(\frac{\sigma_w^2}{d_l}\sum_i (\phi'(z_i^l))^2\right)
 \end{align}\]
 
 <p>Again, in our last line we can recognize the CLT argument to write:
-\(Q_{l,l} = \frac{1}{d_l} \sum_{j}  \mathbb{E}\left[ \left(\frac{\partial z^L}{\partial z^{l+1}_j}\right)^2 \right] \left(\sigma_w^2 \mathbb{E} [(\phi'(z))^2]\right) \quad \text{where } z\sim \mathcal{N}(0,\Sigma^l(x'))\)</p>
+\(Q_{l,l} = \frac{1}{d_l} \sum_{j} \mathbb{E}\left[ \left(\frac{\partial z^L}{\partial z^{l+1}_j}\right)^2 \right] \left(\sigma_w^2 \mathbb{E} [(\phi'(z))^2]\right) \quad \text{where } z\sim \mathcal{N}(0,\Sigma^l(x'))\)</p>
 
 <p>We can reorder the terms and recognize the recursive formula:
-\(Q_{l,l} =Q_{l+1,l+1}  \dot\Sigma^l(x') \frac{d_{l+1}}{d_l}\)</p>
+\(Q_{l,l} =Q_{l+1,l+1} \dot\Sigma^l(x') \frac{d_{l+1}}{d_l}\)</p>
 
-<p>And finally, we can roll the induction forward first to get from $Q_{k,l}$ to $Q_{l,l}$ using first induction, and then to $Q_{L,L} = 1$ using the second induction use the hypothesis to conclude:
+<p>And finally, we can roll the induction forward first to get from $Q_{k,l}$ to $Q_{l,l}$ using the first induction, and then to $Q_{L,L} = 1$ using the second induction, and use the hypothesis to conclude:
 \(\begin{align}
 Q_{l,l} &amp;= Q_{L,L}\prod_{i=l}^{L-1} \frac{d_{i+1}}{d_i}\prod_{i=l}^{L-1}\dot\Sigma^i(x',x') \\
 &amp;= 1\cdot \frac{d_L}{d_l}\prod_{i=l}^{L-1}\dot\Sigma^i(x',x')\\
@@ -501,49 +511,55 @@ Q_{l,l} &amp;= Q_{L,L}\prod_{i=l}^{L-1} \frac{d_{i+1}}{d_i}\prod_{i=l}^{L-1}\dot
 <p>Thus, combining the two cases we have:
 \(Q_{k,l} = \frac{1}{d_l}\left(\prod_{i=k}^{l-1}(\dot\Sigma^i(x,x'))^2\right) \cdot \left(\prod_{i=l}^{L-1}\dot\Sigma^i(x',x')\right)\)</p>
 
-<p>Now, in order to account for the second moment variations due to applying gradient update, we need to account for learning rate of $W^k$, as well as the forward product $d_{k-1}\Sigma^{k-1}(x,x’)$, both of which will be squared. Recall that we applied a learning rate of $\eta_0/d_{k-1}$ to this layer. Thus the cumulative effect will be that $\eta_0/d_{k-1} \langle h^{k-1}(x),h^{k-1}(x’)\rangle$ converges to its expectation $\eta_0 \Sigma^{k-1}(x,x’)$. Because we’re analyzing second moment, both the effect of learning rate and the inner product of forwards will be squared. Thus we have the second moment:</p>
+<p>Now, in order to account for the second moment variations due to applying gradient update, we need to account for the learning rate of $W^k$, as well as the forward product $d_{k-1}\Sigma^{k-1}(x,x’)$, both of which will be squared. Recall that we applied a learning rate of $\eta_0/d_{k-1}$ to this layer. Thus the cumulative effect will be that $\eta_0/d_{k-1} \langle h^{k-1}(x),h^{k-1}(x’)\rangle$ converges to its expectation $\eta_0 \Sigma^{k-1}(x,x’)$. Because we’re analyzing the second moment, both the effect of learning rate and the inner product of forwards will be squared. Thus we have the second moment:</p>
 
-\[\mathbb{E} [(\dot\Theta_{k,l})^2] =  \frac{1}{d_l} (\eta_0\Sigma^{k-1}(x,x'))^2\left(\prod_{i=k}^{l-1}(\dot\Sigma^i(x,x'))^2\right) \cdot \left(\prod_{i=l}^{L-1}\dot\Sigma^i(x',x')\right)\]
+\[\mathbb{E} [(\dot\Theta_{k,l})^2] = \frac{1}{d_l} (\eta_0\Sigma^{k-1}(x,x'))^2\left(\prod_{i=k}^{l-1}(\dot\Sigma^i(x,x'))^2\right) \cdot \left(\prod_{i=l}^{L-1}\dot\Sigma^i(x',x')\right)\]
 
 <p>which is accurate up to $O(\sum_{l=1}^L 1/d_l)$ approximation factor. This is the result of our inductive step where in each step we introduce a $(1+O(L/d_k))$ approximation factor, which we can upper bound by using the worst (narrowest layer).</p>
 
 <p>Now, recall the result for first moments:
-\(\mathbb{E} [\dot\Theta_{k,l}] =  \begin{cases}
+\(\mathbb{E} [\dot\Theta_{k,l}] = \begin{cases}
 0 &amp; l &lt; L\\
 \eta_0 \Sigma^{k-1}(x,x')\prod_{i=k}^{L-1} \dot\Sigma^i(x,x') &amp; l=L
 \end{cases}\)</p>
 
-<p>In order to obtain variance we can now use the second moment minus first moment squared formula. Observe that the leading order of the terms for second moment layer $L$ is equal to the square of first moment. This means, the entire variance must be captured by the approximation error. We thus have:</p>
+<p>In order to obtain variance we can now use the second moment minus first moment squared formula. Observe that the leading order of the terms for second moment layer $L$ is equal to the square of the first moment. This means, the entire variance must be captured by the approximation error. We thus have:</p>
 
 \[\text{Var} [\dot\Theta_{k,l}] = \begin{cases}
 \frac{\eta_0^2}{d_l} (\Sigma^{k-1}(x,x'))^2\left(\prod_{i=k}^{l-1}(\dot\Sigma^i(x,x'))^2\right) \cdot \left(\prod_{i=l}^{L-1}\dot\Sigma^i(x',x')\right) &amp; l &lt; L\\
-\sum_{k}^{l} O(1/d_k)\eta_0^2 (\Sigma^{k-1}(x,x'))^2\left(\prod_{i=k}^{l-1}(\dot\Sigma^i(x,x'))^2\right)  &amp; l=L
+\sum_{k}^{l} O(1/d_k)\eta_0^2 (\Sigma^{k-1}(x,x'))^2\left(\prod_{i=k}^{l-1}(\dot\Sigma^i(x,x'))^2\right) &amp; l=L
 \end{cases}\]
 
 <p>It is clear that if we now tend all hidden layers to infinity $d_1,\dots, d_{L-1} \to \infty$, both variances will vanish. This means, both mean values indicate a deterministic scenario that there is zero variance.</p>
 
+<hr>
+
 <h3 id="putting-it-all-together">Putting It All Together</h3>
 
-<p>So far we have only considered isolated influence terms. In order to analyze the kernel evolution, we need to sum up all different terms. In the second moment analysis, this means computing cross terms of type $\mathbb{E} [\dot \Theta_{k,l}\dot \Theta_{k’,l}]$ where $k\neq k’$. Here, we can rely on the body of work laid out here to argue that these cross terms will vanish, because assuming wlog $k &lt; k’$, the weight terms $W^k$ cannot be paired with any other term, and hence, the entire cross term will vanish. Therefore, both mean variance of the kernel shift at $l$ will be simply equal to the sum of all influence terms from $k=1$ up until $k=L$. As we know by now, the variances were already vanishing, and mean of middle-layers was also vanishing. Thus, we here will only focus on the last layer kernel shift first moment, which is sum of all terms leading up to it:</p>
+<p>So far we have only considered isolated influence terms. In order to analyze the kernel evolution, we need to sum up all different terms. In the second moment analysis, this means computing cross terms of type $\mathbb{E} [\dot \Theta_{k,l}\dot \Theta_{k’,l}]$ where $k\neq k’$. Here, we can rely on the body of work laid out here to argue that these cross terms will vanish, because assuming without loss of generality $k &lt; k’$, the weight terms $W^k$ cannot be paired with any other term, and hence, the entire cross term will vanish. Therefore, both mean and variance of the kernel shift at $l$ will be simply equal to the sum of all influence terms from $k=1$ up until $k=L$. As we know by now, the variances were already vanishing, and the mean of middle-layers was also vanishing. Thus, here we will only focus on the last layer kernel shift first moment, which is the sum of all terms leading up to it:</p>
 
 \[\dot\Theta^L = \sum_{k=1}^L \dot \Theta_{k,L} = \sum_{k=1}^L \eta_0 \Sigma^{k-1}(x,x')\prod_{i=k}^{L-1}\dot\Sigma^i(x,x')\]
 
-<p>Note that here we have dropped the expectation, because by now know know that these are deterministic quantities with zero variance.</p>
+<p>Note that here we have dropped the expectation, because by now we know that these are deterministic quantities with zero variance.</p>
 
 <p>From this formula, it is not hard to notice the famous recursion of NTK:
 \(\dot\Theta^L = \eta_0\Sigma^{L-1}(x,x')+\dot\Theta^{L-1}\dot\Sigma^{L-1}(x,x')\)</p>
 
 <p>This finishes our NTK derivations and establishes all the key facts in that paper.</p>
 
+<hr>
+
 <h3 id="a-more-nuanced-first-moment-calculation">A More Nuanced First Moment Calculation</h3>
 
-<p>After reviewing my proof above, which replicates NTK result, I’ve realized a flaw in the argument. More concretely, I tried to make a subtle assumption of independence more rigorous. But as I made it more rigorous, it became clear that there is no easy way of bounding it without rigorously working out all the details. Somewhat annoyingly, after a very long and laborious sequence of calculations, this</p>
+<p>After reviewing my proof above, which replicates the NTK result, I’ve realized a flaw in the argument. More concretely, I tried to make a subtle assumption of independence more rigorous. But as I made it more rigorous, it became clear that there is no easy way of bounding it without rigorously working out all the details. Somewhat annoyingly, after a very long and laborious sequence of calculations, this resulted in the same qualitative result, as in, it did not alter the main result of NTK recursion.</p>
 
-<p><strong>Heart of the problem:</strong> At the heart of this discrepancy is the following observation: Suppose that elements of $W$ are drawn iid from $\mathcal{N}(0,1/d)$, and construct $h=\phi(z(W x))$ where $x$ is some input vector that represents post-activations of the previous layer. In my previous analysis, whenever terms like $\phi’(z_s)\phi’(z_r)W_{rj}W_{s’j’}$ appeared, where weight terms isolating all places this weight term appears, the term vanishes in expectation except for terms that match indices of weights. This is in fact true in the asymptotic sense, because the influence of elements of weights on elements of $z$ will diminish with a $O(1/d)$ rate. This step allowed me to then enforce the equality of indices $r=s$ and proceed the analysis from there. The fatal issue with this analysis is that it discounts the fact that while the term does decay with $O(1/d)$ rate, the number of $r\neq s$ terms is factor $O(d^2)$ larger than the $O(r=s)$ terms because they have one more free summation over a index with $d$ terms. Therefore, for the $r= s$ case we have $O(d)$ terms of order $O(1)$, amounting to $O(d)$ total contribution, and in the $r\neq s$ case we have $O(d^2)$ terms of order $O(1/d)$, amounting to a similar $O(d)$ total contribution.</p>
+<p><strong>Heart of the problem:</strong> At the heart of this discrepancy is the following observation: Suppose that elements of $W$ are drawn i.i.d. from $\mathcal{N}(0,1/d)$, and construct $h=\phi(z(W x))$ where $x$ is some input vector that represents post-activations of the previous layer. In my previous analysis, whenever terms like $\phi’(z_s)\phi’(z_r)W_{rj}W_{s’j’}$ appeared, where weight terms isolating all places this weight term appears, the term vanishes in expectation except for terms that match indices of weights. This is in fact true in the asymptotic sense, because the influence of elements of weights on elements of $z$ will diminish with an $O(1/d)$ rate. This step allowed me to then enforce the equality of indices $r=s$ and proceed the analysis from there. The fatal issue with this analysis is that it discounts the fact that while the term does decay with $O(1/d)$ rate, the number of $r\neq s$ terms is a factor $O(d^2)$ larger than the $O(r=s)$ terms because they have one more free summation over an index with $d$ terms. Therefore, for the $r=s$ case we have $O(d)$ terms of order $O(1)$, amounting to $O(d)$ total contribution, and in the $r\neq s$ case we have $O(d^2)$ terms of order $O(1/d)$, amounting to a similar $O(d)$ total contribution.</p>
 
-<h3 id="our-refined-strategy">Our refined Strategy</h3>
+<hr>
 
-<p>Proceeding similar to before, we want to evaluate the first moment. But here, our overall strategy will be very different to compute expectations and error terms: we will now pack every term that is directly dependent on $W^l$, meaning the weight terms itself and the pre-activations $z^{l+1}$. The reasoning is as follows: conditioned on knowing the norms and angles of $\phi(z^{l-1}(x)),\phi(z^{l-1}(x’))$, is sufficient to compute the expectation of these aforementioned terms. The highly important nuance is that, these norms and angles have a high degree of concentration. Because, due to CLT, deviation of average inner product from two vectors with $n$ iid elements, will be highly concentrated around its expected value, and its variance will decay as $1/\sqrt{n}$. However, under finite third moment assumptions about the activations, the CLT gives us light tailed bounds, meaning that, these deviations will be within $O(1/\sqrt{n})$ of their expected values with a high probability, where the constant on the deviation $c$ appears exponentially in our tail bound $\text{failure probability}\approx \exp( - \alpha c)$. Therefore, we can use union bounds over all layers to guarantee this type of concentration across all layers. Assuming for now that depth is only a constant and not growing with width, we can assume these $O(1/\sqrt{\text{width}})$ approximation factors hold for all “sample mean vs. expectation” steps in our analysis. After plugging these approximation factors, namely using Taylor expansions around the expected values, we will obtain $1+O(1/\sqrt{n})$ corrections over the final result, which is multiplicative error factors that will converge to $1$ as width increases. That said, these error factors could become significant and complicate a later second order analysis. But as we learn in this section, even the first order seems to be more complicated than previously thought and we leave the second order correction for a separate analysis.</p>
+<h3 id="our-refined-strategy">Our Refined Strategy</h3>
+
+<p>Proceeding similar to before, we want to evaluate the first moment. But here, our overall strategy will be very different to compute expectations and error terms: we will now pack every term that is directly dependent on $W^l$, meaning the weight terms themselves and the pre-activations $z^{l+1}$. The reasoning is as follows: conditioned on knowing the norms and angles of $\phi(z^{l-1}(x)),\phi(z^{l-1}(x’))$, it is sufficient to compute the expectation of these aforementioned terms. The highly important nuance is that, these norms and angles have a high degree of concentration. Because, due to CLT, the deviation of the average inner product from two vectors with $n$ i.i.d. elements, will be highly concentrated around its expected value, and its variance will decay as $1/\sqrt{n}$. However, under finite third moment assumptions about the activations, the CLT gives us light-tailed bounds, meaning that these deviations will be within $O(1/\sqrt{n})$ of their expected values with a high probability, where the constant on the deviation $c$ appears exponentially in our tail bound $\text{failure probability}\approx \exp( - \alpha c)$. Therefore, we can use union bounds over all layers to guarantee this type of concentration across all layers. Assuming for now that depth is only a constant and not growing with width, we can assume these $O(1/\sqrt{\text{width}})$ approximation factors hold for all “sample mean vs. expectation” steps in our analysis. After plugging these approximation factors, namely using Taylor expansions around the expected values, we will obtain $1+O(1/\sqrt{n})$ corrections over the final result, which are multiplicative error factors that will converge to $1$ as width increases. That said, these error factors could become significant and complicate a later second-order analysis. But as we learn in this section, even the first order seems to be more complicated than previously thought and we leave the second order correction for a separate analysis.</p>
 
 <p>Let us define a quantity that will be useful throughout our correct NTK results:
 \(\begin{align}
@@ -551,11 +567,11 @@ C^l_{f,g} &amp;:=\mathbb{E}[f(z)\,g(z')] \quad \text{where } (z,z')\sim \mathcal
 Q_f^{l} &amp;:= \mathbb{E}[f(z)^2] \quad \text{where } z \sim \mathcal{N}\left(0, \Sigma^{l-1}_{1,1}\right)
 \end{align}\)</p>
 
-<p>We already had introduced the notation $\dot\Sigma^k(x,x’):=\mathbb{E} [\phi’(z)\phi’(z’)]$ where $(z,z’)\sim \mathcal{N}(0,\Sigma^{k-1}(x,x’))$, which is a special case of our new operator. The reason for the choice of indexing with $C^l$ being based on $\Sigma^{l-1}$ is that now, we can simplify expressions such as $\mathbb{E} [f(z_i^k(x)) g(z^k_j(x’))]$ as $C^k_{f,g}$. In other words, the correct indexing will be the one that matches superscript of $C$ with the index of $z$, which is more intuitive than if there was some offset. This definition is also more appealing as it makes a very explicit reference to the function which we are taking expectation. With this definition we have:</p>
+<p>We already had introduced the notation $\dot\Sigma^k(x,x’):=\mathbb{E} [\phi’(z)\phi’(z’)]$ where $(z,z’)\sim \mathcal{N}(0,\Sigma^{k-1}(x,x’))$, which is a special case of our new operator. The reason for the choice of indexing with $C^l$ being based on $\Sigma^{l-1}$ is that now, we can simplify expressions such as $\mathbb{E} [f(z_i^k(x)) g(z^k_j(x’))]$ as $C^k_{f,g}$. In other words, the correct indexing will be the one that matches the superscript of $C$ with the index of $z$, which is more intuitive than if there was some offset. This definition is also more appealing as it makes a very explicit reference to the function which we are taking expectation. With this definition we have:</p>
 
 \[M_{k,l} =\frac{C^k_{\phi',\phi'}}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\sum_{j=1}^{d_k} \frac{\partial z^l_i(x)}{\partial h^k_j} \frac{\partial z^L(x')}{\partial h^k_j}\right]\]
 
-<p>Now, similar to before, we will unroll the chain rule formula from $k$ onto $k+1$ but this time wrt post-activations, ie, from $h^k$ to $h^{k+1}$:</p>
+<p>Now, similar to before, we will unroll the chain rule formula from $k$ onto $k+1$ but this time with respect to post-activations, i.e., from $h^k$ to $h^{k+1}$:</p>
 
 \[\begin{align}
 M_{k,l}&amp;= \frac{C^k_{\phi',\phi'}}{d_l} \sum_{i,j,s,r} \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial h^{k+1}_s}\frac{\partial h^{k+1}_s(x)}{\partial h^k_j} \frac{\partial z^L(x')}{\partial h^{k+1}_r}\frac{\partial h^{k+1}_r(x')}{\partial h^k_j}\right] \\
@@ -563,9 +579,9 @@ M_{k,l}&amp;= \frac{C^k_{\phi',\phi'}}{d_l} \sum_{i,j,s,r} \mathbb{E}\left[ \fra
 &amp;=\frac{C^k_{\phi',\phi'}}{d_l} \sum_{i,s,r} \mathbb{E}\left[\frac{\partial z^l_i(x)}{\partial h^{k+1}_s} \frac{\partial z^L(x')}{\partial h^{k+1}_r}\right]\cdot \underbrace{\sum_{j} \mathbb{E} \left[\phi'(z^{k+1}_s(x))\phi'(z^{k+1}_r(x')) W^k_{sj} W^k_{rj} \right] }_{T_{rs}:=}
 \end{align}\]
 
-<p>Note that $z^{k+1} = W^k h^k + b^k$. Thus, in the last step, we invoked our packing argument of all terms directly involving $W^k$, assuming variance and covariances of previous layer are equal to their mean field values.</p>
+<p>Note that $z^{k+1} = W^k h^k + b^k$. Thus, in the last step, we invoked our packing argument of all terms directly involving $W^k$, assuming variance and covariances of the previous layer are equal to their mean-field values.</p>
 
-\[T_{rs}=  \sum_{j}\mathbb{E} \left[\phi'\left( \sum_{j=1}^{d_k} W_{sj}^k h_j^k(x) + b_s^k\right)\phi'\left( \sum_{j=1}^{d_k} W_{rj}^k h_j^k(x') + b_r^k\right) W^k_{sj} W^k_{rj} \right]\]
+\[T_{rs}= \sum_{j}\mathbb{E} \left[\phi'\left( \sum_{j=1}^{d_k} W_{sj}^k h_j^k(x) + b_s^k\right)\phi'\left( \sum_{j=1}^{d_k} W_{rj}^k h_j^k(x') + b_r^k\right) W^k_{sj} W^k_{rj} \right]\]
 
 <p>Here we can prove a very useful Lemma based on Stein’s lemma:</p>
 
@@ -595,7 +611,7 @@ where we canceled out a factor of $d_k$ with the summation.</p>
 \(\begin{align}
 \mathbb{E} [T_{rs}] &amp;= \sum_{j=1}^{d_k}\mathbb{E} \left[\phi'\left( \sum_{j=1}^{d_k} W_{sj}^k h_j^k(x) + b_s^k\right) W^k_{sj} \right] \cdot \mathbb{E}\left[\phi'\left( \sum_{j=1}^{d_k} W_{rj}^k h_j^k(x') + b_r^k\right) W^k_{rj} \right] \\
 &amp;=\sum_{j=1}^{d_k} \frac{h_j^k(x)}{d_k}\mathbb{E} [\phi''(z)]\cdot \frac{h_j^k(x')}{d_k}\mathbb{E}[\phi''(z')] \quad \text{where } (z,z')\sim \mathcal{N}(0,\Sigma^{k+1}) \\
-&amp;= \frac{1}{d_k}(\mu_{\phi''}^{k+1})^2 \frac{\sum_{j=1}^{d_k} h^k_j(x)h^k_j(x')}{d_k} \quad \text{where } \mu_f^l:= \mathbb{E} [f(z)], \; z \sim \mathcal{N}(0,\Sigma^{l-1})  \\
+&amp;= \frac{1}{d_k}(\mu_{\phi''}^{k+1})^2 \frac{\sum_{j=1}^{d_k} h^k_j(x)h^k_j(x')}{d_k} \quad \text{where } \mu_f^l:= \mathbb{E} [f(z)], \; z \sim \mathcal{N}(0,\Sigma^{l-1}) \\
 &amp;=\frac{1}{d_k} \Sigma^{k} (x,x')(\mu^{k+1}_{\phi''})^2
 \end{align}\)</p>
 
@@ -605,13 +621,13 @@ where we canceled out a factor of $d_k$ with the summation.</p>
 M_{k,l}&amp;=\frac{C^k_{\phi',\phi'}}{d_l} \sum_{i, j} \mathbb{E}\left[\frac{\partial z^l_i(x)}{\partial h^k_j} \frac{\partial z^L(x')}{\partial h^k_j}\right]\\
 &amp;=\frac{C^k_{\phi',\phi'}}{d_l} \sum_{i,s,r} \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial h^{k+1}_s} \frac{\partial z^L(x')}{\partial h^{k+1}_r}\right]\cdot \mathbb{E}\; [T_{rs}] \\
 &amp;=\frac{C^k_{\phi',\phi'}}{d_l} \underbrace{\sum_{i,r}\mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial h^{k+1}_r} \frac{\partial z^L(x')}{\partial h^{k+1}_r}\right] }_{D_{k+1,l}}C^{k+1}_{\phi',\phi'} \\
-&amp;\quad + \frac{C^k_{\phi',\phi'}}{d_l} \underbrace{\sum_{i,r\neq s}  \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial h^{k+1}_s} \frac{\partial z^L(x')}{\partial h^{k+1}_r}\right]}_{S_{k+1,l}}\frac{1}{d_k}\Sigma^{k} (x,x')(\mu^{k+1}_{\phi''})^2
+&amp;\quad + \frac{C^k_{\phi',\phi'}}{d_l} \underbrace{\sum_{i,r\neq s} \mathbb{E}\left[ \frac{\partial z^l_i(x)}{\partial h^{k+1}_s} \frac{\partial z^L(x')}{\partial h^{k+1}_r}\right]}_{S_{k+1,l}}\frac{1}{d_k}\Sigma^{k} (x,x')(\mu^{k+1}_{\phi''})^2
 \end{align}\]
 
 <p>From the identity for $M_{k,l}$ above we can write and conclude the following:
 \(\begin{align}
-M_{k,l} = \frac{C^k_{\phi',\phi'}}{d_l} D_{k,l} &amp;=  \frac{C^k_{\phi',\phi'}}{d_l} C^{k+1}_{\phi',\phi'} D_{k+1,l} +   \frac{C^k_{\phi',\phi'}}{d_l}\frac{\Sigma^{k} (x,x')(\mu^{k+1}_{\phi''})^2}{d_k}   S_{k+1,l}\\
-\implies   D_{k,l} &amp;=   C^{k+1}_{\phi',\phi'} D_{k+1,l} +  \frac{\Sigma^{k} (x,x')(\mu^{k+1}_{\phi''})^2}{d_k}  S_{k+1,l}    
+M_{k,l} = \frac{C^k_{\phi',\phi'}}{d_l} D_{k,l} &amp;= \frac{C^k_{\phi',\phi'}}{d_l} C^{k+1}_{\phi',\phi'} D_{k+1,l} + \frac{C^k_{\phi',\phi'}}{d_l}\frac{\Sigma^{k} (x,x')(\mu^{k+1}_{\phi''})^2}{d_k} S_{k+1,l}\\
+\implies D_{k,l} &amp;= C^{k+1}_{\phi',\phi'} D_{k+1,l} + \frac{\Sigma^{k} (x,x')(\mu^{k+1}_{\phi''})^2}{d_k} S_{k+1,l}
 \end{align}\)</p>
 
 <p>At this point, it is clear that some other recursion for $S$ is needed. Following similar analysis, we can derive:</p>
@@ -619,7 +635,7 @@ M_{k,l} = \frac{C^k_{\phi',\phi'}}{d_l} D_{k,l} &amp;=  \frac{C^k_{\phi',\phi'}}
 <ol>
   <li>
     <p><strong>Recursion for $D$:</strong>
-\(D_{k,l} =  C^{k+1}_{\phi',\phi'} D_{k+1,l} + \frac{1}{d_k} C^{k+1}_{\phi,\phi} (\mu^{k+1}_{\phi''})^2 S_{k+1,l}\)</p>
+\(D_{k,l} = C^{k+1}_{\phi',\phi'} D_{k+1,l} + \frac{1}{d_k} C^{k+1}_{\phi,\phi} (\mu^{k+1}_{\phi''})^2 S_{k+1,l}\)</p>
   </li>
   <li>
     <p><strong>Recursion for $S$:</strong>
@@ -633,22 +649,22 @@ S_{L-1,L} &amp;= 0 \\
 D_{L-1,L} &amp;= 1
 \end{align}\)</p>
 
-<p>We can represent this as a \(2 \times 2\) transfer matrix \(\mathbf{T}_k\) where \(v_k = \mathbf{T}_k v_{k+1}\) with \(v_k = (D_{k,L}, S_{k,L})\):</p>
+<p>We can represent this as a $2 \times 2$ transfer matrix $\mathbf{T}<em>k$ where $v_k = \mathbf{T}_k v</em>{k+1}$ with $v_k = (D_{k,L}, S_{k,L})$:</p>
 
 \[\mathbf{T}_k = \begin{pmatrix}
 C^{k+1}_{\phi',\phi'} &amp; \frac{1}{d_k} C^{k+1}_{\phi,\phi} (\mu^{k+1}_{\phi''})^2 \\
 2C^{k+1}_{\phi'',\phi''} (\mu^{k+1}_\phi)^2 &amp; (\mu^{k+1}_\phi)^2 (\mu^{k+1}_{\phi''})^2
 \end{pmatrix}\]
 
-<p>However, under the $\mathbf{T}_k$ dynamics, the off-diagonal terms will also have a $O(1/d_k)$ order wrt to width. Thus, we can conclude that in the mean field limit, the effect of non-diagonal terms will be vanishing at $O(1/d_k)$ rate. In other words, we could ignore the off-diagonal terms, which gives us back the NTK original result.</p>
+<p>However, under the $\mathbf{T}_k$ dynamics, the off-diagonal terms will also have an $O(1/d_k)$ order with respect to width. Thus, we can conclude that in the mean-field limit, the effect of non-diagonal terms will be vanishing at an $O(1/d_k)$ rate. In other words, we could ignore the off-diagonal terms, which gives us back the NTK original result.</p>
 
-<p><strong>Implication:</strong> For the large part, to the extent that we wanted to check if the classical NTK recursion is valid, our much longer and complicated analysis only reproduced that result as opposed to violate it. But the interesting and yet unresolved issue is that, apart from random guessing, it was very hard to tell that this term will vanish in comparison, without conducting the detailed and laborous algebraic work. Perhaps, there are deeper and more transcendent insights that could have informed us about the extra term scaling without having to actually do it. Another interesting result of the above inquiry is that it shows these extra terms, whie being small, may play a bigger role if we somehow amplify these $O/\text{wdith}$ terms, namely in the feature learning regime. In that regard, our analysis shows that their first order contribution entirely vanishes if $\mathbb{E} [\phi(z)] = 0$ for an activation, these non-diagonal terms can always be ignored. This is because the mean activations $\mu^{k+1}_\phi$ appear in the off-diagonal correction terms. This is quite remarkable, in that, these terms in the first order will be zero exactly (not asymptotically), which might be relevant to feature and deeper inquiries.</p>
+<p><strong>Implication:</strong> For the large part, to the extent that we wanted to check if the classical NTK recursion is valid, our much longer and complicated analysis only reproduced that result as opposed to violating it. But the interesting and yet unresolved issue is that, apart from random guessing, it was very hard to tell that this term will vanish in comparison, without conducting the detailed and laborious algebraic work. Perhaps, there are deeper and more transcendent insights that could have informed us about the extra term scaling without having to actually do it. Another interesting result of the above inquiry is that it shows these extra terms, while being small, may play a bigger role if we somehow amplify these $O/\text{width}$ terms, namely in the feature learning regime. In that regard, our analysis shows that their first-order contribution entirely vanishes if $\mathbb{E} [\phi(z)] = 0$ for an activation; these non-diagonal terms can always be ignored. This is because the mean activations $\mu^{k+1}_\phi$ appear in the off-diagonal correction terms. This is quite remarkable, in that, these terms in the first order will be zero exactly (not asymptotically), which might be relevant to feature and deeper inquiries.</p>
 
-<p>Therefore,</p>
+<hr>
 
 <h3 id="concluding-remarks">Concluding Remarks</h3>
 
-<p>The key takeaways from our analysis is that there is a drastic difference between the middle layers and last layer, in that the last layer is the only one that exhibits first moment kernel shift. Furthermore, we saw that this was a result of asymmetries in the kernel evolution dynamics. This progression from detailed first-principles analysis to the celebrated NTK recursion represents a fundamental advance in our theoretical understanding of deep neural networks in the infinite-width limit.</p>
+<p>The key takeaway from our analysis is that there is a drastic difference between the middle layers and the last layer, in that the last layer is the only one that exhibits first moment kernel shift. Furthermore, we saw that this was a result of asymmetries in the kernel evolution dynamics. This progression from detailed first-principles analysis to the celebrated NTK recursion represents a fundamental advance in our theoretical understanding of deep neural networks in the infinite-width limit.</p>
 
       </d-article>
 
