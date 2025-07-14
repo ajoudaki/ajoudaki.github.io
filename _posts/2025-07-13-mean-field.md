@@ -14,8 +14,8 @@ authors:
 bibliography: refs.bib
 
 toc:
-  - name: "Preliminary"  
   - name: "Why Mean Field?"
+  - name: "Preliminary"  
   - ame: "LSTM: A Solution for Recurrent Networks"
   - name: "Glorot & Bengio Initialization for Feedforward Networks"
   - name: "Deep Signal Propagation and the Edge of Chaos"
