@@ -182,18 +182,17 @@
         <d-contents>
           <nav class="l-text figcaption">
           <h3>Contents</h3>
-            <div><a href="#why-mean-field">Why Mean Field?</a></div>
-            <div><a href="#preliminary">Preliminary</a></div>
-            <div><a href="#"></a></div>
-            <div><a href="#glorot-bengio-initialization-for-feedforward-networks">Glorot &amp; Bengio Initialization for Feedforward Networks</a></div>
-            <div><a href="#deep-signal-propagation-and-the-edge-of-chaos">Deep Signal Propagation and the Edge of Chaos</a></div>
-            <div><a href="#bayesian-prediction-with-the-nngp">Bayesian Prediction with the NNGP</a></div>
-            <div><a href="#the-neural-tangent-kernel-dynamics-of-training">The Neural Tangent Kernel: Dynamics of Training</a></div>
+            <div><a href="#intro">Intro</a></div>
+            <div><a href="#lstm">LSTM</a></div>
+            <div><a href="#glorot-initialization">Glorot initialization</a></div>
+            <div><a href="#deep-signal-propagation">Deep Signal Propagation</a></div>
+            <div><a href="#neural-net-gaussian-process-nngp">Neural Net Gaussian Process (NNGP)</a></div>
+            <div><a href="#ntk">NTK</a></div>
             
           </nav>
         </d-contents>
 
-        <h3 id="intro">Intro</h3>
+        <h2 id="intro">Intro</h2>
 
 <p>This post is dedicated to a review of the most classical results in theory of deep neural networks from the point of view of infintely wide networks, aka the mean field regime. Mean-field study of neural networks focuses on studying the macro-statistical properties of neural networks, when width or number of features converges to infinity. This approach originates from statistical physics, where study of macrostatistics of molecules and atoms is a lot more effective in explaining them rather than modeling each one individually. Mean field analysis of neural networks dates back at least two decades, appearing in the first introduction of LSTM paper.</p>
 
@@ -223,7 +222,7 @@
 
 <p>Despite the amazing progress of the last 1-1.5 decades of research, there are so many deep and fascinating questions that remain fully open. First, the question of finite vs mean field analses still remains a hot and not fully resolved area. But even deeper and more open are questions about learning. While the muP regime does lead to deterministic learning regime, it does not tell us what features are we learning, or how do we converge to solutions such that we don’t overfit.</p>
 
-<h3 id="preliminary">Preliminary</h3>
+<h2 id="preliminaries">Preliminaries</h2>
 
 <p>One of the challenges I had while reading these papers was the constant changing of symbols and notations. So I thought introducing and using a consistent notation will go a long way to make them more readable.</p>
 
@@ -280,7 +279,7 @@ As we also take \(n_l \to \infty\), the term in the parenthesis becomes an expec
 
 <p>The earliest challenge in training deep networks was the instability of the backpropagation algorithm.</p>
 
-<h3 id="lstm-a-solution-for-recurrent-networks">LSTM: A Solution for Recurrent Networks</h3>
+<h3 id="lstm">LSTM</h3>
 
 <p>In recurrent neural networks (RNNs), which can be seen as very deep networks unfolded in time, the problem is particularly acute. The backpropagated error signal at a given time step is a product of many Jacobian matrices from future time steps. As analyzed by <a class="citation" href="#hochreiter1991">(Hochreiter, 1991)</a>, this product causes the error to either vanish or blow up exponentially.</p>
 
@@ -288,7 +287,7 @@ As we also take \(n_l \to \infty\), the term in the parenthesis becomes an expec
 \(\frac{\partial s_c(t)}{\partial s_c(t-1)} = 1\)
 This guarantees that error can flow backward through many time steps without its magnitude being scaled up or down, thus preventing the vanishing and exploding gradient problem. Gating mechanisms are then introduced to control the flow of information into and out of this stable memory cell.</p>
 
-<h3 id="glorot--bengio-initialization-for-feedforward-networks">Glorot &amp; Bengio Initialization for Feedforward Networks</h3>
+<h3 id="glorot-initialization">Glorot Initialization</h3>
 
 <p>For feedforward networks, a similar but distinct problem exists. <a class="citation" href="#glorot2010">(Glorot &amp; Bengio, 2010)</a> analyzed how the variance of activations and gradients changes as they propagate through the layers. The key idea is to maintain stable training by ensuring that the variance of outputs of each layer equals the variance of its inputs.</p>
 
@@ -310,7 +309,7 @@ To maintain constant gradient variance, we need:
 \(\text{Var}[W^l] = \frac{2}{n_{l-1} + n_l}\)
 For a uniform distribution \(U[-a, a]\), this corresponds to \(a = \sqrt{\frac{6}{n_{l-1} + n_l}}\).</p>
 
-<h2 id="deep-signal-propagation-and-the-edge-of-chaos">Deep Signal Propagation and the Edge of Chaos</h2>
+<h2 id="deep-signal-propagation">Deep Signal Propagation</h2>
 
 <p>The theory developed by <a class="citation" href="#schoenholz2017">(Schoenholz et al., 2017)</a> moved beyond variance-based heuristics to develop a precise mean-field theory for wide, randomly initialized networks.</p>
 
@@ -438,7 +437,7 @@ This reveals a beautiful duality:</p>
   <li>Edge of chaos (\(\chi_1 = 1\)): Stable training</li>
 </ul>
 
-<h2 id="the-neural-network-gaussian-process-nngp">The Neural Network Gaussian Process (NNGP)</h2>
+<h2 id="neural-net-gaussian-process-nngp">Neural Net Gaussian Process (NNGP)</h2>
 
 <p>As first noted by <a class="citation" href="#neal1994">(Neal, 1994)</a> and rigorously extended by <a class="citation" href="#lee2018">(Lee et al., 2018)</a>, the mean-field theory has a profound consequence: in the infinite-width limit, the entire network function becomes a draw from a Gaussian Process.</p>
 
@@ -458,7 +457,7 @@ where the kernel \(K^{L+1}\) is the same covariance function derived from the me
 
 <p>The covariance function of this process is precisely the object \(q_{ab}^l\) we tracked in the mean-field theory, which is why it is called a GP kernel. A function \(K(x,x')\) is a valid covariance kernel if the Gram matrix \([K(x_i, x_j)]_{i,j}\) is positive semi-definite for any set of points \(\{x_i\}\). This holds for the NNGP kernel because it is constructed from expectations of outer products, \(\mathbb{E}[f(x)f(x')^T]\), which are inherently positive semi-definite.</p>
 
-<h3 id="bayesian-prediction-with-the-nngp">Bayesian Prediction with the NNGP</h3>
+<h3 id="the-nngp-kernel">The NNGP kernel</h3>
 
 <p>This equivalence allows for fully Bayesian inference without ever training a network. Given a training set 
 \(\mathcal{D} = \{(x_i, t_i)\}^n_{i=1}\) and assuming Gaussian observation noise \(\epsilon \sim \mathcal{N}(0, \sigma_\epsilon^2)\), we can predict the output \(z^\star\) for a new test point \(x^\star\). The joint distribution of training targets and the test prediction is Gaussian. The predictive distribution \(P(z^\star | \mathcal{D}, x^\star)\) is also Gaussian, with a posterior mean and variance given by:
@@ -468,7 +467,7 @@ where the kernel \(K^{L+1}\) is the same covariance function derived from the me
 \end{align}\)
 <strong>Intuition:</strong> The predicted mean \(\overline{\mu}\) is a weighted average of the training targets \(t\). The weights are computed by solving a linear system that asks: “How much does the output at each training point \(x_j\) influence the output at the test point \(x^\star\)?” This influence is measured by the kernel \(K(x^\star, x_j)\), while correcting for redundancies between the training points themselves (the \((K_{\mathcal{D},\mathcal{D}} + \sigma_\epsilon^2 I)^{-1}\) term). The posterior variance \(\overline{K}\) measures our uncertainty; it starts at the prior variance \(K_{x^\star,x^\star}\) and is reduced by an amount corresponding to the information gained from the training data.</p>
 
-<h2 id="the-neural-tangent-kernel-dynamics-of-training">The Neural Tangent Kernel: Dynamics of Training</h2>
+<h2 id="ntk">NTK</h2>
 
 <p>The GP correspondence describes networks at initialization. <a class="citation" href="#jacot2018">(Jacot et al., 2018)</a> answered the crucial question: what happens during training?</p>
 
