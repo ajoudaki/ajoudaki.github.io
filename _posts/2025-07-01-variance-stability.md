@@ -1,5 +1,5 @@
 ---
-layout: post 
+layout: distill 
 title: "On the global stability of activation variance"
 description: "Can an activation have multiple variance stable points? This post proves it affirmitively. "
 giscus_comments: true
