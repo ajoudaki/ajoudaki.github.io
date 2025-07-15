@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-07-14T17:19:45+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-07-15T10:40:38+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 </subtitle><entry><title type="html">The Mean-Field View of Deep Learning</title><link href="https://ajoudaki.github.io/blog/2025/mean-field/" rel="alternate" type="text/html" title="The Mean-Field View of Deep Learning" /><published>2025-07-13T00:00:00+00:00</published><updated>2025-07-13T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/mean-field</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/mean-field/"><![CDATA[<h2 id="intro">Intro</h2>
 
 <p>This post is dedicated to a review of the foundational results in the theory of deep neural networks, viewed through the lens of infinitely wide networks—a regime often called the “mean field.” The mean-field approach, which has its roots in statistical physics, shifts our focus from the chaotic behavior of individual neurons to the stable, predictable macro-statistics of the network as a whole. This perspective allows us to tame the immense complexity of deep models and uncover the principles governing how they learn.</p>
@@ -649,20 +649,18 @@ In the infinite-width limit, the weights \(W^L\) are independent of the lower-la
 
 <p>We begin by defining the precise mathematical setting for our analysis.</p>
 
-<p>We consider a fully-connected neural network with an input layer, $L-1$ hidden layers with widths $d_1,\dots, d_{L-1}$, and a scalar output layer $d_L=1$, for a total of $L$ layers of activations.</p>
+<p>We consider a fully-connected neural network with an input layer, \(L-1\) hidden layers with widths \(d_1,\dots, d_{L-1}\), and a scalar output layer \(d_L=1\), for a total of \(L\) layers of activations.</p>
 
 <ul>
   <li><strong>Layer 0 (Input):</strong> $h^0(x) = x \in \mathbb{R}^{d_0}$</li>
-  <li><strong>Hidden Layers ($1 \leq l &lt; L$):</strong>
-\(\begin{align}
-z^l(x) &amp;= W^{l-1} h^{l-1}(x) + b^{l-1} \quad \text{(Pre-activation)} \\
-h^{l-1}(x) &amp;= \phi(z^{l-1}(x)) \quad \text{(Activation)}
-\end{align}\)</li>
-  <li><strong>Layer $L$ (Output):</strong>
-\(z^L(x) = W^{L-1} h^{L-1}(x) + b^{L-1} \quad \text{(Pre-activation, scalar)}\)</li>
+  <li><strong>Hidden Layers ($1 \leq l &lt; L$):</strong></li>
 </ul>
 
-<p>For simplicity, as specified in the analysis, we <strong>define the loss to be the network output itself</strong>, evaluated at an input $x’$: $\mathcal{L} = z^L(x’)$. This captures the essential structure of the gradients without loss of generality.</p>
+<p>\begin{align}
+&amp;z^l(x) = W^{l-1} h^{l-1}(x) + b^{l-1} &amp;&amp; \text{(Pre-activation)} \cr
+&amp;h^{l-1}(x) = \phi(z^{l-1}(x)) &amp;&amp; \text{(Activation)} \cr
+&amp;z^L(x) = W^{L-1} h^{L-1}(x) + b^{L-1} &amp;&amp; \text{(output, scalar)}
+\end{align}</p>
 
 <p>The weights and biases are initialized as i.i.d. zero-mean Gaussian variables with fan-in variance scaling:
 \(\begin{align}
@@ -670,27 +668,34 @@ W^{l}_{ij} &amp;\sim \mathcal{N}(0, \sigma_w^2 / d_{l}) \\
 b^{l}_i &amp;\sim \mathcal{N}(0, \sigma_b^2)
 \end{align}\)</p>
 
+<p><strong>Loss:</strong> For simplicity, as specified in the analysis, we define the loss to be the network output itself, evaluated at an input $x’$: \(\mathcal{L} = z^L(x')\). This captures the essential structure of the gradients without loss of generality.</p>
+
 <hr />
 
 <h3 id="kernel-in-the-mean-field-regime">Kernel in the Mean-Field Regime</h3>
 
-<p>The kernel at layer $l$ between $x$ and $x’$ is defined as the average inner product of their layer $l$ pre-activations:
-\(\Sigma^l(x,x') := \frac{1}{d_l} \langle z^l(x), z^l(x') \rangle\)</p>
+<p>The kernel at layer \(l\) between \(x\) and \(x'\) is defined as the average inner product of their layer \(l\) pre-activations:
+\begin{align}
+\Sigma^l(x,x’) := \frac{1}{d_l} \langle z^l(x), z^l(x’) \rangle
+\end{align}</p>
 
-<p>It is straightforward to show the following forward recursion for the kernel in the mean-field regime:
-\(\begin{align}
-\Sigma^0(x,x') &amp;:= \sigma_w^2 \frac{1}{d_0} x^\top x' + \sigma_b^2\\
-\Sigma^{l+1}(x,x') &amp;:= \sigma_w^2 \mathbb{E}\left[\phi(z)\phi(z')\right] + \sigma_b^2 \quad \text{where } (z,z')\sim \mathcal{N}(0,\Sigma^l(x,x'))
-\end{align}\)</p>
+<p>It is straightforward to show the following forward recursion for the kernel in the mean-field regime:</p>
+
+<p>\begin{align}
+\Sigma^0(x,x’) &amp;:= \sigma_w^2 \frac{1}{d_0} x^\top x’ + \sigma_b^2\cr
+\Sigma^{l+1}(x,x’) &amp;:= \sigma_w^2 \mathbb{E}\left[\phi(z)\phi(z’)\right] + \sigma_b^2 &amp;&amp; \text{where } (z,z’)\sim \mathcal{N}(0,\Sigma^l(x,x’))
+\end{align}</p>
 
 <p>Similar to the NTK paper, we can use a more specialized notation to denote the derivatives kernel at a specified layer:
-\(\dot \Sigma^l(x,x') := \sigma_w^2 \mathbb{E} [\phi'(z)\phi'(z')] \quad \text{where } (z,z')\sim \mathcal{N}\left(0, \Sigma^{l-1}(x,x')\right)\)</p>
+\begin{align}
+\dot \Sigma^l(x,x’) &amp;:= \sigma_w^2 \mathbb{E} [\phi’(z)\phi’(z’)] &amp;&amp; \text{where } (z,z’)\sim \mathcal{N}\left(0, \Sigma^{l-1}(x,x’)\right)
+\end{align}</p>
 
 <p>We are interested in how the network representations change under the influence of the gradient of the loss $\mathcal{L} = z^L(x’)$. Specifically, we analyze the change in the pre-activation $z^l(x)$ caused by updating the weights of layer $k-1$, which we denote $\Theta_{k,l}$.</p>
 
 <p>The change in the kernel $\Sigma^l$ is a sum of terms. A representative term, which we denote $\dot{\Theta}_{k,l}$, captures the influence of the gradient with respect to weights $W^{k-1}$ on the correlation between $z^l(x)$ and the loss $z^L(x’)$:</p>
 
-\[\dot{\Theta}_{k,l} := \frac{1}{d_l} \sum_{i=1}^{d_l}\left\langle \frac{\partial z^l_i(x)}{\partial W^{k-1}}, \frac{\partial z^L(x')}{\partial W^{k-1}} \right\rangle_{W^{k-1}}\]
+\[\dot{\Theta}_{k,l} := \frac{1}{d_l} \sum_{i=1}^{d_l}\left\langle \frac{\partial z^l_i(x)}{\partial W^{k-1}}, \frac{\partial z^L(x')}{\partial W^{k-1}} \right\rangle _{W^{k-1}}\]
 
 <p>where $\langle \cdot, \cdot \rangle_{W^{k-1}}$ denotes the Frobenius inner product over all elements of the weight matrix $W^{k-1}$. Using the outer product rule for gradients ($\nabla_W (Wa) = a^\top I$), this decomposes into:</p>
 
@@ -716,7 +721,7 @@ V_{k,l} &amp;:= Q_{k,l} - M_{k,l}^2 &amp;&amp; \text{(variance)}
 
 <hr />
 
-<h3 id="recursion-for-the-mean-influence-m_kl">Recursion for the Mean Influence $M_{k,l}$</h3>
+<h3 id="recursion-for-the-mean-influence">Recursion for the Mean Influence</h3>
 
 <p>A very important and clear fact is the Jacobian of two successive layers:</p>
 
@@ -763,7 +768,7 @@ where $(z,z’)\sim \mathcal{N}\left(0, \Sigma^{k-1}(x,x’)\right)$.</p>
 
 <hr />
 
-<h3 id="induction-basis-for-m">Induction Basis for $M$</h3>
+<h3 id="induction-basis-for-mean-influence">Induction Basis for Mean Influence</h3>
 
 <p>Recall the definition of $M$:
 \(M_{k,l} := \frac{1}{d_l} \sum_{i=1}^{d_l} \mathbb{E}\left[\sum_{j=1}^{d_l}\frac{\partial z^l_i(x)}{\partial z^k_j} \frac{\partial z^L(x')}{\partial z^k_j} \right]\)</p>
