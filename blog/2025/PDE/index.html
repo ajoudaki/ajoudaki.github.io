@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>From A Stochastic Traffic Jams to a Solvable PDE | Amir  Joudaki</title>
+    <title>From a Stochastic Traffic Jam to a Solvable PDE | Amir  Joudaki</title>
     <meta name="author" content="Amir  Joudaki">
     <meta name="description" content="An exploration of how complex, random traffic flow can be described by a simple, solvable continuous model.">
     <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
@@ -73,7 +73,7 @@
   <body>
 <d-front-matter>
     <script async type="text/json">{
-      "title": "From A Stochastic Traffic Jams to a Solvable PDE",
+      "title": "From a Stochastic Traffic Jam to a Solvable PDE",
       "description": "An exploration of how complex, random traffic flow can be described by a simple, solvable continuous model.",
       "published": "July 20, 2025",
       "authors": [
@@ -172,7 +172,7 @@
     <div class="post distill">
 
       <d-title>
-        <h1>From A Stochastic Traffic Jams to a Solvable PDE</h1>
+        <h1>From a Stochastic Traffic Jam to a Solvable PDE</h1>
         <p>An exploration of how complex, random traffic flow can be described by a simple, solvable continuous model.</p>
       </d-title>
 
@@ -409,13 +409,6 @@ c(k) &amp;= \frac{1}{\sqrt{24k + B}}
 
 <p><strong>Step 3: Applying the Boundary Condition.</strong> To find the constant $B$, we must match our continuous solution to the known behavior of the first intersection ($k=1$). Its dynamics are described by the discrete-time ODE using our derived physics:</p>
 
-\[\frac{dq_1}{dt} = f_0 - f_1 = 1 - f(q_1) \approx 1 - \left(\frac{1}{2} - \frac{1}{24q_1}\right) = \frac{1}{2} + \frac{1}{24q_1}\]
-
-<p>Wait, let’s re-check the boundary condition logic from the original post. The inflow to the first intersection is 1 (normalized). The outflow is $f_1(q_1)$. So $dq_1/dt = 1 - f_1(q_1)$. The original post used $f_0 = 1/2$. Why? The inflow at $k=0$ is deterministic and equals 1. $f_{-1}(t) \equiv 1$ was defined. The first <em>queued</em> intersection is $k=0$. Let’s call it $k=1$ to match the post. Then the inflow is $f_0(t) \equiv 1$.
-Then $\frac{dq_1}{dt} = 1 - f_1(q_1) \approx 1 - (\frac{1}{2} - \frac{1}{24q_1}) = \frac{1}{2} + \frac{1}{24q_1}$. For large $q_1$, this is $\frac{dq_1}{dt} \approx \frac{1}{2}$. So $q_1(t) \approx t/2$. This seems different from the original post’s derivation $q_1(t)=\sqrt{t/12}$. Let’s re-read the original model setup. Ah, <code class="language-plaintext highlighter-rouge">F_{-1}(t) \equiv 1</code>. But in the continuous model <code class="language-plaintext highlighter-rouge">f_0</code> is used. What is <code class="language-plaintext highlighter-rouge">f_0</code>? The model assumes a <em>stream</em> of intersections $k=0, 1, …$. The inflow to the <em>first</em> intersection $k=0$ is 1. Its outflow is $f_0$. This $f_0$ is the inflow to intersection $k=1$. The queue $q_0$ is assumed to be 0 (no queue before the first intersection).
-Then $f_0 = E[\min(X_0, Q_{-1} + F_{-1})] = E[\min(X_0, 0 + 1)] = E[X_0] = 1/2$.
-So the inflow to the first queued intersection ($k=1$ in the post’s notation) is indeed $f_0=1/2$. The original derivation was correct.</p>
-
 \[\frac{dq_1}{dt} = f_0 - f_1 \approx \frac{1}{2} - \left(\frac{1}{2} - \frac{1}{24q_1}\right) = \frac{1}{24q_1}\]
 
 <p>Solving this ODE for $q_1(t)$ with the initial condition $q_1(0)=0$:</p>
@@ -592,7 +585,7 @@ waitForPlotly(() => {
 <p>The final equations reveal a clear picture: queue lengths at each intersection grow with the square root of time, while the outflow slowly approaches the steady-state value of $N/2$, with both dynamics governed by the intersection’s position along the road. This elegant mathematical structure emerges from what initially appeared to be intractable stochastic chaos, demonstrating the profound insights that can be gained into traffic dynamics through careful theoretical analysis.</p>
 
 <p><strong>Limitations and unanswered questions:</strong>
-Despite the progress we made, there are quite a few open questions that I could not answer. For example, we only analyzed the mean of the stochastic process (the mean flow) and not the fluctuations, or deviations from this mean in our model. Another point of discussion is the central assumption that the queue length distribution is exponential. While our model’s components (e.g., uniform service time) do not form a classical M/M/1 queue, this assumption is strongly justified by the <strong>heavy-traffic limit theorem</strong> in queueing theory (<a class="citation" href="#kingman1961">(Kingman, 1961)</a>). This theorem states that for general queues near saturation, the queue length distribution does converge to an exponential one. Our analysis for large queues operates precisely in this regime, lending strong theoretical support to our model. A formal proof of convergence for our specific iterative system, however, remains a topic for future work.</p>
+Despite the progress we made, there are quite a few open questions that I could not answer. For example, we only analyzed the mean of the stochastic process (the mean flow) and not the fluctuations, or deviations from this mean in our model. Another point of discussion is the central assumption that the queue length distribution is exponential. While our model’s components (e.g., uniform service time) do not form a classical M/M/1 queue, this assumption is strongly justified by the <strong>heavy-traffic limit theorem</strong> in queueing theory <a class="citation" href="#kingman1961">(Kingman, 1961)</a>. This theorem states that for general queues near saturation, the queue length distribution does converge to an exponential one. Our analysis for large queues operates precisely in this regime, lending strong theoretical support to our model. A formal proof of convergence for our specific iterative system, however, remains a topic for future work.</p>
 
 <h2 id="references">References</h2>
 
