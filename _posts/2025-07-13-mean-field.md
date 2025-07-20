@@ -11,8 +11,6 @@ authors:
     affiliations:
       name: ETH Zurich
 
-bibliography: refs.bib
-
 toc:
   - name: "Intro"
   - name: "LSTM"

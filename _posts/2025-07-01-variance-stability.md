@@ -11,8 +11,6 @@ authors:
     affiliations:
       name: ETH, Zurich
 
-bibliography: refs.bib
-
 include_scripts:
   - "https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly.min.js"
   - "/assets/js/blog/norm-fixed-points-standard.js"
