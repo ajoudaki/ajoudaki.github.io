@@ -262,7 +262,7 @@ Rather than focusing on the stochastic variables above, our goal is to find the 
 
 <p>Note that this creates determinsitic variables for queue and flow that are deterministic, capturing the first order of the variables of interest.</p>
 
-<p><strong>The discrete conservation law:</strong>  We can make an important observation here that cars are neither created or destroyed at intersections, rather, they only can move from one intersection to the other. Thus, the discrete-time conservation law states that the change in the queue of an intersection, is equal to the difference between its outflow and inflow:</p>
+<p><strong>The discrete conservation law:</strong> We can make an important observation here that cars are neither created or destroyed at intersections, rather, they only can move from one intersection to the other. Thus, the discrete-time conservation law states that the change in the queue of an intersection, is equal to the difference between its outflow and inflow:</p>
 
 <p>\begin{align}
 q_k(t) - q_k(t-1) = f_{k-1}(t) - f_k(t)
@@ -282,6 +282,12 @@ q_k(t) - q_k(t-1) = f_{k-1}(t) - f_k(t)
 \frac{\partial q(k,t)}{\partial t} = -\frac{\partial f(k,t)}{\partial k}
 \end{align}</p>
 
+<p>Despite the quite beautiful PDE, it does not lead to solutions on its own and requires more information about the “physics” of the setup.</p>
+
+<hr>
+
+<h3 id="deriving-the-traffic-physics">Deriving the Traffic Physics</h3>
+
 <p><strong>The Key Physical Assumption.</strong> To solve this, we need a “closure relation”—a fundamental diagram—that connects the expected outflow $f(k,t)$ to the expected queue length $q(k,t)$. This is where we leverage a powerful result from the theory of stochastic queues: the <strong>heavy-traffic limit theorem</strong>.</p>
 
 <ul>
@@ -291,33 +297,84 @@ q_k(t) - q_k(t-1) = f_{k-1}(t) - f_k(t)
 
 <p>By Little’s Law, which states that average queue length is proportional to average waiting time, this implies that <strong>the queue length $Q(k,t)$ itself is approximately exponentially distributed in the heavy traffic regime.</strong> Since our analysis focuses on the behavior of large queues ($q \to \infty$), we are precisely in this heavy traffic limit. We can therefore confidently model the queue as an exponential random variable whose mean is the expected queue length $q(k,t)$.</p>
 
-<hr>
+<p>With our key assumption in place—that the queue length $Q_k$ at an intersection follows an exponential distribution with mean $q_k$—we can derive the crucial relationship between the expected outflow $f_k$ and the expected queue length $q_k$. This relationship is the “closure relation” or “fundamental diagram” for our model.</p>
 
-<h3 id="deriving-the-traffic-physics">Deriving the Traffic Physics</h3>
+<p>The expected outflow at intersection $k$, which we denote $f(q)$ for a given expected queue length $q$, is a function of the intersection’s own stochastic queue $Q$, its random capacity $X$, and the stochastic inflow from the previous intersection $Y$. We model both the normalized capacity and inflow as independent uniform random variables.
+\(f(q) = E[\min(X, Q + Y)]\)
+where $X \sim \text{Unif}[0,1]$, $Q \sim \text{Exp}(1/q)$, and $Y \sim \text{Unif}[0,1]$ are mutually independent.</p>
 
-<p>With our key assumption in place, we can derive the relationship between outflow and queue length. This refined model accurately reflects the simulation by including the inflow from the previous intersection, which we also approximate as a continuous random variable $Y \sim \text{Unif}[0,1]$.</p>
+<p>While this expression seems daunting, we can derive its exact value and then find a simple, accurate approximation for the heavy-traffic regime ($q \to \infty$).</p>
 
-<p>The expected outflow is a function of the intersection’s own stochastic queue $Q_k$ and the stochastic inflow $Y$:</p>
+<p><strong>Lemma: Expected Outflow</strong></p>
 
-\[f(k,t) = E[\min(X_k, Q_k + Y)]\]
+<p><em>The exact expected outflow $f(q)$ is given by the expression:</em>
+\(f(q) = \int_0^1 \left(\frac{1}{3} + \frac{z}{2} - \frac{z^2}{2} + \frac{z^3}{6}\right) \frac{1}{q}e^{-z/q} \,dz + \frac{1}{2} e^{-1/q}\)</p>
 
-<p>where $X_k \sim \text{Unif}[0,1]$, $Q_k \sim \text{Exp}(\lambda_k)$ with mean $q_k=1/\lambda_k$, and $Y \sim \text{Unif}[0,1]$.</p>
+<blockquote>
+  <p><strong>Proof:</strong>
+The expectation is taken over three random variables. We can compute it by first conditioning on the queue length $Q=z$ and finding the conditional expectation $g(z) = E_{X,Y}[\min(X, z+Y)]$.
+\(g(z) = \int_0^1 \int_0^1 \min(x, z+y) \,dx \,dy\)
+The value of this integral depends on whether $z$ is greater or less than 1.</p>
+  <ol>
+    <li>
+<strong>Case 1: $z \ge 1$.</strong> For any $y \in [0,1]$, we have $z+y \ge 1$. Since $x \in [0,1]$, it follows that $x \le z+y$. Therefore, $\min(x, z+y) = x$. The integral becomes $g(z) = \int_0^1 \int_0^1 x \,dx \,dy = \int_0^1 \frac{1}{2} \,dy = \frac{1}{2}$.</li>
+    <li>
+<strong>Case 2: $0 \le z &lt; 1$.</strong> We first integrate with respect to $x$. The integral over $x$ depends on the value of $z+y$:
+\(\int_0^1 \min(x, z+y)\,dx = \begin{cases} (z+y) - \frac{(z+y)^2}{2} &amp; \text{if } z+y \le 1 \\ 1/2 &amp; \text{if } z+y &gt; 1 \end{cases}\)
+Integrating this piecewise function over $y \in [0,1]$ gives:
+ \begin{align}
+ g(z) &amp;= \int_0^{1-z} \left((z+y) - \frac{(z+y)^2}{2}\right) dy + \int_{1-z}^1 \frac{1}{2} dy \cr
+ &amp;= \left[\frac{(z+y)^2}{2} - \frac{(z+y)^3}{6}\right]_0^{1-z} + \frac{1}{2}(1-(1-z)) \cr
+ &amp;= \left(\frac{1}{2} - \frac{1}{6}\right) - \left(\frac{z^2}{2} - \frac{z^3}{6}\right) + \frac{z}{2} \cr
+ &amp;= \frac{1}{3} + \frac{z}{2} - \frac{z^2}{2} + \frac{z^3}{6}
+ \end{align}
+Combining these cases, we have the exact conditional expectation $g(z)$. The total expectation $f(q)$ is found by averaging $g(z)$ over the exponential distribution of $Q$, which has PDF $p_Q(z) = (1/q)e^{-z/q}$:
+\(f(q) = E_Q[g(Q)] = \int_0^\infty g(z) \frac{1}{q}e^{-z/q} \,dz\)
+Splitting this integral at $z=1$ and substituting the expressions for $g(z)$ gives the result. The integral from $1$ to $\infty$ is $\int_1^\infty \frac{1}{2} \frac{1}{q}e^{-z/q} dz = \frac{1}{2}e^{-1/q}$, which completes the proof.</li>
+  </ol>
+</blockquote>
 
-<p><strong>The Asymptotic Approximation.</strong> The exact integral for this expectation is intractable. We therefore find its behavior for large queues ($q \to \infty$, which means $\lambda \to 0$), corresponding to heavy traffic. This involves first finding the expectation for a fixed queue length $z$, which gives the function $g(z) = \frac{(z-1)^3}{6} + \frac{1}{2}$, and then averaging this over the exponential distribution of the queue. The asymptotic result is:</p>
+<p>The exact formula is still too complex to be inserted into our PDE. However, we are interested in the heavy-traffic regime where queues are large ($q \to \infty$). In this limit, we can find a simple and elegant approximation.</p>
 
-\[f(q) \approx \frac{1}{2} - \frac{1}{24q}\]
+<p><strong>Corollary: Asymptotic Approximation for Heavy Traffic</strong></p>
 
-<p>This provides the accurate, tractable relationship we need. For a detailed derivation of this result, please see the appendix of this post.</p>
+<p><em>In the heavy traffic limit as $q \to \infty$, the expected outflow $f(q)$ is given by the approximation:</em>
+\(f(q) \approx \frac{1}{2} - \frac{1}{24q}\)</p>
 
-<p><strong>The PDE.</strong> We now substitute this physically accurate flow-density law into our conservation PDE:
-\(\frac{\partial q}{\partial t} = -\frac{\partial}{\partial k}\left(\frac{1}{2} - \frac{1}{24q}\right) 
-= -\frac{1}{24q^2}\frac{\partial q}{\partial k}\)
-So we finally arrive at the PDE approximation of our mean field model:
+<blockquote>
+  <p><strong>Proof:</strong>
+We start from the exact expression $f(q) = E[g(Q)]$. We can rewrite this by separating the steady-state flow of $1/2$:
+\(f(q) = \int_0^\infty \frac{1}{2} p_Q(z)dz + \int_0^\infty \left(g(z) - \frac{1}{2}\right)p_Q(z)dz\)
+Since $\int_0^\infty p_Q(z)dz=1$ and $g(z)=1/2$ for $z \ge 1$, the second integral is non-zero only for $z \in [0,1]$. This simplifies to:
+\(f(q) = \frac{1}{2} + \int_0^1 \left(g(z) - \frac{1}{2}\right) \frac{1}{q}e^{-z/q} dz\)
+For large $q$, the term $e^{-z/q}$ is close to 1 for any $z$ in the integration range $[0,1]$. Thus, the leading-order behavior of the integral is given by setting $e^{-z/q} \approx 1$:
+\(f(q) - \frac{1}{2} \approx \frac{1}{q} \int_0^1 \left(g(z) - \frac{1}{2}\right) dz\)
+We evaluate the definite integral:
+\begin{align}
+\int_0^1 &amp;\left(\left(\frac{1}{3} + \frac{z}{2} - \frac{z^2}{2} + \frac{z^3}{6}\right) - \frac{1}{2}\right) dz \cr
+&amp;= \int_0^1 \left(-\frac{1}{6} + \frac{z}{2} - \frac{z^2}{2} + \frac{z^3}{6}\right) dz \cr
+&amp;= \left[-\frac{z}{6} + \frac{z^2}{4} - \frac{z^3}{6} + \frac{z^4}{24}\right]_0^1 \cr
+&amp;= -\frac{1}{6} + \frac{1}{4} - \frac{1}{6} + \frac{1}{24} \cr
+&amp;= \frac{-4+6-4+1}{24} = -\frac{1}{24}
+\end{align}
+Substituting this result back, we arrive at the asymptotic relationship:
+\(f(q) \approx \frac{1}{2} + \frac{1}{q} \left(-\frac{1}{24}\right) = \frac{1}{2} - \frac{1}{24q}\)
+This provides the accurate, tractable relationship we need.</p>
+</blockquote>
+
+<p><strong>The PDE.</strong> We now substitute this physically accurate flow-density law into our conservation PDE:</p>
+
+\[\frac{\partial q}{\partial t} = -\frac{\partial}{\partial k}\left(\frac{1}{2} - \frac{1}{24q}\right) 
+= - \frac{d}{dq}\left(\frac{1}{2} - \frac{1}{24q}\right) \frac{\partial q}{\partial k}
+= - \left(\frac{1}{24q^2}\right) \frac{\partial q}{\partial k}\]
+
+<p>So we finally arrive at the PDE approximation of our mean field model:
 \begin{align}\tag{heavy traffic PDE}
 \boxed{\frac{\partial q}{\partial t} = -\frac{1}{24q^2}\frac{\partial q}{\partial k}}
 \end{align}</p>
 
-<p>It was only after deriving this equation from first principles that I discovered its deep connections to a classic line of research in traffic theory. The fundamental conservation law, $\frac{\partial q}{\partial t} + \frac{\partial f}{\partial k} = 0$, is the cornerstone of the celebrated <strong>Lighthill-Whitham-Richards (LWR) model</strong>, independently proposed in the mid-1950s <a class="citation" href="#lighthill1955">(Lighthill &amp; Whitham, 1955; Richards, 1956)</a>, The LWR model is the foundation of macroscopic traffic flow theory. Different traffic models are often distinguished by their “fundamental diagram”—the specific choice of the closure relation $f(q)$. Our result, $f(q) \approx \frac{1}{2} - \frac{1}{24q}$, can be seen as a new fundamental diagram, derived not from empirical data, but from the microscopic stochastic rules of our system. It’s a humbling and fascinating experience to see how a simple, bottom-up model can independently rediscover and fit into a decades-old theoretical framework.</p>
+<p><strong>Historical note:</strong>
+It was only after deriving this equation from first principles that I discovered its deep connections to a classic line of research in traffic theory. The fundamental conservation law, $\frac{\partial q}{\partial t} + \frac{\partial f}{\partial k} = 0$, is the cornerstone of the celebrated <strong>Lighthill-Whitham-Richards (LWR) model</strong>, independently proposed in the mid-1950s <a class="citation" href="#lighthill1955">(Lighthill &amp; Whitham, 1955; Richards, 1956)</a>, The LWR model is the foundation of macroscopic traffic flow theory. Different traffic models are often distinguished by their “fundamental diagram”—the specific choice of the closure relation $f(q)$. Our result, $f(q) \approx \frac{1}{2} - \frac{1}{24q}$, can be seen as a new fundamental diagram, derived not from empirical data, but from the microscopic stochastic rules of our system. It’s a humbling and fascinating experience to see how a simple, bottom-up model can independently rediscover and fit into a decades-old theoretical framework.</p>
 
 <hr>
 
@@ -351,6 +408,13 @@ c(k) &amp;= \frac{1}{\sqrt{24k + B}}
 <p>where $B=-2A$ is the constant of integration.</p>
 
 <p><strong>Step 3: Applying the Boundary Condition.</strong> To find the constant $B$, we must match our continuous solution to the known behavior of the first intersection ($k=1$). Its dynamics are described by the discrete-time ODE using our derived physics:</p>
+
+\[\frac{dq_1}{dt} = f_0 - f_1 = 1 - f(q_1) \approx 1 - \left(\frac{1}{2} - \frac{1}{24q_1}\right) = \frac{1}{2} + \frac{1}{24q_1}\]
+
+<p>Wait, let’s re-check the boundary condition logic from the original post. The inflow to the first intersection is 1 (normalized). The outflow is $f_1(q_1)$. So $dq_1/dt = 1 - f_1(q_1)$. The original post used $f_0 = 1/2$. Why? The inflow at $k=0$ is deterministic and equals 1. $f_{-1}(t) \equiv 1$ was defined. The first <em>queued</em> intersection is $k=0$. Let’s call it $k=1$ to match the post. Then the inflow is $f_0(t) \equiv 1$.
+Then $\frac{dq_1}{dt} = 1 - f_1(q_1) \approx 1 - (\frac{1}{2} - \frac{1}{24q_1}) = \frac{1}{2} + \frac{1}{24q_1}$. For large $q_1$, this is $\frac{dq_1}{dt} \approx \frac{1}{2}$. So $q_1(t) \approx t/2$. This seems different from the original post’s derivation $q_1(t)=\sqrt{t/12}$. Let’s re-read the original model setup. Ah, <code class="language-plaintext highlighter-rouge">F_{-1}(t) \equiv 1</code>. But in the continuous model <code class="language-plaintext highlighter-rouge">f_0</code> is used. What is <code class="language-plaintext highlighter-rouge">f_0</code>? The model assumes a <em>stream</em> of intersections $k=0, 1, …$. The inflow to the <em>first</em> intersection $k=0$ is 1. Its outflow is $f_0$. This $f_0$ is the inflow to intersection $k=1$. The queue $q_0$ is assumed to be 0 (no queue before the first intersection).
+Then $f_0 = E[\min(X_0, Q_{-1} + F_{-1})] = E[\min(X_0, 0 + 1)] = E[X_0] = 1/2$.
+So the inflow to the first queued intersection ($k=1$ in the post’s notation) is indeed $f_0=1/2$. The original derivation was correct.</p>
 
 \[\frac{dq_1}{dt} = f_0 - f_1 \approx \frac{1}{2} - \left(\frac{1}{2} - \frac{1}{24q_1}\right) = \frac{1}{24q_1}\]
 
