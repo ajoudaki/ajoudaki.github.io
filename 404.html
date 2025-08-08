@@ -160,22 +160,31 @@
   <script async src="https://badge.dimensions.ai/badge.js"></script>
 
     <!-- MathJax -->
-  <script type="text/javascript">
-    window.MathJax = {
-      tex: {
-        tags: 'ams',
-        macros: {
-          E: "{\\mathbb{E}}",
-          P: "{\\mathbb{P}}",
-          RR: "{\\bf R}",
-          Expec: ["{\\left[ #1 \\right]}", 1],
-          Prob: ["{\\mathbb{P}\\left( #1 \\right)}", 1],
-          bold: ["{\\bf #1}", 1]}
+<script type="text/javascript">
+  window.MathJax = {
+    tex: {
+      tags: 'ams',
+      macros: {
+        E: "{\\mathbb{E}}\\!",
+        Var: "{\\mathrm{Var}}",
+        Cov: "{\\mathrm{Cov}}",
+        diag: "{\\mathrm{Diag}}",
+        R: "{\\mathbb{R}}",
+        P: "{\\mathbb{P}}",
+        Expec: ["{\\left[ #1 \\right]}", 1],
+        Prob: ["{\\mathbb{P}\\left( #1 \\right)}", 1],
+        bold: ["{\\mathbf{#1}}", 1],
+        ip: ["{\\left\\langle #1,#2\\right\\rangle}", 2],
+        ipN: ["{\\left\\langle #1,#2\\right\\rangle_{(#3)}}", 3],
+        Fip: ["{\\left\\langle #1,#2\\right\\rangle_{\\!\\mathrm{F}}}", 2],
+        cN: "{\\mathcal{N}}",
+        J: ["{\\mathbf{J}^{#1\\leftarrow #2}}", 2]
       }
-    };
-  </script>
-  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
-  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    }
+  };
+</script>
+<script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+<script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 
     
     
