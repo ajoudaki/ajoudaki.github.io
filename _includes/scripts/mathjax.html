@@ -6,11 +6,18 @@
         tags: 'ams',
         macros: {
           E: "{\\mathbb{E}}",
+          Var: "{\\mathrm{Var}}",
+          Cov: "{\\mathrm{Cov}}",
+          diag: "{\\mathrm{Diag}}",
+          R: "{\\mathbb{R}}",
           P: "{\\mathbb{P}}",
           RR: "{\\bf R}",
           Expec: ["{\\left[ #1 \\right]}", 1],
           Prob: ["{\\mathbb{P}\\left( #1 \\right)}", 1],
-          bold: ["{\\bf #1}", 1]}
+          bold: ["{\\bf #1}", 1],
+          ip: ["{\\left\\langle #1,#2\\right\\rangle}", 2],
+          ipN: ["{\\left\\langle #1,#2\\right\\rangle_{(#3)}}", 3],
+          Fip: ["{\\left\\langle #1,#2\\right\\rangle_{\\!\\mathrm{F}}}", 2]}
       }
     };
   </script>
