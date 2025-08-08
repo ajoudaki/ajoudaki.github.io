@@ -3,82 +3,139 @@
   contents:
     - name: Full Name
       value: Amir Joudaki
-    - name: Tagline
-      value: Mathematical understanding of deep neural networks
+    - name: Title
+      value: Fundamental AI/ML researcher
     - name: Location
-      value: Zurich, SWITZERLAND
-    - name: Languages
-      value: English, Persian, German (A2)
+      value: Zurich, Switzerland
+    - name: LinkedIn
+      value: https://linkedin.com/in/AmirJoudaki/
+    - name: GitHub
+      value: https://github.com/ajoudaki/
+    - name: Google Scholar
+      value: https://scholar.google.com/citations?user=iCXSFxMAAAAJ
 
-- title: Experience
+- title: Practical Experience
   type: time_table
   contents:
-    - title: Postdoctoral Researcher
+    - title: Postoctoral researcher
       institution: ETH Zurich
-      year: Nov 2024 – now
+      year: Nov 2024 – present
+      location: Zürich, Switzerland
+      description:
+        - "Working towards a comprehensive understanding of how deep nonlinear models learn"
+        - "Researching barriers to learning in real world tasks with task and distributional changes, as well as reasoning"
+        - "Supervising multiple MSc students"
+    - title: Lead Research Collaborator
+      institution: ETH Zurich & Apple Inc.
+      year: Nov 2024 – present
       location: Zurich, Switzerland
       description:
-        - "Researching how deep nonlinear models learn by investigating module interactions, forward passes, backward gradients, and the evolution of neural kernels."
+        - "Contributing to fundamental research on barriers for learning in real world applications where distributions shift"
+        - "Developed a novel mathematical framework to predict how and why deep neural networks lose their ability to adapt"
+        - "Design and implementation of comprehensive experiments on wide-ranging tasks and architectures"
+    - title: Machine Learning Consultant
+      institution: SkillLab
+      year: Jan 2022 – July 2022
+      location: Zurich, Switzerland
+      description:
+        - "Research and development of a proof-of-concept for training, labeling, and monitoring NLP tasks"
+        - "Written in PyTorch, Flask, Typescript, React, MongoDB, orchestrated as micro-services in REST API"
+        - "Run inside Docker containers for deployment"
 
 - title: Education
   type: time_table
   contents:
-    - title: Direct Ph.D. (Msc + Ph.D.) in Artificial Intelligence
+    - title: Ph.D. in Artificial Intelligence
       institution: ETH Zurich
-      year: Feb 2017 – 2024
+      year: Sept 2019 – Nov 2024
       location: Zurich, Switzerland
       description:
-        - "Highly selective program (<5% admissions) focused on the mathematical foundations of deep neural networks and AI for biomedicine."
-        - "PhD Thesis: 'On a mathematical understanding of deep neural networks'."
-        - "Authored 8 papers (6 first-authored) in top-tier venues; supervised over 10 MSc projects."
-        - "Supervisors: Gunnar Ratsch & Francis Bach."
+        - "Authored 8 papers (6 first-authored) in top-tier venues in AI/ML and computational genomics"
+        - "Supervised >10 MSc thesis/semester projects, leading to several top-tier publications"
+        - "Organized teaching"
+    - title: Direct Ph.D. (MSc + Ph.D.) in Artificial Intelligence
+      institution: ETH Zurich
+      year: Feb 2017 – Nov 2024
+      location: Zurich, Switzerland
+      description:
+        - "Direct PhD is a highly selective program (<5% of all PhD admissions)"
+        - "2 years of MSc courses followed by 4 years of PhD research"
+        - "Ph.D. supervisors: Gunnar Ratsch & Francis Bach"
+        - "MSc Thesis: Scalable algorithms for biological sequence analysis"
     - title: M.Sc. in Cognitive Neuroscience
       institution: International School for Advanced Studies (SISSA)
       year: Feb 2014 – Jan 2017
       location: Trieste, Italy
       description:
-        - "Thesis: 'Modeling activity of electrophysiological recordings in vivo in rats'."
+        - "Thesis: Modeling activity of electrophysiological recordings in vivo in rats"
     - title: B.Sc. in Computer Engineering
       institution: Sharif University of Technology
       year: Sept 2008 – Sept 2011
       location: Tehran, Iran
 
 
-- title: Awards
-  type: time_table
+- title: Programming Skills
+  type: list
   contents:
-    - year: 2017
-      items:
-        - "Direct Doctorate Fellowship (selected as 1 of 2 out of >100 candidates for ETH Zurich’s direct PhD program)"
-    - year: 2011
-      items:
-        - "Ranked 42nd in the National Higher Education Entrance Exam (among 50,000 participants)"
-    - year: 2007
-      items:
-        - "Ranked 369th in the National University Entrance Exam (among 400,000 participants)"
+    - "Python · PyTorch · JAX · Scikit-Learn · NumPy"
+    - "C/C++ · OpenMP · MPI · CUDA · Numba"
+    - "Docker · Spark · SQL · Bash · Git · Java · LaTeX"
+
 
 - title: Publications
   type: nested_list
   contents:
-    - title: Mathematical Foundations of AI
+    - title: Mathematical foundations of AI
       items:
-        - "Emergence of globally attracting fixed points in deep neural networks with nonlinear activations (AISTATS, poster)"
-        - "Batch normalization without gradient explosion: Towards training without depth limits (ICLR 2024, poster)"
-        - "On the impact of activation and normalization in obtaining isometric embeddings at initialization (NeurIPS 2023, poster)"
-        - "On Bridging the Gap between Mean Field and Finite Width in Deep Random Neural Networks with Batch Normalization (ICML 2023, poster)"
-        - "Batch Normalization Orthogonalizes Representations in Deep Random Networks (spotlighted NeurIPS 2021, top 3% submissions)"
-        - "PCA Subspaces Are Not Always Optimal for Bayesian Learning (NeurIPS 2021 workshop, DistShift)"
-    - title: Genomic Sequence Analysis
+        - "Amir Joudaki, Giulia Lanzillotta, Mohammad Samragh Razlighi, Iman Mirzadeh, Keivan Alizadeh, Thomas Hofmann, Mehrdad Farajtabar, Fartash Faghri. 'Barriers for Learning in an Evolving World: a Mathematical Understanding of Loss of Plasticity' (submitted, under review)"
+        - "Amir Joudaki, Thomas Hofmann. 'Emergence of globally attracting fixed points in deep neural networks with nonlinear activations', AISTATS (poster)"
+        - "Alex Meterez*, Amir Joudaki*, Francesco Orabona, Alex Immer, Gunnar Ratsch, Hadi Daneshmand. 'Batch normalization without gradient explosion: Towards training without depth limits', ICLR 2024 (poster). (*equally contributed)"
+        - "Amir Joudaki, Hadi Daneshmand, Francis Bach. 'On the impact of activation and normalization in obtaining isometric embeddings at initialization', NeurIPS 2023 (poster)"
+        - "Amir Joudaki, Hadi Daneshmand, Francis Bach. 'On Bridging the Gap between Mean Field and Finite Width in Deep Random Neural Networks with Batch Normalization', ICML 2023 (poster)"
+        - "Hadi Daneshmand, Amir Joudaki, Francis Bach. 'Batch Normalization Orthogonalizes Representations in Deep Random Networks', spotlighted NeurIPS 2021 (top 3% of submissions)"
+        - "Alexandre Bense, Amir Joudaki, Tim G. J. Rudner, Vincent Fortuin. 'PCA Subspaces Are Not Always Optimal for Bayesian Learning', NeurIPS 2021 workshop (DistShift)"
+    - title: Genomics Sequence Analysis
       items:
-        - "Identifying Biological Priors and Structure in Single-Cell Foundation Models (ICML workshop 2024)"
-        - "Learning Genomic Sequence Representations using Graph Neural Networks over De Bruijn Graphs (NeurIPS workshop 2023)"
-        - "Aligning distant sequences to graphs using long seed sketches (Journal of Genome Research 2023)"
-        - "Fast Alignment-Free Similarity Estimation By Tensor Sketching (RECOMB 2021)"
-        - "Sparse Binary Relation Representations for Genome Graph (Journal of Computational Biology 27.4, 2020)"
+        - "Flavia Pedrocchi, Stefan Stark, Gunnar Ratsch, Amir Joudaki. 'Identifying Biological Priors and Structure in Single-Cell Foundation Models', ICML workshop 2024 (Efficient and Accessible Foundation Models for Biological Discovery)"
+        - "Kacper Kapusniak, Manuel Burger, Gunnar Ratsch, Amir Joudaki. 'Learning Genomic Sequence Representations using Graph Neural Networks over De Bruijn Graphs', NeurIPS workshop 2023 (Graph Learning Frontiers)"
+        - "Amir Joudaki*, Alexandru Meterez*, Harun Mustafa, Ragnar Groot Koerkamp, Andre Kahles, Gunnar Raetsch. 'Aligning distant sequences to graphs using long seed sketches', Genome Research (Cold Spring Harbor Laboratory Press), 2023. (*equally contributed)"
+        - "Amir Joudaki, Gunnar Ratsch, Andre Kahles. 'Fast Alignment-Free Similarity Estimation By Tensor Sketching', proceedings of RECOMB 2021"
+        - "Mikhail Karasikov, Harun Mustafa, Amir Joudaki, Sara Javadzadeh-No, Gunnar Rätsch, André Kahles. 'Sparse Binary Relation Representations for Genome Graph', Journal of Computational Biology 27(4) (2020): 626–639"
     - title: Dimensionality Reduction
       items:
-        - "Nonlinear Dimensionality Reduction via Path-Based Isometric Mapping (IEEE TPAMI 38(7), 1452–1464)"
+        - "Amir Najafi, Amir Joudaki. 'Nonlinear Dimensionality Reduction via Path-Based Isometric Mapping', IEEE TPAMI 38(7): 1452–1464"
     - title: Functional Brain Networks Analysis
       items:
-        - "Properties of functional brain networks affect frequency of psychogenic non-epileptic seizures (Frontiers in Human Neuroscience, 6:335)"
-        - "EEG-based functional brain networks: does the network size matter? (PLoS ONE 7(4): e35673)"
+        - "Amir Joudaki*, Elham Barzegaran*, Mahdi Jalili*, Andrea O. Rossetti, Richard S. Frackowiak, Maria G. Knyazeva. 'Properties of functional brain networks affect frequency of psychogenic non-epileptic seizures', Frontiers in Human Neuroscience 6:335. (*equally contributed)"
+        - "Amir Joudaki, Niloufar Salehi, Mahdi Jalili, Maria Knyazeva. 'EEG-based functional brain networks: does the network size matter?', PLOS ONE 7(4): e35673"
+
+- title: Supervision / Mentorship
+  type: nested_list
+  contents:
+    - title: Current students
+      items:
+        - "Guiv Farmanfarmayan — 'Improving the efficiency of RL-based reasoning'"
+        - "Annalisa Belloni — 'Improving cloning models with insights from loss of plasticity'"
+        - "Flavia Pedrocchi — 'Interpreting single cell foundation models using sparse auto-encoders'"
+    - title: Former students and mentorships
+      items:
+        - "Alex Meterz — PhD student at Harvard University"
+        - "Alec Flowers — Nvidia"
+        - "Kacper Kapusniak — PhD student at Oxford University"
+
+- title: Awards
+  type: time_table
+  contents:
+    - year: 2025
+      items:
+        - "Best Reviewer Award — Best reviewer AISTATS 2025"
+        - "Top reviewer ICML 2025"
+    - year: 2017
+      items:
+        - "Direct Doctorate Fellowship — Among two out of more than one hundred students selected for direct PhD program at ETH Computer Science Department"
+    - year: 2011
+      items:
+        - "Ranked 42nd — Among more than 50,000 participants in National Higher Education Entrance Exam"
+    - year: 2007
+      items:
+        - "Ranked 369th — Among more than 400,000 participants in National University Entrance Exam"
