@@ -2,7 +2,13 @@
     {% for content in entry.contents %}
       <tr>
         <td class="p-1 pr-2 font-weight-bold"><b>{{ content.name }}</b></td>
-        <td class="p-1 pl-2 font-weight-light text">{{ content.value }}</td>
+        <td class="p-1 pl-2 font-weight-light text">
+          {% if content.value contains "http://" or content.value contains "https://" %}
+            <a href="{{ content.value }}" target="_blank" rel="noopener noreferrer">{{ content.value }}</a>
+          {% else %}
+            {{ content.value }}
+          {% endif %}
+        </td>
       </tr>
     {% endfor %}
 </table>
