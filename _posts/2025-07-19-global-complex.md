@@ -23,6 +23,14 @@ include_scripts: []
 ### Prelude: bridging fields with AI
 
 In my AISTATS paper {% cite joudaki2025aistats %}, I proved by elementary Hermite analysis and Lyapunov inequalities that the mean-field kernel sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. The proof was self-contained, but it required careful casework. Now, roughly a year later after that, with the help of GPT-5's thinking and deep research mode, I found that my elementary proofs are connected to some deep concepts in classical complex analysis that date back almot a centry back. 
+
+The process of me finding out about the complex analytical results wasn't quite one-shot. My first attempts to uncover possible links with various branches of mathematics only revealed that a combination of Schwarz's lemma and could explain the global attraction result, but without any explicit convergence result. I tried several more times to find more advanced result to no avail. 
+
+
+In my final successful attempt, I kind of tried to reverse the process. First, I converted my explicit global convergence results to an statement about holomorphic functions. Once stated in these terms, I did a deep research to find if this statements are novel or are discovering some known complex analytic fact. This transformation of the statement aparently was sufficient to trigger GPT-5 to realize that these results were nearly identical to earlier and by now classical results, dating back to a work from almost a century ago. A little more digging revealed sharp lemmas and extremal principles scattered across function theory, allowing alternative proofs that are shorter and conceptually cleaner, and are actually sharper than my results.
+
+
+I think my story with my elementary proof and these new more involved proofs is only the tip of the iceberg. I believe models like like GPT-5 can act as literature compasses, and help bridge distant areas of knowledge, reuniting ideas that are separated across history and discilipines. If used thoughtfully, they reveal where to look, which classical stones to turn, and how far existing results already reach. I think it's no overstating to say that this could bring about a renesoinse for mathematics, human knowledge, and more broadly understanding of the world around us.
  
 
 ### Setup and the original master theorem
@@ -344,19 +352,13 @@ $$
 \alpha \;=\; 1-\kappa(0)-\kappa'(0),
 $$
 
-leading to $O(1/\ell)$ decay of $|\rho_\ell-1|$. The complex-analytic version proves the same $O(1/\ell)$ law in the natural horodisk gauge and ties the constant $\gamma$ to angular higher-order data via Koenigs linearization and modern boundary refinements {% cite cowenmaccluer1995 mercer2018 osserman2000 %}.
+leading to 
+$$O(1/\ell)$$ 
+decay of 
+$$|\rho_\ell-1|$$. The complex-analytic version proves the same $$O(1/\ell)$$ law in the natural horodisk gauge and ties the constant $\gamma$ to angular higher-order data via Koenigs linearization and modern boundary refinements {% cite cowenmaccluer1995 mercer2018 osserman2000 %}.
 
 Takeaway. In the centered interior case, my elementary constant is strictly stronger for the kernel subclass. In the other regimes, the complex-analytic route matches known sharp constants and repackages the argument in a coordinate-free, hyperbolic geometry that immediately generalizes (e.g., to any interior fixed point via automorphisms), with exact extremals known from classical function theory.
 
-### Final remarks: glimpses into the future 
-
-The process of me finding out about the complex analytical results wasn't quite one-shot. My first attempts to uncover possible links with various branches of mathematics only revealed that a combination of Schwarz's lemma and could explain the global attraction result, but without any explicit convergence result. I tried several more times to find more advanced result to no avail. 
-
-
-In my final successful attempt, I kind of tried to reverse the process. First, I converted my explicit global convergence results to an statement about holomorphic functions. Once stated in these terms, I did a deep research to find if this statements are novel or are discovering some known complex analytic fact. This transformation of the statement aparently was sufficient to trigger GPT-5 to realize that these results were nearly identical to earlier and by now classical results, dating back to a work from almost a century ago. A little more digging revealed sharp lemmas and extremal principles scattered across function theory, allowing alternative proofs that are shorter and conceptually cleaner, and are actually sharper than my results.
-
-
-I think my story with my elementary proof and these new more involved proofs is only the tip of the iceberg. I believe models like like GPT-5 can act as literature compasses, and help bridge distant areas of knowledge, reuniting ideas that are separated across history and discilipines. If used thoughtfully, they reveal where to look, which classical stones to turn, and how far existing results already reach. I think it's no overstating to say that this could bring about a renesoinse for mathematics, human knowledge, and more broadly understanding of the world around us.
 
 ---
 
