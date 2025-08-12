@@ -201,7 +201,8 @@
 
         <h3 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with AI</h3>
 
-<p>In my AISTATS paper <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a>, I proved by elementary Hermite analysis and Lyapunov inequalities that the mean-field kernel sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. The proof was self-contained, but it required careful casework. Now, roughly a year later after that, with the help of GPT-5’s thinking and deep research mode, I found that my elementary proofs are connected to some deep concepts in classical complex analysis that date back almot a centry back.</p>
+<p>In my AISTATS paper <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a>, I proved that the mean-field neural kernel (a.k.a. conjugate kernel, or NNGP kernel) sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. My proof involved using Hermite polynomials, and relying on the specific algebraic properties of the neural kernel. The proof was self-contained and was entirely elementary. 
+Now, roughly a year later after that, with the help of GPT-5’s thinking and deep research mode, I found that my elementary proofs are connected to some deep concepts in classical complex analysis that date back almot a centry back.</p>
 
 <p>The process of me finding out about the complex analytical results wasn’t quite one-shot. My first attempts to uncover possible links with various branches of mathematics only revealed that a combination of Schwarz’s lemma and could explain the global attraction result, but without any explicit convergence result. I tried several more times to find more advanced result to no avail.</p>
 
