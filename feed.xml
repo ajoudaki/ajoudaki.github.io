@@ -1,5 +1,727 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-08T20:47:00+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
-</subtitle><entry><title type="html">From a Stochastic Traffic Jam to a Solvable PDE</title><link href="https://ajoudaki.github.io/blog/2025/PDE/" rel="alternate" type="text/html" title="From a Stochastic Traffic Jam to a Solvable PDE" /><published>2025-07-20T00:00:00+00:00</published><updated>2025-07-20T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/PDE</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/PDE/"><![CDATA[<p>Complex systems composed of many interacting, random parts are ubiquitous in science and engineering. From statistical physics and neural networks analysis, to traffic flow on a highway and pedestrian crowds in a city, tracking each individual agent is often a hopeless task. The goal of theoretical modeling is to find a simpler, macroscopic law that governs the system’s average behavior. This “mean-field” approach shifts our focus from the chaotic micro-scale to the predictable macro-scale.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-12T21:50:25+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+</subtitle><entry><title type="html">Complex-Analytic Proofs of Global Attraction for Neural Kernel Map</title><link href="https://ajoudaki.github.io/blog/2025/global-complex/" rel="alternate" type="text/html" title="Complex-Analytic Proofs of Global Attraction for Neural Kernel Map" /><published>2025-08-12T00:00:00+00:00</published><updated>2025-08-12T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/global-complex</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/global-complex/"><![CDATA[<h3 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with AI</h3>
+
+<p>In my AISTATS paper <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a>, I proved by elementary Hermite analysis and Lyapunov inequalities that the mean-field kernel sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. The proof was self-contained, but it required careful casework. Now, roughly a year later after that, with the help of GPT-5’s thinking and deep research mode, I found that my elementary proofs are connected to some deep concepts in classical complex analysis that date back almot a centry back.</p>
+
+<h3 id="setup-and-the-original-master-theorem">Setup and the original master theorem</h3>
+
+<p>We work in the mean-field regime for a fully-connected, width-$d$ MLP at random initialization with activation $\phi$ that has a finite Gaussian second moment. Let</p>
+
+\[\rho_{\ell+1} \;=\; \kappa(\rho_\ell),
+\qquad
+\kappa(\rho) \;=\; \mathbb E[\phi(X)\phi(Y)],
+\qquad
+\begin{pmatrix}X\\Y\end{pmatrix}
+\sim \mathcal N\!\left(0,\begin{pmatrix}1&amp;\rho\\ \rho&amp;1\end{pmatrix}\right),\]
+
+<p>as in <a class="citation" href="#yang2019meanfield">(Yang, 2019; Poole et al., 2016)</a>. Expanding $\phi$ in the normalized Hermite basis $\phi=\sum_{k\ge0} c_k\,\mathrm{He}_k$ yields the analytic self-map</p>
+
+\[\kappa(z) \;=\; \sum_{k=0}^\infty c_k^2\, z^k \quad \text{on } \mathbb D.\]
+
+<p>The two gauges we will use throughout are</p>
+
+\[\Phi(\rho) \;:=\; \frac{|\rho|}{1-|\rho|},
+\qquad
+H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.\]
+
+<p>The first is the Lyapunov potential used in <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a> (up to a factor of two compared to $e^{d_{\mathbb D}}-1$); the second is the canonical horodisk gauge centered at the boundary point $1$.</p>
+
+<h4 id="original-master-theorem">Original master theorem</h4>
+
+<p>Assume forward stability $\kappa(1)=1$ and nonlinearity $\sum_{k\ge2} c_k^2&gt;0$. Let $\rho_{\ell+1}=\kappa(\rho_\ell)$ with $\rho_0\in(-1,1)$. Then the iterates converge globally to a unique attracting fixed point $\rho^\star\in[0,1]$ with the following casewise rates:</p>
+
+<ol>
+  <li>
+    <p>Centered activations $\kappa(0)=0$:</p>
+
+\[\Phi(\rho_\ell) \;\le\; \left(\frac{1}{\,2-\kappa'(0)\,}\right)^{\!\ell}\, \Phi(\rho_0),
+\qquad \rho^\star=0.\]
+  </li>
+  <li>
+    <p>Boundary Denjoy–Wolff with strict attraction $\kappa(0)&gt;0$ and $\kappa’(1)\in(0,1)$:</p>
+
+\[|\rho_\ell-1| \;\le\; \big(\kappa'(1)\big)^{\!\ell}\,|\rho_0-1|,
+\qquad \rho^\star=1.\]
+  </li>
+  <li>
+    <p>Parabolic boundary case $\kappa(0)&gt;0$ and $\kappa’(1)=1$:</p>
+
+\[|\rho_\ell-1| \;\le\; \frac{|\rho_0-1|}{\,1+\alpha\,\ell\,|\rho_0-1|\,},
+\qquad \alpha \;=\; 1-\kappa(0)-\kappa'(0), \quad \rho^\star=1.\]
+  </li>
+  <li>
+    <p>Interior non-centered attractor $\kappa(0)&gt;0$ and $\kappa’(1)&gt;1$:</p>
+
+\[|\rho_\ell-\rho^\star|
+\;\le\;
+\frac{|\rho_0-\rho^\star|}{\,1-|\rho_0|\,}\,
+\alpha^{\,\ell},
+\quad
+\alpha \;=\; \max\Big\{1-\kappa(0),\, \kappa'(\rho^\star),\, \frac{1-\rho^\star}{\,2-\kappa'(\rho^\star)\,}\Big\}
+\;&lt;\;1.\]
+  </li>
+</ol>
+
+<p>All remaining fixed points (only possibly $\pm1$) are non-attracting. See <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a> for the elementary proofs.</p>
+
+<hr />
+
+<h3 id="alternative-complex-analytic-proofs">Alternative complex-analytic proofs</h3>
+
+<p>We now re-derive global attraction using classical holomorphic dynamics on the unit disk. Let $d_{\mathbb D}$ be the Poincaré distance and $\varphi_a(z)=(z-a)/(1-\overline a z)$ the standard automorphism. Define</p>
+
+\[E_a(z) \;:=\; e^{d_{\mathbb D}(z,a)}-1 \;=\; \frac{2\,|\varphi_a(z)|}{1-|\varphi_a(z)|}.\]
+
+<p>We will use Schwarz–Pick, Julia–Carathéodory, and Rogosinski’s extremal bound <a class="citation" href="#cowenmaccluer1995">(Cowen &amp; MacCluer, 1995; Julia, 1918; Carathéodory, 1907; Rogosinski, 1936; Dieudonné, 1934; Mercer, 2018; Osserman, 2000; Ünkelbach, 1938)</a>.</p>
+
+<h4 id="interior-fixed-point-at-the-origin-centered-case">Interior fixed point at the origin (centered case)</h4>
+
+<p>Assume</p>
+
+\[\kappa(0)=0,
+\qquad
+a:=\kappa'(0)\in[0,1),
+\qquad
+\text{$\kappa$ not an automorphism.}\]
+
+<p>Theorem 1 (global hyperbolic contraction with sharp constant):</p>
+
+\[E_0\big(\kappa(z)\big)
+\;\le\;
+\frac{1+a}{2}\,E_0(z)
+\quad \text{for all } z\in\mathbb D.\]
+
+<p>Proof. By Rogosinski, for $r\in(0,1)$,</p>
+
+\[|\kappa(r)|
+\;\le\;
+\frac{r(a+r)}{1+a r},\]
+
+<p>with equality for Blaschke extremals <a class="citation" href="#rogosinski1936">(Rogosinski, 1936; Cowen &amp; MacCluer, 1995)</a>. Then</p>
+
+\[\frac{E_0(\kappa(r))}{E_0(r)}
+=
+\frac{\dfrac{2|\kappa(r)|}{1-|\kappa(r)|}}{\dfrac{2r}{1-r}}
+=
+\frac{a+r}{1+r}
+\;\le\;
+\frac{1+a}{2},\]
+
+<p>and $r\uparrow1$ shows sharpness. ∎</p>
+
+<p>Iterating,</p>
+
+\[E_0\big(\kappa^{\circ \ell}(z)\big)
+\;\le\;
+\left(\frac{1+a}{2}\right)^{\!\ell} E_0(z).\]
+
+<h4 id="interior-fixed-point-at-an-arbitrary-point">Interior fixed point at an arbitrary point</h4>
+
+<p>Assume</p>
+
+\[\kappa(a)=a,
+\qquad
+q:=|\kappa'(a)|\in[0,1),
+\qquad
+\text{$\kappa$ not an automorphism.}\]
+
+<p>Theorem 2 (global contraction about the fixed point):</p>
+
+\[E_a\big(\kappa(z)\big)
+\;\le\;
+\frac{1+q}{2}\,E_a(z)
+\quad \text{for all } z\in\mathbb D.\]
+
+<p>Proof. Conjugate by $\psi=\varphi_a$. Then $g=\psi\circ\kappa\circ\psi^{-1}$ satisfies $g(0)=0$, $g’(0)=\kappa’(a)$; apply Theorem 1 to $g$ and use $E_0(\psi(z))=E_a(z)$. ∎</p>
+
+<p>Iterating,</p>
+
+\[E_a\big(\kappa^{\circ \ell}(z)\big)
+\;\le\;
+\left(\frac{1+q}{2}\right)^{\!\ell} E_a(z).\]
+
+<h4 id="strictly-attractive-boundary-denjoywolff-point">Strictly attractive boundary Denjoy–Wolff point</h4>
+
+<p>Assume</p>
+
+\[\kappa(1)=1 \text{ n.t.}, \qquad \beta:=\kappa'(1)\in(0,1).\]
+
+<p>Theorem 3 (sharp horodisk contraction at the boundary):</p>
+
+\[H_1\big(\kappa(z)\big)
+\;\le\;
+\beta\, H_1(z)
+\quad \text{for all } z\in\mathbb D.\]
+
+<p>Proof. Julia–Carathéodory gives</p>
+
+\[\frac{1-|\kappa(z)|^2}{|1-\kappa(z)|^2}
+\;\ge\;
+\frac{1}{\beta}\,\frac{1-|z|^2}{|1-z|^2},\]
+
+<p>equivalent to the stated $H_1$ contraction. This is sharp in the Schur class <a class="citation" href="#cowenmaccluer1995">(Cowen &amp; MacCluer, 1995; Mercer, 2018)</a>. ∎</p>
+
+<p>Iterating,</p>
+
+\[H_1\big(\kappa^{\circ \ell}(z)\big)
+\;\le\;
+\beta^{\ell}\, H_1(z).\]
+
+<h4 id="parabolic-boundary-case">Parabolic boundary case</h4>
+
+<p>Assume</p>
+
+\[\kappa(1)=1 \text{ n.t.}, \qquad \kappa'(1)=1, \qquad \text{$\kappa$ not an automorphism.}\]
+
+<p>Theorem 4 (global polynomial decay). There exists $\gamma&gt;0$, determined by second-order boundary data of $\kappa$, such that</p>
+
+\[H_1\big(\kappa(z)\big)
+\;\le\;
+\frac{H_1(z)}{\,1+\gamma\,H_1(z)\,}
+\quad \text{for all } z\in\mathbb D.\]
+
+<p>Consequently,</p>
+
+\[H_1\big(\kappa^{\circ \ell}(z)\big)
+\;\le\;
+\frac{H_1(z)}{\,1+\gamma\,\ell\,H_1(z)\,}.\]
+
+<p>Sketch. Koenigs linearization conjugates $\kappa$ to a unit translation on a right half-plane <a class="citation" href="#cowenmaccluer1995">(Cowen &amp; MacCluer, 1995)</a>. In that model, the reciprocal Busemann function increases by a fixed increment each iterate,</p>
+
+\[\frac{1}{H_1\big(\kappa(z)\big)}
+\;\ge\;
+\frac{1}{H_1(z)}+\gamma,\]
+
+<p>which yields the one-step inequality and telescopes. Quantitative refinements for $\gamma$ follow from higher-order boundary data <a class="citation" href="#mercer2018">(Mercer, 2018; Osserman, 2000; Ünkelbach, 1938)</a>. ∎</p>
+
+<hr />
+
+<h3 id="neural-net-implications-and-concrete-comparison">Neural net implications and concrete comparison</h3>
+
+<p>This section ties the constants to neural design and then compares, case by case, my elementary bounds with the complex-analytic ones.</p>
+
+<h4 id="neural-net-interpretation-of-the-constants">Neural net interpretation of the constants</h4>
+
+<p>Centered regime. Here $a=\kappa’(0)=c_1(\phi)^2$. The hyperbolic constant is</p>
+
+\[\frac{1+a}{2}
+\quad\text{in}\quad
+E_0(\cdot)=\frac{2|\cdot|}{1-|\cdot|}.\]
+
+<p>Smaller $c_1(\phi)$ (e.g., more symmetry) means faster decay of cross-correlation toward orthogonality.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Interior non-centered regime. Let $a$ be the interior fixed point and $q=</td>
+      <td>\kappa’(a)</td>
+      <td>$. Contraction is</td>
+    </tr>
+  </tbody>
+</table>
+
+\[\frac{1+q}{2}
+\quad\text{in}\quad
+E_a(\cdot).\]
+
+<p>Residual connections convex-combine $\kappa$ with the identity, pushing derivatives toward $1$ and slowing contraction.</p>
+
+<p>Boundary regimes. With $\beta=\kappa’(1)\in(0,1)$, decay is exactly geometric at rate $\beta$ in the natural horodisk gauge $H_1$. In the parabolic case $\kappa’(1)=1$, the optimal general rate is $O(1/\ell)$ with a computable $\gamma&gt;0$ from boundary data.</p>
+
+<h4 id="sharpness-and-apples-to-apples-comparison">Sharpness and apples-to-apples comparison</h4>
+
+<p>Centered case ($\kappa(0)=0$).</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>My elementary contraction for the potential $\Phi(\rho)=</td>
+      <td>\rho</td>
+      <td>/(1-</td>
+      <td>\rho</td>
+      <td>)$:</td>
+    </tr>
+  </tbody>
+</table>
+
+\[\Phi(\kappa(\rho)) \;\le\; \frac{1}{\,2-\kappa'(0)\,}\,\Phi(\rho).\]
+
+<p>Complex-analytic contraction (Rogosinski extremal) for the hyperbolic gauge $E_0=2\Phi$:</p>
+
+\[E_0(\kappa(z)) \;\le\; \frac{1+\kappa'(0)}{2}\,E_0(z).\]
+
+<p>Because</p>
+
+\[\frac{1+\kappa'(0)}{2} \;&gt;\; \frac{1}{\,2-\kappa'(0)\,} \quad \text{for } \kappa'(0)\in(0,1),\]
+
+<p>the constant from my elementary proof is strictly smaller in this centered case. The reason is structural: kernel maps have non-negative Maclaurin coefficients, a special subclass of Schur maps that admits stronger coefficient-wise inequalities. Rogosinski’s factor is nevertheless sharp in the full Schur class and has the conceptual advantage of being purely geometric and automorphism-invariant <a class="citation" href="#rogosinski1936">(Rogosinski, 1936; Cowen &amp; MacCluer, 1995)</a>.</p>
+
+<p>Interior non-centered case.</p>
+
+<p>My elementary theorem gives a Euclidean-gauge rate toward $\rho^\star$ based on</p>
+
+\[\alpha \;=\; \max\Big\{1-\kappa(0),\, \kappa'(\rho^\star),\, \frac{1-\rho^\star}{\,2-\kappa'(\rho^\star)\,}\Big\}.\]
+
+<p>The complex-analytic proof yields a clean, automorphism-invariant hyperbolic contraction</p>
+
+\[E_a(\kappa(z)) \;\le\; \frac{1+q}{2}\,E_a(z),
+\qquad q=|\kappa'(a)|.\]
+
+<p>These are not directly comparable because they measure different geometries (Euclidean vs. hyperbolic about the true fixed point). The analytic bound is universal and sharp in the Schur class; my elementary rate can be tighter for the kernel subclass in some parameter ranges.</p>
+
+<p>Strictly attractive boundary.</p>
+
+<p>Both approaches yield the same sharp constant $\beta=\kappa’(1)$, but the complex-analytic route identifies $H_1$ as the intrinsic gauge via Julia–Carathéodory, giving a one-line proof <a class="citation" href="#julia1918">(Julia, 1918; Carathéodory, 1907; Cowen &amp; MacCluer, 1995)</a>.</p>
+
+<p>Parabolic boundary.</p>
+
+<p>My elementary proof gives a logistic one-step improvement with</p>
+
+\[\alpha \;=\; 1-\kappa(0)-\kappa'(0),\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>leading to $O(1/\ell)$ decay of $</td>
+      <td>\rho_\ell-1</td>
+      <td>$. The complex-analytic version proves the same $O(1/\ell)$ law in the natural horodisk gauge and ties the constant $\gamma$ to angular higher-order data via Koenigs linearization and modern boundary refinements <a class="citation" href="#cowenmaccluer1995">(Cowen &amp; MacCluer, 1995; Mercer, 2018; Osserman, 2000)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Takeaway. In the centered interior case, my elementary constant is strictly stronger for the kernel subclass. In the other regimes, the complex-analytic route matches known sharp constants and repackages the argument in a coordinate-free, hyperbolic geometry that immediately generalizes (e.g., to any interior fixed point via automorphisms), with exact extremals known from classical function theory.</p>
+
+<h3 id="final-remarks-glimpses-into-the-future">Final remarks: glimpses into the future</h3>
+
+<p>The process of me finding out about the complex analytical results wasn’t quite one-shot. My first attempts to uncover possible links with various branches of mathematics only revealed that a combination of Schwarz’s lemma and could explain the global attraction result, but without any explicit convergence result. I tried several more times to find more advanced result to no avail.</p>
+
+<p>In my final successful attempt, I kind of tried to reverse the process. First, I converted my explicit global convergence results to an statement about holomorphic functions. Once stated in these terms, I did a deep research to find if this statements are novel or are discovering some known complex analytic fact. This transformation of the statement aparently was sufficient to trigger GPT-5 to realize that these results were nearly identical to earlier and by now classical results, dating back to a work from almost a century ago. A little more digging revealed sharp lemmas and extremal principles scattered across function theory, allowing alternative proofs that are shorter and conceptually cleaner, and are actually sharper than my results.</p>
+
+<p>I think my story with my elementary proof and these new more involved proofs is only the tip of the iceberg. I believe models like like GPT-5 can act as literature compasses, and help bridge distant areas of knowledge, reuniting ideas that are separated across history and discilipines. If used thoughtfully, they reveal where to look, which classical stones to turn, and how far existing results already reach. I think it’s no overstating to say that this could bring about a renesoinse for mathematics, human knowledge, and more broadly understanding of the world around us.</p>
+
+<hr />
+
+<h3 id="references">References</h3>
+
+<ol class="bibliography"><li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="joudaki2025aistats" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Emergence of Globally Attracting Fixed Points in Deep Neural Networks With Nonlinear Activations</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Amir Joudaki,&nbsp;and&nbsp;Thomas Hofmann</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>In Proceedings of the 28th International Conference on Artificial Intelligence and Statistics (AISTATS)</em>, 2025
+        </div>
+        <div class="periodical">
+          To appear
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="yang2019meanfield" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Scaling Limits of Wide Neural Networks with Weight Sharing: Gaussian Process Behavior, Gradient Descent, and Weak Limits</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Greg Yang</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>In Proceedings of the 33rd Conference on Neural Information Processing Systems (NeurIPS) Workshops</em>, 2019
+        </div>
+        <div class="periodical">
+          arXiv:1902.04760
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="poole2016" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Exponential expressivity in deep neural networks through transient chaos</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Ben Poole,&nbsp;Subhaneil Lahiri,&nbsp;Maithra Raghu, and
+          <span class="more-authors" title="click to view 2 more authors" onclick="
+                var element = $(this);
+                element.attr('title', '');
+                var more_authors_text = element.text() == '2 more authors' ? 'Jascha Sohl-Dickstein, Surya Ganguli' : '2 more authors';
+                var cursorPosition = 0;
+                var textAdder = setInterval(function(){
+                  element.text(more_authors_text.substring(0, cursorPosition + 1));
+                  if (++cursorPosition == more_authors_text.length){
+                    clearInterval(textAdder);
+                  }
+              }, '10');
+              ">2 more authors</span></div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>In Proceedings of the 30th Conference on Neural Information Processing Systems (NeurIPS)</em>, 2016
+        </div>
+        <div class="periodical">
+          arXiv:1606.05340
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="cowenmaccluer1995" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Composition Operators on Spaces of Analytic Functions</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Carl C. Cowen,&nbsp;and&nbsp;Barbara D. MacCluer</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          1995
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="julia1918" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Mémoire sur l’itération des fonctions rationnelles</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Gaston Julia</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Journal de Mathématiques Pures et Appliquées</em>, 1918
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="caratheodory1907" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Über den Variabilitätsbereich der Koeffizienten von Potenzreihen, die gegebene Werte nicht annehmen</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Constantin Carathéodory</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Mathematische Annalen</em>, 1907
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="rogosinski1936" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">On the maximum modulus of sections of power series bounded in the unit circle</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        W. W. Rogosinski</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Proceedings of the London Mathematical Society</em>, 1936
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="dieudonne1934" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Sur les fonctions holomorphes bornées dans le disque unité</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Jean Dieudonné</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Comptes Rendus de l’Académie des Sciences de Paris</em>, 1934
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="mercer2018" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">A sharpened Schwarz lemma at the boundary</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Peter R. Mercer</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Complex Variables and Elliptic Equations</em>, 2018
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="osserman2000" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">A sharp Schwarz lemma</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Robert Osserman</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Proceedings of the American Mathematical Society</em>, 2000
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li><!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="unkelbach1938" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Über das Schwarzsche Lemma und die Randwerte analytischer Funktionen</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Hellmuth Ünkelbach</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Mathematische Annalen</em>, 1938
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li></ol>]]></content><author><name>Amir Joudaki</name></author><category term="complex-analysis," /><category term="dynamical-systems," /><category term="neural-kernels," /><category term="mean-field," /><category term="fixed-points" /><summary type="html"><![CDATA[A global contraction of the kernel map using Schwarz–Pick, Julia–Carathéodory, and Rogosinski extremals.]]></summary></entry><entry><title type="html">From a Stochastic Traffic Jam to a Solvable PDE</title><link href="https://ajoudaki.github.io/blog/2025/PDE/" rel="alternate" type="text/html" title="From a Stochastic Traffic Jam to a Solvable PDE" /><published>2025-07-20T00:00:00+00:00</published><updated>2025-07-20T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/PDE</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/PDE/"><![CDATA[<p>Complex systems composed of many interacting, random parts are ubiquitous in science and engineering. From statistical physics and neural networks analysis, to traffic flow on a highway and pedestrian crowds in a city, tracking each individual agent is often a hopeless task. The goal of theoretical modeling is to find a simpler, macroscopic law that governs the system’s average behavior. This “mean-field” approach shifts our focus from the chaotic micro-scale to the predictable macro-scale.</p>
 
 <p>This post tells the story of one such journey. We begin with a stochastic, discrete model of cars at intersections. This setup is quite difficult to analyze, mostly due to its infinite state space (the number of cars at various intersection points). We will then show how this system can be mapped to a continuous approximation, which, with one powerful physical assumption, can be described by a solvable Partial Differential Equation (PDE).</p>
 
