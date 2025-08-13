@@ -559,7 +559,6 @@ Interactive Visualization: Complex-Analytic Proofs for Kernel Dynamics
 Paste this block inside your post. It only depends on Plotly.
 ========================= -->
 
-<!-- Add Plotly if not already loaded in your page -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly.min.js" defer></script>
 
 <style>
@@ -575,7 +574,6 @@ Paste this block inside your post. It only depends on Plotly.
 </style>
 
 <div class="viz-grid" id="kernel-viz-root">
-  <!-- Controls -->
   <div class="viz-card">
     <div class="viz-title">Kernel map κ(z) = Σ w_k z^k</div>
     <div class="muted">Weights w_k are auto-normalized to sum to 1. This enforces forward stability κ(1)=1.</div>
@@ -641,7 +639,6 @@ Paste this block inside your post. It only depends on Plotly.
     <div class="muted" id="readouts" style="margin-top:8px;"></div>
   </div>
 
-  <!-- Plots -->
   <div>
     <div class="viz-card" style="margin-bottom:12px;">
       <div class="viz-title">Kernel map on [−1,1]</div>
@@ -660,11 +657,8 @@ Paste this block inside your post. It only depends on Plotly.
 
 <script>
 (function() {
-  // Ensure Plotly is ready
   function onReady(cb){ if (window.Plotly) cb(); else setTimeout(()=>onReady(cb), 50); }
-
   onReady(() => {
-    // DOM refs
     const degEl = document.getElementById('deg');
     const degLabel = document.getElementById('degLabel');
     const weightsDiv = document.getElementById('weights');
@@ -690,7 +684,6 @@ Paste this block inside your post. It only depends on Plotly.
     const diskPlot = document.getElementById('diskPlot');
     const iterPlot = document.getElementById('iterPlot');
 
-    // Build weight sliders
     function buildWeightControls(K) {
       weightsDiv.innerHTML = '';
       for (let k = 0; k <= K; k++) {
@@ -712,7 +705,7 @@ Paste this block inside your post. It only depends on Plotly.
       return 0.10 / Math.max(1, K-2);
     }
 
-    // Complex helpers & gauges
+    // Complex helpers
     function cAdd(a,b){ return [a[0]+b[0], a[1]+b[1]]; }
     function cSub(a,b){ return [a[0]-b[0], a[1]-b[1]]; }
     function cMul(a,b){ return [a[0]*b[0]-a[1]*b[1], a[0]*b[1]+a[1]*b[0]]; }
@@ -720,23 +713,25 @@ Paste this block inside your post. It only depends on Plotly.
     function cAbs(a){ return Math.hypot(a[0], a[1]); }
     function cConj(a){ return [a[0], -a[1]]; }
 
+    // Möbius and hyperbolic gauges
     function phi_a(z, a){ // ϕ_a(z)=(z-a)/(1-ā z)
       const num = cSub(z, a);
       const den = cSub([1,0], cMul(cConj(a), z));
       return cDiv(num, den);
     }
-    function dD(z,w){ // hyperbolic distance in the disk
+    // FIX: use FULL hyperbolic distance (not half)
+    function dD(z,w){
       const t = Math.min(0.999999, Math.max(0, cAbs(phi_a(z,w))));
-      return 0.5 * Math.log((1+t)/(1-t));
+      return Math.log((1+t)/(1-t)); // = 2 * artanh(t)
     }
-    function E_a(z,a){ return Math.exp(dD(z,a)) - 1; }
+    function E_a(z,a){ return Math.exp(dD(z,a)) - 1; } // consistent with E = 2ρ/(1-ρ)
     function H1_direct(z){ // |1-z|^2 / (1-|z|^2)
       const num = (1 - z[0])*(1 - z[0]) + z[1]*z[1];
       const den = 1 - (z[0]*z[0] + z[1]*z[1]);
       return den > 0 ? (num/den) : Infinity;
     }
 
-    // κ map and derivatives (real coefficients)
+    // κ and derivatives
     function getWeights(K){
       const ws = [];
       let sum = 0;
@@ -746,7 +741,6 @@ Paste this block inside your post. It only depends on Plotly.
         ws.push(vv); sum += vv;
       }
       if (sum === 0){ ws[0]=1; sum=1; }
-      // normalize to sum 1
       for (let k=0;k<=K;k++) ws[k] /= sum;
       if (forceCenteredEl.checked){
         ws[0] = 0;
@@ -754,7 +748,6 @@ Paste this block inside your post. It only depends on Plotly.
         if (s === 0) { ws[1] = 1; s = 1; }
         for (let k=1;k<=K;k++) ws[k] /= s;
       }
-      // labels
       for (let k=0;k<=K;k++){
         const lab = document.getElementById(`w_${k}_label`);
         if (lab) lab.textContent = ws[k].toFixed(3);
@@ -762,14 +755,12 @@ Paste this block inside your post. It only depends on Plotly.
       return ws;
     }
     function kappaReal(x, ws){
-      let s = 0;
-      let xpow = 1;
+      let s = 0, xpow = 1;
       for (let k=0;k<ws.length;k++){ s += ws[k] * xpow; xpow *= x; }
       return s;
     }
     function kappaComplex(z, ws){
-      let acc = [0,0];
-      let zpow = [1,0];
+      let acc = [0,0], zpow = [1,0];
       for (let k=0;k<ws.length;k++){
         acc = cAdd(acc, [ws[k]*zpow[0], ws[k]*zpow[1]]);
         zpow = cMul(zpow, z);
@@ -787,7 +778,6 @@ Paste this block inside your post. It only depends on Plotly.
     // Rogosinski envelope for centered: |κ(r)| ≤ R(r) with R(r)= r(a+r)/(1+a r), a=κ'(0)=w1
     function rogosinski(r, a){ return (r*(a+r)) / (1 + a*r); }
 
-    // Fixed points (real) finder
     function computeFixedPoints(ws){
       const xs = [];
       const f = (x)=>kappaReal(x,ws)-x;
@@ -797,7 +787,6 @@ Paste this block inside your post. It only depends on Plotly.
         const x = -1 + 2*i/N;
         const y = f(x);
         if (y===0 || (prevF<0 && y>0) || (prevF>0 && y<0)){
-          // bisection refine
           let a=prevX, b=x, fa=prevF, fb=y;
           for (let it=0; it<50; it++){
             const m=0.5*(a+b), fm=f(m);
@@ -824,49 +813,59 @@ Paste this block inside your post. It only depends on Plotly.
       return m;
     }
 
-    function update() {
-      syncLabels();
+function update() {
+  syncLabels();
 
-      const K = parseInt(degEl.value,10);
-      const ws = getWeights(K);
+  const K = parseInt(degEl.value,10);
+  let ws = getWeights(K);
 
-      const w0 = ws[0] || 0;
-      const a0 = kappaPrimeAt0(ws);     // κ'(0)
-      const beta = kappaPrimeAt1(ws);   // κ'(1)
-      const fixeds = computeFixedPoints(ws);
+  // --- Enforce the precondition for the chosen bound ---
+  const mode = currentMode();
+  if (mode === 'centered' && (ws[0] || 0) > 1e-12) {
+    // Auto-toggle the UI switch to keep visuals consistent with theory
+    forceCenteredEl.checked = true;
+    ws = getWeights(K); // re-normalize with w0=0
+  }
 
-      // choose attracting real fixed point (if any) in (−1,1)
-      let rhoStar = null;
-      if (fixeds.length){
-        // prefer one in [0,1); otherwise nearest to 0
-        const nonneg = fixeds.filter(x=>x>=0);
-        rhoStar = (nonneg.length? nonneg[0] : fixeds.reduce((p,c)=>Math.abs(c)<Math.abs(p)?c:p, fixeds[0]));
-      }
+  const w0 = ws[0] || 0;
+  const a0 = kappaPrimeAt0(ws);     // κ'(0) = w1
+  const beta = kappaPrimeAt1(ws);   // κ'(1) = Σ k w_k
+  const fixeds = computeFixedPoints(ws);
 
-      // Interior mode: snap a to ρ⋆ and expose derivative at that point
-      let a_show = '—', kprime_a = null;
-      const mode = currentMode();
-      if (mode==='interior' && rhoStar!==null){
-        aEl.disabled = true;
-        aEl.value = rhoStar.toFixed(2);
-        a_show = rhoStar.toFixed(2);
-        kprime_a = kappaPrimeAt(ws, rhoStar);
-      } else {
-        aEl.disabled = true; // keep disabled to avoid confusion with theory
-      }
+  let rhoStar = null;
+  if (fixeds.length){
+    const nonneg = fixeds.filter(x=>x>=0);
+    rhoStar = (nonneg.length? nonneg[0] : fixeds.reduce((p,c)=>Math.abs(c)<Math.abs(p)?c:p, fixeds[0]));
+  }
 
-      readouts.innerHTML = `
-        <span class="pill">w₀=κ(0)=${w0.toFixed(3)}</span>
-        <span class="pill">κ'(0)=${a0.toFixed(3)}</span>
-        <span class="pill">κ'(1)=${beta.toFixed(3)}</span>
-        <span class="pill">fixed points: ${fixeds.map(x=>x.toFixed(3)).join(', ') || 'none'}</span>
-        ${mode==='interior' && rhoStar!==null ? `<span class="pill">ρ⋆=${a_show}, κ'(ρ⋆)=${kprime_a.toFixed(3)}</span>` : ''}
-      `;
+  let a_show = '—', kprime_a = null;
+  if (mode==='interior' && rhoStar!==null){
+    aEl.disabled = true;
+    aEl.value = rhoStar.toFixed(2);
+    a_show = rhoStar.toFixed(2);
+    kprime_a = kappaPrimeAt(ws, rhoStar);
+  } else {
+    aEl.disabled = true;
+  }
 
-      drawMap(ws, a0, beta);
-      drawDisk(ws, rhoStar);
-      drawIter(ws, a0, beta, rhoStar, kprime_a);
-    }
+  // Readouts (+ a small warning if user turns off centering but keeps "centered" mode)
+  const warn = (mode==='centered' && w0>1e-12)
+    ? `<span class="pill" style="background:#fee2e2;color:#b91c1c;">warning: centered bound needs w₀=0</span>`
+    : '';
+  readouts.innerHTML = `
+    <span class="pill">w₀=κ(0)=${(w0||0).toFixed(3)}</span>
+    <span class="pill">κ'(0)=${a0.toFixed(3)}</span>
+    <span class="pill">κ'(1)=${beta.toFixed(3)}</span>
+    <span class="pill">fixed points: ${fixeds.map(x=>x.toFixed(3)).join(', ') || 'none'}</span>
+    ${mode==='interior' && rhoStar!==null ? `<span class="pill">ρ⋆=${a_show}, κ'(ρ⋆)=${kprime_a.toFixed(3)}</span>` : ''}
+    ${warn}
+  `;
+
+  drawMap(ws, a0, beta);
+  drawDisk(ws, rhoStar);
+  drawIter(ws, a0, beta, rhoStar, kprime_a);
+}
+
 
     function drawMap(ws, a0, beta){
       const N=600;
@@ -882,32 +881,21 @@ Paste this block inside your post. It only depends on Plotly.
         { x:[-1,1], y:[-1,1], name:'identity', mode:'lines', line:{dash:'dash'} },
       ];
 
-      // fixed points
       const fixeds = computeFixedPoints(ws);
       if (fixeds.length){
-        traces.push({
-          x: fixeds, y: fixeds, mode:'markers', name:'fixed points',
-          marker:{size:8, color:'#10b981'}
-        });
+        traces.push({ x: fixeds, y: fixeds, mode:'markers', name:'fixed points',
+                      marker:{size:8, color:'#10b981'} });
       }
 
-      // tangents
       if (showSlopeEl.checked){
-        // tangent at 0: y = κ'(0) x
-        traces.push({
-          x:[-1,1], y:[-a0, a0], mode:'lines', name:"tangent at 0",
-          line:{color:'#6366f1', width:1}
-        });
-        // tangent at 1: y = 1 + κ'(1)(x-1)
-        traces.push({
-          x:[-1,1], y:[1 + beta*(-2), 1 + beta*(0)], mode:'lines', name:"tangent at 1",
-          line:{color:'#f59e0b', width:1}
-        });
+        traces.push({ x:[-1,1], y:[-a0, a0], mode:'lines', name:"tangent at 0",
+                      line:{color:'#6366f1', width:1} });
+        traces.push({ x:[-1,1], y:[1 + beta*(-2), 1 + beta*(0)], mode:'lines', name:"tangent at 1",
+                      line:{color:'#f59e0b', width:1} });
       }
 
-      // Rogosinski envelope for centered
       if (showRogEl.checked && Math.abs(ws[0])<1e-12){
-        const a=a0; // κ'(0)
+        const a=a0;
         const Rplus = X.map(x => rogosinski(Math.abs(x), a));
         const Rminus = Rplus.map(v => -v);
         traces.push({ x:X, y:Rplus, name:'Rogosinski +R(|x|)', mode:'lines', line:{dash:'dot', color:'#ef4444'}});
@@ -923,38 +911,31 @@ Paste this block inside your post. It only depends on Plotly.
     }
 
     function drawDisk(ws, rhoStar){
-      // Poincaré disk with unit circle, show z and κ(z), and gauges
       const r = parseFloat(rEl.value), th = parseFloat(thetaEl.value);
       let z = [r*Math.cos(th), r*Math.sin(th)];
       let kz = kappaComplex(z, ws);
 
-      // keep inside disk numerically
       const keepInside = (w) => {
         const a = cAbs(w);
         return (a < 0.999) ? w : [w[0]/(a*1.001), w[1]/(a*1.001)];
       };
       z = keepInside(z); kz = keepInside(kz);
 
-      // unit circle
       const circleN=256, cx=[], cy=[];
       for (let i=0;i<=circleN;i++){ const t=2*Math.PI*i/circleN; cx.push(Math.cos(t)); cy.push(Math.sin(t)); }
 
-      // Gauges
       const mode = currentMode();
       let a = [0,0];
-      let ratioText = '';
-      if (mode==='interior'){
-        if (rhoStar!==null) a = [rhoStar, 0];
-      }
+      if (mode==='interior' && rhoStar!==null) a=[rhoStar,0];
 
-      let E_before=null, E_after=null, H_before=null, H_after=null;
+      let ratioText = '';
       if (mode==='boundary'){
-        H_before = H1_direct(z);
-        H_after  = H1_direct(kz);
+        const H_before = H1_direct(z);
+        const H_after  = H1_direct(kz);
         ratioText = (H_before>0 && isFinite(H_before) ? (H_after/H_before).toFixed(3) : '—');
       } else {
-        E_before = E_a(z,a);
-        E_after  = E_a(kz,a);
+        const E_before = E_a(z,a);
+        const E_after  = E_a(kz,a);
         const denom = Math.max(E_before, 1e-12);
         ratioText = (E_after/denom).toFixed(3);
       }
@@ -993,7 +974,6 @@ Paste this block inside your post. It only depends on Plotly.
       const r = parseFloat(rEl.value), th = parseFloat(thetaEl.value);
       let z = [r*Math.cos(th), r*Math.sin(th)];
 
-      // iterate κ
       const zseq = [];
       for (let i=0;i<=L;i++){
         zseq.push(z);
@@ -1002,14 +982,13 @@ Paste this block inside your post. It only depends on Plotly.
         if (a >= 0.999){ z = [z[0]/(a*1.001), z[1]/(a*1.001)]; }
       }
 
-      // Compute gauge sequence and theoretical envelope
       let gaugeName='', G=[], theory=[];
       if (mode==='boundary'){
         gaugeName='H₁';
         for (let i=0;i<zseq.length;i++) G.push(H1_direct(zseq[i]));
         const b = beta; // κ'(1)
         const base = Math.max(G[0], 1e-12);
-        for (let i=0;i<zseq.length;i++) theory.push( Math.pow(Math.max(Math.min(b,0.999),0), i) * base );
+        for (let i=0;i<zseq.length;i++) theory.push( Math.pow(b, i) * base ); // no down-clamp
       } else {
         const a = (mode==='interior' && rhoStar!==null) ? [rhoStar,0] : [0,0];
         gaugeName = (mode==='interior' && rhoStar!==null) ? 'Eₐ' : 'E₀';
@@ -1018,7 +997,7 @@ Paste this block inside your post. It only depends on Plotly.
           ? (1 + Math.abs(kprime_a||0)) / 2
           : (1 + Math.abs(a0)) / 2;
         const base = Math.max(G[0], 1e-12);
-        for (let i=0;i<zseq.length;i++) theory.push( Math.pow(Math.max(Math.min(q,0.999),0), i) * base );
+        for (let i=0;i<zseq.length;i++) theory.push( Math.pow(q, i) * base ); // no down-clamp
       }
 
       const iters = Array.from({length:zseq.length}, (_,i)=>i);
@@ -1035,7 +1014,6 @@ Paste this block inside your post. It only depends on Plotly.
       }, {displayModeBar:false, responsive:true});
     }
 
-    // Events
     [degEl, forceCenteredEl, showRogEl, showSlopeEl, rEl, thetaEl, LEl].forEach(el => el.addEventListener('input', refresh));
     modeEls.forEach(el => el.addEventListener('change', refresh));
 
@@ -1047,7 +1025,21 @@ Paste this block inside your post. It only depends on Plotly.
       update();
     }
 
-    // Initial render
+    function syncLabels(){
+      degLabel.textContent = degEl.value;
+      rLabel.textContent = parseFloat(rEl.value).toFixed(2);
+      thetaLabel.textContent = parseFloat(thetaEl.value).toFixed(2);
+      LLabel.textContent = LEl.value;
+      aLabel.textContent = aEl.disabled ? '—' : parseFloat(aEl.value).toFixed(2);
+    }
+
+    function currentMode(){
+      const m = modeEls.find(x=>x.checked)?.value || 'centered';
+      aCtrl.style.display = (m==='interior') ? '' : 'none';
+      return m;
+    }
+
+    // Init
     buildWeightControls(parseInt(degEl.value,10));
     update();
   });
