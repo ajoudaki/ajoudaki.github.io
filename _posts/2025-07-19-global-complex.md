@@ -288,7 +288,7 @@ $$
 
 Smaller $c_1(\phi)$ (e.g., more symmetry) means faster decay of cross-correlation toward orthogonality.
 
-Interior non-centered regime. Let $a$ be the interior fixed point and $q=|\kappa'(a)|$. Contraction is
+Interior non-centered regime. Let $a$ be the interior fixed point and $$q=\kappa'(a)$$. Contraction is
 
 $$
 \frac{1+q}{2}
@@ -304,7 +304,8 @@ Boundary regimes. With $\beta=\kappa'(1)\in(0,1)$, decay is exactly geometric at
 
 Centered case ($\kappa(0)=0$).
 
-My elementary contraction for the potential $\Phi(\rho)=|\rho|/(1-|\rho|)$:
+My elementary contraction for the potential
+$\Phi(\rho)=|\rho|/(1-|\rho|)$:
 
 $$
 \Phi(\kappa(\rho)) \;\le\; \frac{1}{\,2-\kappa'(0)\,}\,\Phi(\rho).
