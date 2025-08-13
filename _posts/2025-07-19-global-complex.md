@@ -33,6 +33,7 @@ In my final successful attempt, I kind of tried to reverse the process. First, I
 
 I think my story with my elementary proof and these new more involved proofs is only the tip of the iceberg. I believe models like like GPT-5 can act as literature compasses, and help bridge distant areas of knowledge, reuniting ideas that are separated across history and discilipines. If used thoughtfully, they reveal where to look, which classical stones to turn, and how far existing results already reach. I think it's no overstating to say that this could bring about a renesoinse for mathematics, human knowledge, and more broadly understanding of the world around us.
  
+---
 
 ### Setup and the original master theorem
 
@@ -110,7 +111,11 @@ All remaining fixed points (only possibly $\pm1$) are non-attracting. See {% cit
 
 ### Alternative complex-analytic proofs
 
-We now re-derive global attraction using classical holomorphic dynamics on the unit disk. Let $d_{\mathbb D}$ be the Poincaré distance and $\varphi_a(z)=(z-a)/(1-\overline a z)$ the standard automorphism. Define
+We now re-derive global attraction using classical holomorphic dynamics on the unit disk. Let $d_{\mathbb D}$ be the Poincaré distance and the standard automorphism
+
+$$\varphi_a(z)=(z-a)/(1-\overline a z)$$ 
+
+Define
 
 $$
 E_a(z) \;:=\; e^{d_{\mathbb D}(z,a)}-1 \;=\; \frac{2\,|\varphi_a(z)|}{1-|\varphi_a(z)|}.
