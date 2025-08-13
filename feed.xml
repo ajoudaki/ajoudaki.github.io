@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-13T06:32:30+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-13T08:23:25+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 </subtitle><entry><title type="html">Complex-Analytic Proofs of Global Attraction for Neural Kernel Map</title><link href="https://ajoudaki.github.io/blog/2025/global-complex/" rel="alternate" type="text/html" title="Complex-Analytic Proofs of Global Attraction for Neural Kernel Map" /><published>2025-08-12T00:00:00+00:00</published><updated>2025-08-12T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/global-complex</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/global-complex/"><![CDATA[<h3 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with AI</h3>
 
 <p>In my AISTATS paper <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a>, I proved that the mean-field neural kernel (a.k.a. conjugate kernel, or NNGP kernel) sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. My proof involved using Hermite polynomials, and relying on the specific algebraic properties of the neural kernel. The proof was self-contained and was entirely elementary. 
@@ -9,6 +9,8 @@ Now, roughly a year later after that, with the help of GPT-5’s thinking and de
 <p>In my final successful attempt, I kind of tried to reverse the process. First, I converted my explicit global convergence results to an statement about holomorphic functions. Once stated in these terms, I did a deep research to find if this statements are novel or are discovering some known complex analytic fact. This transformation of the statement aparently was sufficient to trigger GPT-5 to realize that these results were nearly identical to earlier and by now classical results, dating back to a work from almost a century ago. A little more digging revealed sharp lemmas and extremal principles scattered across function theory, allowing alternative proofs that are shorter and conceptually cleaner, and are actually sharper than my results.</p>
 
 <p>I think my story with my elementary proof and these new more involved proofs is only the tip of the iceberg. I believe models like like GPT-5 can act as literature compasses, and help bridge distant areas of knowledge, reuniting ideas that are separated across history and discilipines. If used thoughtfully, they reveal where to look, which classical stones to turn, and how far existing results already reach. I think it’s no overstating to say that this could bring about a renesoinse for mathematics, human knowledge, and more broadly understanding of the world around us.</p>
+
+<hr />
 
 <h3 id="setup-and-the-original-master-theorem">Setup and the original master theorem</h3>
 
@@ -75,7 +77,11 @@ H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.\]
 
 <h3 id="alternative-complex-analytic-proofs">Alternative complex-analytic proofs</h3>
 
-<p>We now re-derive global attraction using classical holomorphic dynamics on the unit disk. Let $d_{\mathbb D}$ be the Poincaré distance and $\varphi_a(z)=(z-a)/(1-\overline a z)$ the standard automorphism. Define</p>
+<p>We now re-derive global attraction using classical holomorphic dynamics on the unit disk. Let $d_{\mathbb D}$ be the Poincaré distance and the standard automorphism</p>
+
+\[\varphi_a(z)=(z-a)/(1-\overline a z)\]
+
+<p>Define</p>
 
 \[E_a(z) \;:=\; e^{d_{\mathbb D}(z,a)}-1 \;=\; \frac{2\,|\varphi_a(z)|}{1-|\varphi_a(z)|}.\]
 
