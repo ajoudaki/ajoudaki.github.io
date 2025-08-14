@@ -46,39 +46,47 @@ $$
 \sim \mathcal N\!\left(0,\begin{pmatrix}1&\rho\\ \rho&1\end{pmatrix}\right),
 $$
 
-as in {% cite yang2019meanfield poole2016 %}. Expanding $\phi$ in the normalized Hermite basis $\phi=\sum_{k\ge0} c_k\,\mathrm{He}_k$ yields the analytic self-map
+as in {% cite poole2016 %}. 
+
+Throughout this analysis we assume $\kappa(1) = 1$ which impplies  $E\phi(z)^2 = 1$ for $z\sim N(0,1)$. This implies that $\kappa$ is a mapping from $[-1,1]$ onto itself. This means we can study the kernel sequence as a fixed point iteration, and thus, ask the following key question:
+
+> **The key inquiry** in our work was the convergence behavior and speed of sequence $\rho_0, \kappa(\rho_0),\kappa(\kappa(\rho_0)) \ldots $ as a function of its starting point $\rho_0$ and properties of the activation.  
+
+
+Some more definitons and terminology: 
+
+- **Kernel sequence**: starting from $\rho_0$, we denote the $\ell$-th point in the the sequence by $\rho_\ell$, or alternatively as $\kappa^{\circ \ell}(\rho_0),$ which indicates it is $\ell$ invocation of the kernel map on the input.   
+- **Fixed points**: are defined as invariant locations for the kernel map:
+$\kappa(\rho^\star) = \rho^\star. $
+- **Locally attracting fixed points** are defined as $\rho^\star$ such that if starting from an infinitesmal neighborhood of $\rho^\star$, kernel sequence will converge to $\rho^\star.$ 
+- **Locally repulsive fixed point**: are defined as $\rho^\star$ such that if starting from an infinitesmal neighborhood of $\rho^\star$, kernel sequence will diverge from $\rho^\star.$ 
+- **Global attracting fixed point** are defined as $\rho^\star$ such that for all starting points other than some measure zero set of $[-1,1]$, the kernel sequence will converge to $\rho^\star. $ 
+
+
+**High level insights from the proofs:** The most crucial first insight to the work is that we must expand $\phi$ in the normalized Hermite basis $\phi=\sum_{k\ge0} c_k\,\mathrm{He}_k$ yields the analytic self-map
 
 $$
 \kappa(z) \;=\; \sum_{k=0}^\infty c_k^2\, z^k \quad \text{on } \mathbb D.
 $$
 
-#### Notation conventions
+Thus, based on the asusmption that $\kappa(1)=1$ we will have $\sum_{k=0}^\infty c_k^2 = 1. $ This means that kernel map $\kappa$ is a highly smooth, aka analytic function, and it is also a mapping from $[-1,1]$ onto itself. These two restrictions were the essential ingregdients to proof the bounds above. If we plot the kernel map for various functions, it becomes readily immediately clear that its smoothness will prevent us from crossing the identity more than two times. But to make this intuition formal, it took several days of painstaking step-by-step derivations. 
 
-Throughout this work, we use the following notation:
-* $$\rho^\star\in\mathbb D$$: the **interior attracting fixed point** (when it exists). In the centered case, $\rho^\star=0$.
-* $\varphi_{\rho^\star}(z)=\dfrac{z-\rho^\star}{1-\overline{\rho^\star}z}$ — automorphism sending $\rho^\star\mapsto 0$.
-* $$E_{\rho^\star}(z)=e^{d_{\mathbb D}(z,\rho^\star)}-1=\dfrac{2\,\vert\varphi_{\rho^\star}(z)\vert}{1-\vert\varphi_{\rho^\star}(z)\vert}$$ — hyperbolic gauge centered at $\rho^\star$.
 
-The two gauges we will use throughout are
+For comparison reasons, here is the statement of the master theorem in the paper:
 
-$$
-\Phi(\rho) \;:=\; \frac{|\rho|}{1-|\rho|},
-\qquad
-H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.
-$$
-
-The first is the Lyapunov potential used in {% cite joudaki2025aistats %} (up to a factor of two compared to $e^{d_{\mathbb D}}-1$); the second is the canonical horodisk gauge centered at the boundary point $1$.
 
 #### Original master theorem 
 
-Assume forward stability $\kappa(1)=1$ and nonlinearity $\sum_{k\ge2} c_k^2>0$. Let $\rho_{\ell+1}=\kappa(\rho_\ell)$ with $\rho_0\in(-1,1)$. Then the iterates converge globally to a unique attracting fixed point $\rho^\star\in[0,1]$ with the following casewise rates:
+Assume forward stability $\kappa(1)=1$ and nonlinearity $\sum_{k\ge2} c_k^2>0$. Let 
+$\rho_{\ell+1}=\kappa(\rho_\ell)$ 
+with $\rho_0\in(-1,1)$. Then the iterates converge globally to a unique attracting fixed point $\rho^\star\in[0,1]$ with the following casewise rates:
 
 1. Centered activations $\kappa(0)=0$:
 
    
    $$
    \Phi(\rho_\ell) \;\le\; \left(\frac{1}{\,2-\kappa'(0)\,}\right)^{\!\ell}\, \Phi(\rho_0),
-   \qquad \rho^\star=0, \quad \kappa'(0)=\kappa'(0).
+   \qquad \rho^\star=0.
    $$
 
 2. Boundary Denjoy–Wolff with strict attraction $\kappa(0)>0$ and $\kappa'(1)\in(0,1)$:
@@ -86,7 +94,7 @@ Assume forward stability $\kappa(1)=1$ and nonlinearity $\sum_{k\ge2} c_k^2>0$. 
    
    $$
    |\rho_\ell-1| \;\le\; \kappa'(1)^{\!\ell}\,|\rho_0-1|,
-   \qquad \rho^\star=1, \quad \kappa'(1)=\kappa'(1).
+   \qquad \rho^\star=1.
    $$
 
 3. Parabolic boundary case $\kappa(0)>0$ and $\kappa'(1)=1$:
@@ -112,7 +120,22 @@ Assume forward stability $\kappa(1)=1$ and nonlinearity $\sum_{k\ge2} c_k^2>0$. 
 
    where $q=\kappa'(\rho^\star)$.
 
-All remaining fixed points (only possibly $\pm1$) are non-attracting. See {% cite joudaki2025aistats %} for the elementary proofs.
+All remaining fixed points (only possibly $\pm1$) are non-attracting. 
+
+
+One of the central ingredients for formalizing these intuitions were the following two Lyapunov potential functions, that worked as gauges to look at kernel sequence convergence
+
+$$
+\Phi(\rho) \;:=\; \frac{|\rho|}{1-|\rho|},
+\qquad
+H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.
+$$
+
+Roughly speaking, the first potential function was used for interior fixed points, i.e., $\rho^\star\in[0,1)$, and the second type was used for boundary fixed points, i.e., $\rho^\star=1. $  You can identify these potentials respectively under cases 1 and 4 of the master theorem. Other cases whose contraction was simpler and didn't require defining a special potential.  You can see {% cite joudaki2025aistats %} for the full and entirely elementatry proofs. 
+
+One notable thing you will quickly realize from the proofs is that they are entirely elementary proofs. Not that this is a bad thing per se, but given the elegant and very simple form of this result and its seeming generality, it is befuddling to think that this result is a fundumentally new discovery, and has never been discovered by mathematicians. That was the point that was raised by my co-author, and stayed with me for quite a long time. A second reason for my unease was the discontinuity between some of the cases. Namely, if you compare the centered and interior cases (1 & 4), if we take the limit of $\kappa(0)\to 0^+$, which still falls under case 4, will be converging to a vacuous bound. However, having exactly $\kappa(0) = 0$ we fall under the still non-vacuous bound of case 1. 
+
+The combination of these two reasons is why we suspect something deeper and more elegant under the surface of these proofs and results. As discussed in the sequel, these suspicions were deemed to be true. 
 
 ---
 
@@ -137,7 +160,7 @@ Assume
 $$
 \kappa(0)=0,
 \qquad
-\kappa'(0):=\kappa'(0)\in[0,1),
+\kappa'(0)\in[0,1),
 \qquad
 \text{$\kappa$ not an automorphism.}
 $$
@@ -371,6 +394,8 @@ $$|\rho_\ell-1|$$. The complex-analytic version proves the same $$O(1/\ell)$$ la
 
 Takeaway. In the centered interior case, my elementary constant is strictly stronger for the kernel subclass. In the other regimes, the complex-analytic route matches known sharp constants and repackages the argument in a coordinate-free, hyperbolic geometry that immediately generalizes (e.g., to any interior fixed point via automorphisms), with exact extremals known from classical function theory.
 
+---
+
 ### Visualization 
 
 How to use the panel
@@ -386,7 +411,6 @@ How to use the panel
 
 - **Point and iterates.** Pick $$z=re^{i\theta}$$ and the number of steps $$\ell$$.
 
----
 
 #### What the three plots show
 
@@ -411,7 +435,6 @@ $$
    - boundary: $$\kappa'(1)^{\ell}H_1(z_0)$$.
    (Parabolic $$\kappa'(1)=1$$: true $$H_1\sim 1/(1+\gamma\ell)$$; the overlay is a visual proxy.)
 
----
 
 #### Quick recipes (C1–C4)
 
@@ -421,7 +444,7 @@ $$
 - **C4 (interior, non-centered):** weights yield $$\rho^\star\in(0,1)$$; interior mode shows factor 
 $$\tfrac{1+\kappa'(\rho^\star)}{2}$$ in $$E_{\rho^\star}$$, where $$\kappa'(\rho^\star)=|\kappa'(\rho^\star)|$$.
 
-*Notes:* the demo uses polynomials with non-negative coefficients (kernel subclass); points near $$\vert z\vert =1$$ are kept slightly inside for numerical stability.
+*Notes:* the demo uses polynomials with non-negative coefficients (kernel subclass); points near $$| z | =1$$ are kept slightly inside for numerical stability.
 
 <!-- =========================
 Interactive Visualization: Complex-Analytic Proofs for Kernel Dynamics
@@ -736,47 +759,44 @@ function update() {
 }
 
 
-    function drawMap(ws, alpha0, beta){
-      const N=600;
-      const X = new Array(N);
-      const Y = new Array(N);
-      for (let i=0;i<N;i++){
-        const x = -1 + 2*i/(N-1);
-        X[i]=x; Y[i]=kappaReal(x,ws);
-      }
+function drawMap(ws, alpha0, beta){
+  const N=600;
+  const X = new Array(N);
+  const Y = new Array(N);
+  for (let i=0;i<N;i++){
+    const x = -1 + 2*i/(N-1);
+    X[i]=x; Y[i]=kappaReal(x,ws);
+  }
 
-      const traces = [
-        { x:X, y:Y, name:'κ(x)', mode:'lines', line:{width:3} },
-        { x:[-1,1], y:[-1,1], name:'identity', mode:'lines', line:{dash:'dash'} },
-      ];
+  const traces = [
+    { x:X, y:Y, name:'κ(x)', mode:'lines', line:{width:3, color:'#3b82f6'} },
+    { x:[-1,1], y:[-1,1], name:'identity', mode:'lines', line:{dash:'dash', color:'#9ca3af', width:2} },
+  ];
 
-      const fixeds = computeFixedPoints(ws);
-      if (fixeds.length){
-        traces.push({ x: fixeds, y: fixeds, mode:'markers', name:'fixed points',
-                      marker:{size:8, color:'#10b981'} });
-      }
+  const fixeds = computeFixedPoints(ws);
+  if (fixeds.length){
+    traces.push({ x: fixeds, y: fixeds, mode:'markers', name:'fixed points',
+                  marker:{size:10, color:'#10b981'} });
+  }
 
-      if (showSlopeEl.checked){
-        traces.push({ x:[-1,1], y:[-alpha0, alpha0], mode:'lines', name:"tangent at 0",
-                      line:{color:'#6366f1', width:1} });
-        traces.push({ x:[-1,1], y:[1 + beta*(-2), 1 + beta*(0)], mode:'lines', name:"tangent at 1",
-                      line:{color:'#f59e0b', width:1} });
-      }
+  // Only show tangents if explicitly enabled and make them more subtle
+  if (showSlopeEl.checked){
+    traces.push({ x:[-0.3,0.3], y:[-alpha0*0.3, alpha0*0.3], mode:'lines', name:"slope at 0",
+                  line:{color:'#e5e7eb', width:1} });
+    traces.push({ x:[0.7,1], y:[1 + beta*(0.7-1), 1], mode:'lines', name:"slope at 1",
+                  line:{color:'#fef3c7', width:1} });
+  }
 
-      if (showRogEl.checked && Math.abs(ws[0])<1e-12){
-        const Rplus = X.map(x => rogosinski(Math.abs(x), alpha0));
-        const Rminus = Rplus.map(v => -v);
-        traces.push({ x:X, y:Rplus, name:'Rogosinski +R(|x|)', mode:'lines', line:{dash:'dot', color:'#ef4444'}});
-        traces.push({ x:X, y:Rminus, name:'Rogosinski -R(|x|)', mode:'lines', line:{dash:'dot', color:'#ef4444'}});
-      }
+  // Remove Rogosinski envelope entirely - it's too technical for most users
 
-      Plotly.react(mapPlot, traces, {
-        margin:{t:20,r:10,l:40,b:40},
-        xaxis:{title:'x', range:[-1,1]},
-        yaxis:{title:'κ(x)', range:[-1,1]},
-        legend:{orientation:'h', y:1.15}
-      }, {displayModeBar:false, responsive:true});
-    }
+  Plotly.react(mapPlot, traces, {
+    margin:{t:20,r:10,l:40,b:40},
+    xaxis:{title:'x', range:[-1,1]},
+    yaxis:{title:'κ(x)', range:[-1,1]},
+    legend:{orientation:'h', y:1.15},
+    showlegend: false  // Hide legend to reduce clutter
+  }, {displayModeBar:false, responsive:true});
+}
 
     function drawDisk(ws, rhoStar){
       const r = parseFloat(rEl.value), th = parseFloat(thetaEl.value);
