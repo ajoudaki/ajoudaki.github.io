@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-14T14:14:48+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-14T15:15:53+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 </subtitle><entry><title type="html">Complex-Analytic Proofs of Global Attraction for Neural Kernel Map</title><link href="https://ajoudaki.github.io/blog/2025/kernel-complex-analysis/" rel="alternate" type="text/html" title="Complex-Analytic Proofs of Global Attraction for Neural Kernel Map" /><published>2025-08-12T00:00:00+00:00</published><updated>2025-08-12T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/kernel-complex-analysis</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/kernel-complex-analysis/"><![CDATA[<h3 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with AI</h3>
 
 <p>In my AISTATS paper <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a>, we proved that the mean-field neural kernel (a.k.a. conjugate kernel, or NNGP kernel) sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. My proof involved using Hermite polynomials, and relying on the specific algebraic properties of the neural kernel. The proof was self-contained and was entirely elementary. 
@@ -23,43 +23,51 @@ Now, roughly a year later after that, with the help of GPT-5’s thinking and de
 \begin{pmatrix}X\\Y\end{pmatrix}
 \sim \mathcal N\!\left(0,\begin{pmatrix}1&amp;\rho\\ \rho&amp;1\end{pmatrix}\right),\]
 
-<p>as in <a class="citation" href="#yang2019meanfield">(Yang, 2019; Poole et al., 2016)</a>. Expanding $\phi$ in the normalized Hermite basis $\phi=\sum_{k\ge0} c_k\,\mathrm{He}_k$ yields the analytic self-map</p>
+<p>as in <a class="citation" href="#poole2016">(Poole et al., 2016)</a>.</p>
+
+<p>Throughout this analysis we assume $\kappa(1) = 1$ which impplies  $E\phi(z)^2 = 1$ for $z\sim N(0,1)$. This implies that $\kappa$ is a mapping from $[-1,1]$ onto itself. This means we can study the kernel sequence as a fixed point iteration, and thus, ask the following key question:</p>
+
+<blockquote>
+  <p><strong>The key inquiry</strong> in our work was the convergence behavior and speed of sequence $\rho_0, \kappa(\rho_0),\kappa(\kappa(\rho_0)) \ldots $ as a function of its starting point $\rho_0$ and properties of the activation.</p>
+</blockquote>
+
+<p>Some more definitons and terminology:</p>
+
+<ul>
+  <li><strong>Kernel sequence</strong>: starting from $\rho_0$, we denote the $\ell$-th point in the the sequence by $\rho_\ell$, or alternatively as $\kappa^{\circ \ell}(\rho_0),$ which indicates it is $\ell$ invocation of the kernel map on the input.</li>
+  <li><strong>Fixed points</strong>: are defined as invariant locations for the kernel map:
+$\kappa(\rho^\star) = \rho^\star. $</li>
+  <li><strong>Locally attracting fixed points</strong> are defined as $\rho^\star$ such that if starting from an infinitesmal neighborhood of $\rho^\star$, kernel sequence will converge to $\rho^\star.$</li>
+  <li><strong>Locally repulsive fixed point</strong>: are defined as $\rho^\star$ such that if starting from an infinitesmal neighborhood of $\rho^\star$, kernel sequence will diverge from $\rho^\star.$</li>
+  <li><strong>Global attracting fixed point</strong> are defined as $\rho^\star$ such that for all starting points other than some measure zero set of $[-1,1]$, the kernel sequence will converge to $\rho^\star. $</li>
+</ul>
+
+<p><strong>High level insights from the proofs:</strong> The most crucial first insight to the work is that we must expand $\phi$ in the normalized Hermite basis $\phi=\sum_{k\ge0} c_k\,\mathrm{He}_k$ yields the analytic self-map</p>
 
 \[\kappa(z) \;=\; \sum_{k=0}^\infty c_k^2\, z^k \quad \text{on } \mathbb D.\]
 
-<h4 id="notation-conventions">Notation conventions</h4>
+<p>Thus, based on the asusmption that $\kappa(1)=1$ we will have $\sum_{k=0}^\infty c_k^2 = 1. $ This means that kernel map $\kappa$ is a highly smooth, aka analytic function, and it is also a mapping from $[-1,1]$ onto itself. These two restrictions were the essential ingregdients to proof the bounds above. If we plot the kernel map for various functions, it becomes readily immediately clear that its smoothness will prevent us from crossing the identity more than two times. But to make this intuition formal, it took several days of painstaking step-by-step derivations.</p>
 
-<p>Throughout this work, we use the following notation:</p>
-<ul>
-  <li>\(\rho^\star\in\mathbb D\): the <strong>interior attracting fixed point</strong> (when it exists). In the centered case, $\rho^\star=0$.</li>
-  <li>$\varphi_{\rho^\star}(z)=\dfrac{z-\rho^\star}{1-\overline{\rho^\star}z}$ — automorphism sending $\rho^\star\mapsto 0$.</li>
-  <li>\(E_{\rho^\star}(z)=e^{d_{\mathbb D}(z,\rho^\star)}-1=\dfrac{2\,\vert\varphi_{\rho^\star}(z)\vert}{1-\vert\varphi_{\rho^\star}(z)\vert}\) — hyperbolic gauge centered at $\rho^\star$.</li>
-</ul>
-
-<p>The two gauges we will use throughout are</p>
-
-\[\Phi(\rho) \;:=\; \frac{|\rho|}{1-|\rho|},
-\qquad
-H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.\]
-
-<p>The first is the Lyapunov potential used in <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a> (up to a factor of two compared to $e^{d_{\mathbb D}}-1$); the second is the canonical horodisk gauge centered at the boundary point $1$.</p>
+<p>For comparison reasons, here is the statement of the master theorem in the paper:</p>
 
 <h4 id="original-master-theorem">Original master theorem</h4>
 
-<p>Assume forward stability $\kappa(1)=1$ and nonlinearity $\sum_{k\ge2} c_k^2&gt;0$. Let $\rho_{\ell+1}=\kappa(\rho_\ell)$ with $\rho_0\in(-1,1)$. Then the iterates converge globally to a unique attracting fixed point $\rho^\star\in[0,1]$ with the following casewise rates:</p>
+<p>Assume forward stability $\kappa(1)=1$ and nonlinearity $\sum_{k\ge2} c_k^2&gt;0$. Let 
+$\rho_{\ell+1}=\kappa(\rho_\ell)$ 
+with $\rho_0\in(-1,1)$. Then the iterates converge globally to a unique attracting fixed point $\rho^\star\in[0,1]$ with the following casewise rates:</p>
 
 <ol>
   <li>
     <p>Centered activations $\kappa(0)=0$:</p>
 
 \[\Phi(\rho_\ell) \;\le\; \left(\frac{1}{\,2-\kappa'(0)\,}\right)^{\!\ell}\, \Phi(\rho_0),
-\qquad \rho^\star=0, \quad \kappa'(0)=\kappa'(0).\]
+\qquad \rho^\star=0.\]
   </li>
   <li>
     <p>Boundary Denjoy–Wolff with strict attraction $\kappa(0)&gt;0$ and $\kappa’(1)\in(0,1)$:</p>
 
 \[|\rho_\ell-1| \;\le\; \kappa'(1)^{\!\ell}\,|\rho_0-1|,
-\qquad \rho^\star=1, \quad \kappa'(1)=\kappa'(1).\]
+\qquad \rho^\star=1.\]
   </li>
   <li>
     <p>Parabolic boundary case $\kappa(0)&gt;0$ and $\kappa’(1)=1$:</p>
@@ -82,7 +90,19 @@ H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.\]
   </li>
 </ol>
 
-<p>All remaining fixed points (only possibly $\pm1$) are non-attracting. See <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a> for the elementary proofs.</p>
+<p>All remaining fixed points (only possibly $\pm1$) are non-attracting.</p>
+
+<p>One of the central ingredients for formalizing these intuitions were the following two Lyapunov potential functions, that worked as gauges to look at kernel sequence convergence</p>
+
+\[\Phi(\rho) \;:=\; \frac{|\rho|}{1-|\rho|},
+\qquad
+H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.\]
+
+<p>Roughly speaking, the first potential function was used for interior fixed points, i.e., $\rho^\star\in[0,1)$, and the second type was used for boundary fixed points, i.e., $\rho^\star=1. $  You can identify these potentials respectively under cases 1 and 4 of the master theorem. Other cases whose contraction was simpler and didn’t require defining a special potential.  You can see <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a> for the full and entirely elementatry proofs.</p>
+
+<p>One notable thing you will quickly realize from the proofs is that they are entirely elementary proofs. Not that this is a bad thing per se, but given the elegant and very simple form of this result and its seeming generality, it is befuddling to think that this result is a fundumentally new discovery, and has never been discovered by mathematicians. That was the point that was raised by my co-author, and stayed with me for quite a long time. A second reason for my unease was the discontinuity between some of the cases. Namely, if you compare the centered and interior cases (1 &amp; 4), if we take the limit of $\kappa(0)\to 0^+$, which still falls under case 4, will be converging to a vacuous bound. However, having exactly $\kappa(0) = 0$ we fall under the still non-vacuous bound of case 1.</p>
+
+<p>The combination of these two reasons is why we suspect something deeper and more elegant under the surface of these proofs and results. As discussed in the sequel, these suspicions were deemed to be true.</p>
 
 <hr />
 
@@ -104,7 +124,7 @@ H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.\]
 
 \[\kappa(0)=0,
 \qquad
-\kappa'(0):=\kappa'(0)\in[0,1),
+\kappa'(0)\in[0,1),
 \qquad
 \text{$\kappa$ not an automorphism.}\]
 
@@ -291,6 +311,8 @@ decay of
 
 <p>Takeaway. In the centered interior case, my elementary constant is strictly stronger for the kernel subclass. In the other regimes, the complex-analytic route matches known sharp constants and repackages the argument in a coordinate-free, hyperbolic geometry that immediately generalizes (e.g., to any interior fixed point via automorphisms), with exact extremals known from classical function theory.</p>
 
+<hr />
+
 <h3 id="visualization">Visualization</h3>
 
 <p>How to use the panel</p>
@@ -311,8 +333,6 @@ decay of
     <p><strong>Point and iterates.</strong> Pick \(z=re^{i\theta}\) and the number of steps \(\ell\).</p>
   </li>
 </ul>
-
-<hr />
 
 <h4 id="what-the-three-plots-show">What the three plots show</h4>
 
@@ -342,8 +362,6 @@ decay of
   </li>
 </ul>
 
-<hr />
-
 <h4 id="quick-recipes-c1c4">Quick recipes (C1–C4)</h4>
 
 <ul>
@@ -354,7 +372,15 @@ decay of
 \(\tfrac{1+\kappa'(\rho^\star)}{2}\) in \(E_{\rho^\star}\), where \(\kappa'(\rho^\star)=|\kappa'(\rho^\star)|\).</li>
 </ul>
 
-<p><em>Notes:</em> the demo uses polynomials with non-negative coefficients (kernel subclass); points near \(\vert z\vert =1\) are kept slightly inside for numerical stability.</p>
+<table>
+  <tbody>
+    <tr>
+      <td><em>Notes:</em> the demo uses polynomials with non-negative coefficients (kernel subclass); points near $$</td>
+      <td>z</td>
+      <td>=1$$ are kept slightly inside for numerical stability.</td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- =========================
 Interactive Visualization: Complex-Analytic Proofs for Kernel Dynamics
@@ -669,47 +695,44 @@ function update() {
 }
 
 
-    function drawMap(ws, alpha0, beta){
-      const N=600;
-      const X = new Array(N);
-      const Y = new Array(N);
-      for (let i=0;i<N;i++){
-        const x = -1 + 2*i/(N-1);
-        X[i]=x; Y[i]=kappaReal(x,ws);
-      }
+function drawMap(ws, alpha0, beta){
+  const N=600;
+  const X = new Array(N);
+  const Y = new Array(N);
+  for (let i=0;i<N;i++){
+    const x = -1 + 2*i/(N-1);
+    X[i]=x; Y[i]=kappaReal(x,ws);
+  }
 
-      const traces = [
-        { x:X, y:Y, name:'κ(x)', mode:'lines', line:{width:3} },
-        { x:[-1,1], y:[-1,1], name:'identity', mode:'lines', line:{dash:'dash'} },
-      ];
+  const traces = [
+    { x:X, y:Y, name:'κ(x)', mode:'lines', line:{width:3, color:'#3b82f6'} },
+    { x:[-1,1], y:[-1,1], name:'identity', mode:'lines', line:{dash:'dash', color:'#9ca3af', width:2} },
+  ];
 
-      const fixeds = computeFixedPoints(ws);
-      if (fixeds.length){
-        traces.push({ x: fixeds, y: fixeds, mode:'markers', name:'fixed points',
-                      marker:{size:8, color:'#10b981'} });
-      }
+  const fixeds = computeFixedPoints(ws);
+  if (fixeds.length){
+    traces.push({ x: fixeds, y: fixeds, mode:'markers', name:'fixed points',
+                  marker:{size:10, color:'#10b981'} });
+  }
 
-      if (showSlopeEl.checked){
-        traces.push({ x:[-1,1], y:[-alpha0, alpha0], mode:'lines', name:"tangent at 0",
-                      line:{color:'#6366f1', width:1} });
-        traces.push({ x:[-1,1], y:[1 + beta*(-2), 1 + beta*(0)], mode:'lines', name:"tangent at 1",
-                      line:{color:'#f59e0b', width:1} });
-      }
+  // Only show tangents if explicitly enabled and make them more subtle
+  if (showSlopeEl.checked){
+    traces.push({ x:[-0.3,0.3], y:[-alpha0*0.3, alpha0*0.3], mode:'lines', name:"slope at 0",
+                  line:{color:'#e5e7eb', width:1} });
+    traces.push({ x:[0.7,1], y:[1 + beta*(0.7-1), 1], mode:'lines', name:"slope at 1",
+                  line:{color:'#fef3c7', width:1} });
+  }
 
-      if (showRogEl.checked && Math.abs(ws[0])<1e-12){
-        const Rplus = X.map(x => rogosinski(Math.abs(x), alpha0));
-        const Rminus = Rplus.map(v => -v);
-        traces.push({ x:X, y:Rplus, name:'Rogosinski +R(|x|)', mode:'lines', line:{dash:'dot', color:'#ef4444'}});
-        traces.push({ x:X, y:Rminus, name:'Rogosinski -R(|x|)', mode:'lines', line:{dash:'dot', color:'#ef4444'}});
-      }
+  // Remove Rogosinski envelope entirely - it's too technical for most users
 
-      Plotly.react(mapPlot, traces, {
-        margin:{t:20,r:10,l:40,b:40},
-        xaxis:{title:'x', range:[-1,1]},
-        yaxis:{title:'κ(x)', range:[-1,1]},
-        legend:{orientation:'h', y:1.15}
-      }, {displayModeBar:false, responsive:true});
-    }
+  Plotly.react(mapPlot, traces, {
+    margin:{t:20,r:10,l:40,b:40},
+    xaxis:{title:'x', range:[-1,1]},
+    yaxis:{title:'κ(x)', range:[-1,1]},
+    legend:{orientation:'h', y:1.15},
+    showlegend: false  // Hide legend to reduce clutter
+  }, {displayModeBar:false, responsive:true});
+}
 
     function drawDisk(ws, rhoStar){
       const r = parseFloat(rEl.value), th = parseFloat(thetaEl.value);
@@ -873,43 +896,6 @@ function update() {
         </div>
         <div class="periodical">
           To appear
-        </div>
-
-          <!-- Links/Buttons -->
-          <div class="links">
-          </div>
-          
-          <div class="badges">
-            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
-              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
-          </div>
-
-          
-        </div>
-      </div>
-</li>
-<li><!-- _layouts/bib.html -->
-      <div class="row">
-        <div class="col-sm-2 abbr"></div>
-
-        <!-- Entry bib key -->
-        <div id="yang2019meanfield" class="col-sm-8">
-        <!-- Title -->
-        <div class="title">Scaling Limits of Wide Neural Networks with Weight Sharing: Gaussian Process Behavior, Gradient Descent, and Weak Limits</div>
-        <!-- Author -->
-        <div class="author">
-        
-
-        Greg Yang</div>
-
-        <!-- Journal/Book title and date -->
-        
-        
-        <div class="periodical">
-          <em>In Proceedings of the 33rd Conference on Neural Information Processing Systems (NeurIPS) Workshops</em>, 2019
-        </div>
-        <div class="periodical">
-          arXiv:1902.04760
         </div>
 
           <!-- Links/Buttons -->
