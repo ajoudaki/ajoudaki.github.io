@@ -236,7 +236,15 @@ for explicit $c$ and $r$ built from the Möbius invariants $\varphi_{z}(z_1)$, $
 
 #### Complex-Analytic Master Theorem (CAMT)
 
-Let $\kappa:\mathbb D\to\mathbb D$ be holomorphic and **not** a disk automorphism. Consider the iteration $\rho_{\ell+1}=\kappa(\rho_\ell)$ with $\rho_0\in(-1,1)$. Then:
+
+
+Let $\kappa:\mathbb D\to\mathbb D$ be holomorphic and **not** a disk automorphism. Consider the iteration $\rho_{\ell+1}=\kappa(\rho_\ell)$ with $\rho_0\in(-1,1)$. In this section, we will use the following variables to simplify the notations: 
+
+$$
+q = \kappa'(\rho^*),\qquad \alpha = \kappa'(0), \qquad \beta= \kappa'(1).
+$$
+
+We can now state the master theorem:
 
 **(C1) Centered interior fixed point at $0$**: if $\kappa(0)=0$ and $\alpha:=\kappa'(0)\in[0,1)$, then for all $z\in\mathbb D$
 
