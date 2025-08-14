@@ -22,16 +22,14 @@ include_scripts: []
 
 ### Prelude: bridging fields with AI
 
-In my AISTATS paper {% cite joudaki2025aistats %}, I proved that the mean-field neural kernel (a.k.a. conjugate kernel, or NNGP kernel) sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. My proof involved using Hermite polynomials, and relying on the specific algebraic properties of the neural kernel. The proof was self-contained and was entirely elementary. 
-Now, roughly a year later after that, with the help of GPT-5's thinking and deep research mode, I found that my elementary proofs are connected to some deep concepts in classical complex analysis that date back almot a centry back. 
+In my AISTATS paper {% cite joudaki2025aistats %}, we proved that the mean-field neural kernel (a.k.a. conjugate kernel, or NNGP kernel) sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. My proof involved using Hermite polynomials, and relying on the specific algebraic properties of the neural kernel. The proof was self-contained and was entirely elementary. 
+Now, roughly a year later after that, with the help of GPT-5's thinking and deep research mode, I found that my elementary proofs are connected to some deep concepts in classical complex analysis that date back almost a century back. 
 
 The process of me finding out about the complex analytical results wasn't quite one-shot. My first attempts to uncover possible links with various branches of mathematics only revealed that a combination of Schwarz's lemma and could explain the global attraction result, but without any explicit convergence result. I tried several more times to find more advanced result to no avail. 
 
+In my final successful attempt, I kind of tried to reverse the process. First, I converted my explicit global convergence results to an statement about holomorphic functions. Once stated in these terms, I did a deep research to find if this statements are novel or are discovering some known complex analytic fact. This transformation of the statement apparently was sufficient to trigger GPT-5 to realize that these results were nearly identical to earlier and by now classical results, dating back to a work from almost a century ago. A little more digging revealed sharp lemmas and extremal principles scattered across function theory, allowing alternative proofs that are shorter and conceptually cleaner, and are actually sharper than my results.
 
-In my final successful attempt, I kind of tried to reverse the process. First, I converted my explicit global convergence results to an statement about holomorphic functions. Once stated in these terms, I did a deep research to find if this statements are novel or are discovering some known complex analytic fact. This transformation of the statement aparently was sufficient to trigger GPT-5 to realize that these results were nearly identical to earlier and by now classical results, dating back to a work from almost a century ago. A little more digging revealed sharp lemmas and extremal principles scattered across function theory, allowing alternative proofs that are shorter and conceptually cleaner, and are actually sharper than my results.
-
-
-I think my story with my elementary proof and these new more involved proofs is only the tip of the iceberg. I believe models like like GPT-5 can act as literature compasses, and help bridge distant areas of knowledge, reuniting ideas that are separated across history and discilipines. If used thoughtfully, they reveal where to look, which classical stones to turn, and how far existing results already reach. I think it's no overstating to say that this could bring about a renesoinse for mathematics, human knowledge, and more broadly understanding of the world around us.
+I think my story with my elementary proof and these new more involved proofs is only the tip of the iceberg. I believe models like like GPT-5 can act as literature compasses, and help bridge distant areas of knowledge, reuniting ideas that are separated across history and disciplines. If used thoughtfully, they reveal where to look, which classical stones to turn, and how far existing results already reach. I think it's no overstating to say that this could bring about a renaissance for mathematics, human knowledge, and more broadly understanding of the world around us.
  
 ---
 
@@ -54,6 +52,13 @@ $$
 \kappa(z) \;=\; \sum_{k=0}^\infty c_k^2\, z^k \quad \text{on } \mathbb D.
 $$
 
+#### Notation conventions
+
+Throughout this work, we use the following notation:
+* $$\rho^\star\in\mathbb D$$: the **interior attracting fixed point** (when it exists). In the centered case, $\rho^\star=0$.
+* $\varphi_{\rho^\star}(z)=\dfrac{z-\rho^\star}{1-\overline{\rho^\star}z}$ — automorphism sending $\rho^\star\mapsto 0$.
+* $$E_{\rho^\star}(z)=e^{d_{\mathbb D}(z,\rho^\star)}-1=\dfrac{2\,\vert\varphi_{\rho^\star}(z)\vert}{1-\vert\varphi_{\rho^\star}(z)\vert}$$ — hyperbolic gauge centered at $\rho^\star$.
+
 The two gauges we will use throughout are
 
 $$
@@ -73,15 +78,15 @@ Assume forward stability $\kappa(1)=1$ and nonlinearity $\sum_{k\ge2} c_k^2>0$. 
    
    $$
    \Phi(\rho_\ell) \;\le\; \left(\frac{1}{\,2-\kappa'(0)\,}\right)^{\!\ell}\, \Phi(\rho_0),
-   \qquad \rho^\star=0.
+   \qquad \rho^\star=0, \quad \kappa'(0)=\kappa'(0).
    $$
 
 2. Boundary Denjoy–Wolff with strict attraction $\kappa(0)>0$ and $\kappa'(1)\in(0,1)$:
 
    
    $$
-   |\rho_\ell-1| \;\le\; \big(\kappa'(1)\big)^{\!\ell}\,|\rho_0-1|,
-   \qquad \rho^\star=1.
+   |\rho_\ell-1| \;\le\; \kappa'(1)^{\!\ell}\,|\rho_0-1|,
+   \qquad \rho^\star=1, \quad \kappa'(1)=\kappa'(1).
    $$
 
 3. Parabolic boundary case $\kappa(0)>0$ and $\kappa'(1)=1$:
@@ -101,9 +106,11 @@ Assume forward stability $\kappa(1)=1$ and nonlinearity $\sum_{k\ge2} c_k^2>0$. 
    \frac{|\rho_0-\rho^\star|}{\,1-|\rho_0|\,}\,
    \alpha^{\,\ell},
    \quad
-   \alpha \;=\; \max\Big\{1-\kappa(0),\, \kappa'(\rho^\star),\, \frac{1-\rho^\star}{\,2-\kappa'(\rho^\star)\,}\Big\}
+   \alpha \;=\; \max\Big\{1-\kappa(0),\, \kappa'(\rho^\star),\, \frac{1-\rho^\star}{\,2-q\,}\Big\}
    \;<\;1.
    $$
+
+   where $q=\kappa'(\rho^\star)$.
 
 All remaining fixed points (only possibly $\pm1$) are non-attracting. See {% cite joudaki2025aistats %} for the elementary proofs.
 
@@ -121,7 +128,7 @@ $$
 E_a(z) \;:=\; e^{d_{\mathbb D}(z,a)}-1 \;=\; \frac{2\,|\varphi_a(z)|}{1-|\varphi_a(z)|}.
 $$
 
-We will use Schwarz–Pick, Julia–Carathéodory, and Rogosinski’s extremal bound {% cite cowenmaccluer1995 julia1918 caratheodory1907 rogosinski1936 dieudonne1934 mercer2018 osserman2000 unkelbach1938 %}.
+We will use Schwarz–Pick, Julia–Carathéodory, and Rogosinski's extremal bound {% cite cowenmaccluer1995 julia1918 caratheodory1907 rogosinski1936 dieudonne1934 mercer2018 osserman2000 unkelbach1938 %}.
 
 #### Interior fixed point at the origin (centered case)
 
@@ -130,7 +137,7 @@ Assume
 $$
 \kappa(0)=0,
 \qquad
-a:=\kappa'(0)\in[0,1),
+\kappa'(0):=\kappa'(0)\in[0,1),
 \qquad
 \text{$\kappa$ not an automorphism.}
 $$
@@ -140,7 +147,7 @@ Theorem 1 (global hyperbolic contraction with sharp constant):
 $$
 E_0\big(\kappa(z)\big)
 \;\le\;
-\frac{1+a}{2}\,E_0(z)
+\frac{1+\kappa'(0)}{2}\,E_0(z)
 \quad \text{for all } z\in\mathbb D.
 $$
 
@@ -149,7 +156,7 @@ Proof. By Rogosinski, for $r\in(0,1)$,
 $$
 |\kappa(r)|
 \;\le\;
-\frac{r(a+r)}{1+a r},
+\frac{r(\kappa'(0)+r)}{1+\kappa'(0) r},
 $$
 
 with equality for Blaschke extremals {% cite rogosinski1936 cowenmaccluer1995 %}. Then
@@ -159,9 +166,9 @@ $$
 =
 \frac{\dfrac{2|\kappa(r)|}{1-|\kappa(r)|}}{\dfrac{2r}{1-r}}
 =
-\frac{a+r}{1+r}
+\frac{\kappa'(0)+r}{1+r}
 \;\le\;
-\frac{1+a}{2},
+\frac{1+\kappa'(0)}{2},
 $$
 
 and $r\uparrow1$ shows sharpness. ∎
@@ -171,7 +178,7 @@ Iterating,
 $$
 E_0\big(\kappa^{\circ \ell}(z)\big)
 \;\le\;
-\left(\frac{1+a}{2}\right)^{\!\ell} E_0(z).
+\left(\frac{1+\kappa'(0)}{2}\right)^{\!\ell} E_0(z).
 $$
 
 #### Interior fixed point at an arbitrary point
@@ -179,9 +186,9 @@ $$
 Assume
 
 $$
-\kappa(a)=a,
+\kappa(\rho^\star)=\rho^\star,
 \qquad
-q:=|\kappa'(a)|\in[0,1),
+\kappa'(\rho^\star)\in[0,1),
 \qquad
 \text{$\kappa$ not an automorphism.}
 $$
@@ -189,20 +196,20 @@ $$
 Theorem 2 (global contraction about the fixed point):
 
 $$
-E_a\big(\kappa(z)\big)
+E_{\rho^\star}\big(\kappa(z)\big)
 \;\le\;
-\frac{1+q}{2}\,E_a(z)
+\frac{1+\kappa'(\rho^\star)}{2}\,E_{\rho^\star}(z)
 \quad \text{for all } z\in\mathbb D.
 $$
 
-Proof. Conjugate by $\psi=\varphi_a$. Then $g=\psi\circ\kappa\circ\psi^{-1}$ satisfies $g(0)=0$, $g'(0)=\kappa'(a)$; apply Theorem 1 to $g$ and use $E_0(\psi(z))=E_a(z)$. ∎
+Proof. Conjugate by $\psi=\varphi_{\rho^\star}$. Then $g=\psi\circ\kappa\circ\psi^{-1}$ satisfies $g(0)=0$, $g'(0)=\kappa'(\rho^\star); $ apply Theorem 1 to $g$ and use $E_0(\psi(z))=E_{\rho^\star}(z)$. ∎
 
 Iterating,
 
 $$
-E_a\big(\kappa^{\circ \ell}(z)\big)
+E_{\rho^\star}\big(\kappa^{\circ \ell}(z)\big)
 \;\le\;
-\left(\frac{1+q}{2}\right)^{\!\ell} E_a(z).
+\left(\frac{1+\kappa'(\rho^\star)}{2}\right)^{\!\ell} E_{\rho^\star}(z).
 $$
 
 #### Strictly attractive boundary Denjoy–Wolff point
@@ -210,7 +217,7 @@ $$
 Assume
 
 $$
-\kappa(1)=1 \text{ n.t.}, \qquad \beta:=\kappa'(1)\in(0,1).
+\kappa(1)=1 \qquad \text{ n.t.}, \qquad \kappa'(1):=\kappa'(1)\in(0,1).
 $$
 
 Theorem 3 (sharp horodisk contraction at the boundary):
@@ -218,7 +225,7 @@ Theorem 3 (sharp horodisk contraction at the boundary):
 $$
 H_1\big(\kappa(z)\big)
 \;\le\;
-\beta\, H_1(z)
+\kappa'(1)\, H_1(z)
 \quad \text{for all } z\in\mathbb D.
 $$
 
@@ -227,7 +234,7 @@ Proof. Julia–Carathéodory gives
 $$
 \frac{1-|\kappa(z)|^2}{|1-\kappa(z)|^2}
 \;\ge\;
-\frac{1}{\beta}\,\frac{1-|z|^2}{|1-z|^2},
+\frac{1}{\kappa'(1)}\,\frac{1-|z|^2}{|1-z|^2},
 $$
 
 equivalent to the stated $H_1$ contraction. This is sharp in the Schur class {% cite cowenmaccluer1995 mercer2018 %}. ∎
@@ -237,7 +244,7 @@ Iterating,
 $$
 H_1\big(\kappa^{\circ \ell}(z)\big)
 \;\le\;
-\beta^{\ell}\, H_1(z).
+\kappa'(1)^{\ell}\, H_1(z).
 $$
 
 #### Parabolic boundary case
@@ -283,33 +290,31 @@ This section ties the constants to neural design and then compares, case by case
 
 #### Neural net interpretation of the constants
 
-Centered regime. Here $a=\kappa'(0)=c_1(\phi)^2$. The hyperbolic constant is
+Centered regime. Here $\kappa'(0)=\kappa'(0)=c_1(\phi)^2$. The hyperbolic constant is
 
 $$
-\frac{1+a}{2}
+\frac{1+\kappa'(0)}{2}
 \quad\text{in}\quad
 E_0(\cdot)=\frac{2|\cdot|}{1-|\cdot|}.
 $$
 
 Smaller $c_1(\phi)$ (e.g., more symmetry) means faster decay of cross-correlation toward orthogonality.
 
-Interior non-centered regime. Let $a$ be the interior fixed point and $$q=\kappa'(a)$$. Contraction is
+Interior non-centered regime. Let $\rho^\star$ be the interior fixed point and $q=\kappa'(\rho^\star)$. Contraction is
 
 $$
-\frac{1+q}{2}
+\frac{1+\kappa'(\rho^\star)}{2}
 \quad\text{in}\quad
-E_a(\cdot).
+E_{\rho^\star}(\cdot).
 $$
 
 Residual connections convex-combine $\kappa$ with the identity, pushing derivatives toward $1$ and slowing contraction.
 
-Boundary regimes. With $\beta=\kappa'(1)\in(0,1)$, decay is exactly geometric at rate $\beta$ in the natural horodisk gauge $H_1$. In the parabolic case $\kappa'(1)=1$, the optimal general rate is $O(1/\ell)$ with a computable $\gamma>0$ from boundary data.
+Boundary regimes. With $\kappa'(1)=\kappa'(1)\in(0,1)$, decay is exactly geometric at rate $\kappa'(1)$ in the natural horodisk gauge $H_1$. In the parabolic case $\kappa'(1)=1$, the optimal general rate is $O(1/\ell)$ with a computable $\gamma>0$ from boundary data.
 
 #### Sharpness and apples-to-apples comparison
 
-Centered case ($\kappa(0)=0$).
-
-My elementary contraction for the potential
+**Centered case ($\kappa(0)=0$).** My elementary contraction for the potential
 $\Phi(\rho)=|\rho|/(1-|\rho|)$:
 
 $$
@@ -328,35 +333,35 @@ $$
 \frac{1+\kappa'(0)}{2} \;>\; \frac{1}{\,2-\kappa'(0)\,} \quad \text{for } \kappa'(0)\in(0,1),
 $$
 
-the constant from my elementary proof is strictly smaller in this centered case. The reason is structural: kernel maps have non-negative Maclaurin coefficients, a special subclass of Schur maps that admits stronger coefficient-wise inequalities. Rogosinski’s factor is nevertheless sharp in the full Schur class and has the conceptual advantage of being purely geometric and automorphism-invariant {% cite rogosinski1936 cowenmaccluer1995 %}.
+the constant from my elementary proof is strictly smaller in this centered case. The reason is structural: kernel maps have non-negative Maclaurin coefficients, a special subclass of Schur maps that admits stronger coefficient-wise inequalities. Rogosinski's factor is nevertheless sharp in the full Schur class and has the conceptual advantage of being purely geometric and automorphism-invariant {% cite rogosinski1936 cowenmaccluer1995 %}.
 
-Interior non-centered case.
-
-My elementary theorem gives a Euclidean-gauge rate toward $\rho^\star$ based on
+**Interior non-centered case.** My elementary theorem gives a Euclidean-gauge rate toward $\rho^\star$ based on
 
 $$
-\alpha \;=\; \max\Big\{1-\kappa(0),\, \kappa'(\rho^\star),\, \frac{1-\rho^\star}{\,2-\kappa'(\rho^\star)\,}\Big\}.
+|\rho_\ell-\rho^\star|
+   \;\le\;
+   \frac{|\rho_0-\rho^\star|}{\,1-|\rho_0|\,}\,
+   \alpha^{\,\ell}, \qquad \alpha \;=\; \max\Big\{1-\kappa(0),\, \kappa'(\rho^\star),\, \frac{1-\rho^\star}{\,2-\kappa'(\rho^\star)\,}\Big\}.
 $$
 
 The complex-analytic proof yields a clean, automorphism-invariant hyperbolic contraction
 
 $$
-E_a(\kappa(z)) \;\le\; \frac{1+q}{2}\,E_a(z),
-\qquad q=|\kappa'(a)|.
+E_{\rho^\star}(\kappa(z)) \;\le\; \frac{1+\kappa'(\rho^\star)}{2}\,E_{\rho^\star}(z),\qquad E_{\rho^\star}(z) = \frac{2|z-\rho^\star|}{|1-\rho^\star z| - |z-\rho^\star|}
 $$
 
-These are not directly comparable because they measure different geometries (Euclidean vs. hyperbolic about the true fixed point). The analytic bound is universal and sharp in the Schur class; my elementary rate can be tighter for the kernel subclass in some parameter ranges.
+In this case, complex-analytic rate might be a better (smaller coefficient) if $\kappa(0)$ is very small. In fact, the presence of $\kappa(0)$ in this bound was the most annoying thing that I tried very hard to get rid of to no avail. The main reason is if $\kappa(0)\to 0^+$, my bound will get vacuous $\alpha\to 0 , $ However, if we set $\kappa(0) = 0, $ we will fall back to the centered case and have a contraction rate of $\alpha = \kappa'(0).$ In other words, there was a discontinuity in my results that was almost certainly due to overly lax bounds. 
 
-Strictly attractive boundary.
+The complex analytic result reveals that this was partly because I was using a Lyapunof that did not correspond to the Poincare metric (hyperbolic distance). This explains why there was such a discontinuinty in my proof. 
 
-Both approaches yield the same sharp constant $\beta=\kappa'(1)$, but the complex-analytic route identifies $H_1$ as the intrinsic gauge via Julia–Carathéodory, giving a one-line proof {% cite julia1918 caratheodory1907 cowenmaccluer1995 %}.
+**Strictly attractive boundary.** Both approaches yield the same sharp constant $\kappa'(1)=\kappa'(1)$, but the complex-analytic route identifies $H_1$ as the intrinsic gauge via Julia–Carathéodory, giving a one-line proof {% cite julia1918 caratheodory1907 cowenmaccluer1995 %}.
 
 Parabolic boundary.
 
 My elementary proof gives a logistic one-step improvement with
 
 $$
-\alpha \;=\; 1-\kappa(0)-\kappa'(0),
+\alpha \;=\; 1-\kappa(0)-\kappa'(0), \quad \kappa'(0)=\kappa'(0),
 $$
 
 leading to 
@@ -372,11 +377,11 @@ How to use the panel
 
 - **Degree and weights.** Set $$K$$ and the sliders $$w_k$$. They are auto-normalized so $$\sum_k w_k=1$$ and hence $$\kappa(1)=1$$.  
   • **force centered** sets $$w_0=\kappa(0)=0$$.  
-  • Readouts show $$w_0$$, $$\kappa'(0)=w_1$$, and $$\kappa'(1)=\sum_{k\ge1} k\,w_k$$.
+  • Readouts show $$w_0$$, $$\kappa'(0)=\kappa'(0)$$, and $$\kappa'(1)=\kappa'(1)$$.
 
 - **Mode.**  
   **centered** uses the gauge $$E_0$$.  
-  **interior** centers at the detected real attractor $$\rho^\star$$ and uses $$E_a$$ with $$a=\rho^\star$$.  
+  **interior** centers at the detected real attractor $$\rho^\star$$ and uses $$E_{\rho^\star}$$.  
   **boundary** uses the horodisk gauge $$H_1$$.
 
 - **Point and iterates.** Pick $$z=re^{i\theta}$$ and the number of steps $$\ell$$.
@@ -395,14 +400,14 @@ $$
 - **Poincaré disk view.** Shows $$z\mapsto \kappa(z)$$ and the one-step ratio:
 
 $$
-\frac{E_a(\kappa(z))}{E_a(z)}\ \text{ or }\ \frac{H_1(\kappa(z))}{H_1(z)}.
+\frac{E_{\rho^\star}(\kappa(z))}{E_{\rho^\star}(z)}\ \text{ or }\ \frac{H_1(\kappa(z))}{H_1(z)}.
 $$
 
 - **Iterates.** Log plot of the gauge along $$\kappa^{\circ \ell}(z_0)$$ with the theoretical envelope:
    - centered: 
    $$\big(\tfrac{1+\kappa'(0)}{2}\big)^{\ell}E_0(z_0)$$
    - interior: 
-   $$\big(\tfrac{1+|\kappa'(a)|}{2}\big)^{\ell}E_a(z_0)$$
+   $$\big(\tfrac{1+\kappa'(\rho^\star)}{2}\big)^{\ell}E_{\rho^\star}(z_0)$$, where $$\kappa'(\rho^\star)=|\kappa'(\rho^\star)|$$
    - boundary: $$\kappa'(1)^{\ell}H_1(z_0)$$.
    (Parabolic $$\kappa'(1)=1$$: true $$H_1\sim 1/(1+\gamma\ell)$$; the overlay is a visual proxy.)
 
@@ -414,7 +419,7 @@ $$
 - **C2 (boundary, strict):** $$w_0>0$$, tune $$\kappa'(1)\in(0,1)$$; boundary mode shows factor $$\kappa'(1)$$ in $$H_1$$.
 - **C3 (parabolic):** make $$\kappa'(1)\approx1$$; see slow $$O(1/\ell)$$ decay in $$H_1$$.
 - **C4 (interior, non-centered):** weights yield $$\rho^\star\in(0,1)$$; interior mode shows factor 
-$$\tfrac{1+|\kappa'(\rho^\star)|}{2}$$ in $$E_a$$.
+$$\tfrac{1+\kappa'(\rho^\star)}{2}$$ in $$E_{\rho^\star}$$, where $$\kappa'(\rho^\star)=|\kappa'(\rho^\star)|$$.
 
 *Notes:* the demo uses polynomials with non-negative coefficients (kernel subclass); points near $$\vert z\vert =1$$ are kept slightly inside for numerical stability.
 
@@ -482,11 +487,11 @@ Paste this block inside your post. It only depends on Plotly.
     <div class="row ctrl">
       <label style="margin-right:8px;">
         <input type="radio" name="mode" value="centered" checked />
-        centered interior (a=0)
+        centered interior (ρ⋆=0)
       </label>
       <label style="margin-right:8px;">
         <input type="radio" name="mode" value="interior" />
-        interior fixed point a
+        interior fixed point ρ⋆
       </label>
       <label>
         <input type="radio" name="mode" value="boundary" />
@@ -494,9 +499,9 @@ Paste this block inside your post. It only depends on Plotly.
       </label>
     </div>
 
-    <div class="ctrl" id="aCtrl" style="display:none;">
-      <label>Interior fixed point a (real) <span class="pill" id="aLabel">—</span></label>
-      <input id="aVal" type="range" min="-0.95" max="0.95" step="0.01" value="0.30" disabled />
+    <div class="ctrl" id="rhoStarCtrl" style="display:none;">
+      <label>Interior fixed point ρ⋆ (real) <span class="pill" id="rhoStarLabel">—</span></label>
+      <input id="rhoStarVal" type="range" min="-0.95" max="0.95" step="0.01" value="0.30" disabled />
       <div class="muted">Automatically set to the attracting real fixed point ρ⋆ when it exists.</div>
     </div>
 
@@ -538,9 +543,9 @@ Paste this block inside your post. It only depends on Plotly.
     const LLabel = document.getElementById('LLabel');
 
     const modeEls = Array.from(document.querySelectorAll('input[name="mode"]'));
-    const aCtrl = document.getElementById('aCtrl');
-    const aEl = document.getElementById('aVal');
-    const aLabel = document.getElementById('aLabel');
+    const rhoStarCtrl = document.getElementById('rhoStarCtrl');
+    const rhoStarEl = document.getElementById('rhoStarVal');
+    const rhoStarLabel = document.getElementById('rhoStarLabel');
 
     const readouts = document.getElementById('readouts');
 
@@ -639,8 +644,8 @@ Paste this block inside your post. It only depends on Plotly.
       return s;
     }
 
-    // Rogosinski envelope for centered: |κ(r)| ≤ R(r) with R(r)= r(a+r)/(1+a r), a=κ'(0)=w1
-    function rogosinski(r, a){ return (r*(a+r)) / (1 + a*r); }
+    // Rogosinski envelope for centered: |κ(r)| ≤ R(r) with R(r)= r(α₀+r)/(1+α₀ r), α₀=κ'(0)=w1
+    function rogosinski(r, alpha0){ return (r*(alpha0+r)) / (1 + alpha0*r); }
 
     function computeFixedPoints(ws){
       const xs = [];
@@ -669,11 +674,11 @@ Paste this block inside your post. It only depends on Plotly.
       rLabel.textContent = parseFloat(rEl.value).toFixed(2);
       thetaLabel.textContent = parseFloat(thetaEl.value).toFixed(2);
       LLabel.textContent = LEl.value;
-      aLabel.textContent = aEl.disabled ? '—' : parseFloat(aEl.value).toFixed(2);
+      rhoStarLabel.textContent = rhoStarEl.disabled ? '—' : parseFloat(rhoStarEl.value).toFixed(2);
     }
     function currentMode(){
       const m = modeEls.find(x=>x.checked)?.value || 'centered';
-      aCtrl.style.display = (m==='interior') ? '' : 'none';
+      rhoStarCtrl.style.display = (m==='interior') ? '' : 'none';
       return m;
     }
 
@@ -692,8 +697,8 @@ function update() {
   }
 
   const w0 = ws[0] || 0;
-  const a0 = kappaPrimeAt0(ws);     // κ'(0) = w1
-  const beta = kappaPrimeAt1(ws);   // κ'(1) = Σ k w_k
+  const alpha0 = kappaPrimeAt0(ws);     // κ'(0) = w1
+  const beta = kappaPrimeAt1(ws);       // κ'(1) = Σ k w_k
   const fixeds = computeFixedPoints(ws);
 
   let rhoStar = null;
@@ -702,14 +707,14 @@ function update() {
     rhoStar = (nonneg.length? nonneg[0] : fixeds.reduce((p,c)=>Math.abs(c)<Math.abs(p)?c:p, fixeds[0]));
   }
 
-  let a_show = '—', kprime_a = null;
+  let rhoStar_show = '—', \kappa'(\rho^\star) = null;
   if (mode==='interior' && rhoStar!==null){
-    aEl.disabled = true;
-    aEl.value = rhoStar.toFixed(2);
-    a_show = rhoStar.toFixed(2);
-    kprime_a = kappaPrimeAt(ws, rhoStar);
+    rhoStarEl.disabled = true;
+    rhoStarEl.value = rhoStar.toFixed(2);
+    rhoStar_show = rhoStar.toFixed(2);
+    \kappa'(\rho^\star) = kappaPrimeAt(ws, rhoStar);
   } else {
-    aEl.disabled = true;
+    rhoStarEl.disabled = true;
   }
 
   // Readouts (+ a small warning if user turns off centering but keeps "centered" mode)
@@ -718,20 +723,20 @@ function update() {
     : '';
   readouts.innerHTML = `
     <span class="pill">w₀=κ(0)=${(w0||0).toFixed(3)}</span>
-    <span class="pill">κ'(0)=${a0.toFixed(3)}</span>
-    <span class="pill">κ'(1)=${beta.toFixed(3)}</span>
+    <span class="pill">α₀=κ'(0)=${alpha0.toFixed(3)}</span>
+    <span class="pill">β=κ'(1)=${beta.toFixed(3)}</span>
     <span class="pill">fixed points: ${fixeds.map(x=>x.toFixed(3)).join(', ') || 'none'}</span>
-    ${mode==='interior' && rhoStar!==null ? `<span class="pill">ρ⋆=${a_show}, κ'(ρ⋆)=${kprime_a.toFixed(3)}</span>` : ''}
+    ${mode==='interior' && rhoStar!==null ? `<span class="pill">ρ⋆=${rhoStar_show}, q=κ'(ρ⋆)=${q.toFixed(3)}</span>` : ''}
     ${warn}
   `;
 
-  drawMap(ws, a0, beta);
+  drawMap(ws, alpha0, beta);
   drawDisk(ws, rhoStar);
-  drawIter(ws, a0, beta, rhoStar, kprime_a);
+  drawIter(ws, alpha0, beta, rhoStar, q);
 }
 
 
-    function drawMap(ws, a0, beta){
+    function drawMap(ws, alpha0, beta){
       const N=600;
       const X = new Array(N);
       const Y = new Array(N);
@@ -752,15 +757,14 @@ function update() {
       }
 
       if (showSlopeEl.checked){
-        traces.push({ x:[-1,1], y:[-a0, a0], mode:'lines', name:"tangent at 0",
+        traces.push({ x:[-1,1], y:[-alpha0, alpha0], mode:'lines', name:"tangent at 0",
                       line:{color:'#6366f1', width:1} });
         traces.push({ x:[-1,1], y:[1 + beta*(-2), 1 + beta*(0)], mode:'lines', name:"tangent at 1",
                       line:{color:'#f59e0b', width:1} });
       }
 
       if (showRogEl.checked && Math.abs(ws[0])<1e-12){
-        const a=a0;
-        const Rplus = X.map(x => rogosinski(Math.abs(x), a));
+        const Rplus = X.map(x => rogosinski(Math.abs(x), alpha0));
         const Rminus = Rplus.map(v => -v);
         traces.push({ x:X, y:Rplus, name:'Rogosinski +R(|x|)', mode:'lines', line:{dash:'dot', color:'#ef4444'}});
         traces.push({ x:X, y:Rminus, name:'Rogosinski -R(|x|)', mode:'lines', line:{dash:'dot', color:'#ef4444'}});
@@ -812,14 +816,14 @@ function update() {
         { x:[kz[0]], y:[kz[1]], mode:'markers', name:'κ(z)', marker:{size:9, color:'#ef4444'} },
       ];
       if (mode!=='boundary'){
-        traces.push({ x:[a[0]], y:[a[1]], mode:'markers', name:'a (gauge center)', marker:{size:7, color:'#10b981'} });
+        traces.push({ x:[a[0]], y:[a[1]], mode:'markers', name:'ρ⋆ (gauge center)', marker:{size:7, color:'#10b981'} });
       }
 
       const annots = [];
       if (mode==='centered'){
         annots.push({x: -1.1, y:1.1, text:`E₀ one-step ratio: ${ratioText}`, showarrow:false, font:{size:12}});
       } else if (mode==='interior'){
-        annots.push({x: -1.1, y:1.1, text:`Eₐ one-step ratio: ${ratioText}`, showarrow:false, font:{size:12}});
+        annots.push({x: -1.1, y:1.1, text:`E_ρ⋆ one-step ratio: ${ratioText}`, showarrow:false, font:{size:12}});
       } else {
         annots.push({x: -1.1, y:1.1, text:`H₁ one-step ratio: ${ratioText}`, showarrow:false, font:{size:12}});
       }
@@ -832,7 +836,7 @@ function update() {
       }, {displayModeBar:false, responsive:true});
     }
 
-    function drawIter(ws, a0, beta, rhoStar, kprime_a){
+    function drawIter(ws, alpha0, beta, rhoStar, q){
       const mode = currentMode();
       const L = parseInt(LEl.value,10);
       const r = parseFloat(rEl.value), th = parseFloat(thetaEl.value);
@@ -855,13 +859,13 @@ function update() {
         for (let i=0;i<zseq.length;i++) theory.push( Math.pow(b, i) * base ); // no down-clamp
       } else {
         const a = (mode==='interior' && rhoStar!==null) ? [rhoStar,0] : [0,0];
-        gaugeName = (mode==='interior' && rhoStar!==null) ? 'Eₐ' : 'E₀';
+        gaugeName = (mode==='interior' && rhoStar!==null) ? 'E_ρ⋆' : 'E₀';
         for (let i=0;i<zseq.length;i++) G.push( Math.exp(dD(zseq[i], a)) - 1 );
-        const q = (mode==='interior' && rhoStar!==null)
-          ? (1 + Math.abs(kprime_a||0)) / 2
-          : (1 + Math.abs(a0)) / 2;
+        const factor = (mode==='interior' && rhoStar!==null)
+          ? (1 + Math.abs(q||0)) / 2
+          : (1 + Math.abs(alpha0)) / 2;
         const base = Math.max(G[0], 1e-12);
-        for (let i=0;i<zseq.length;i++) theory.push( Math.pow(q, i) * base ); // no down-clamp
+        for (let i=0;i<zseq.length;i++) theory.push( Math.pow(factor, i) * base ); // no down-clamp
       }
 
       const iters = Array.from({length:zseq.length}, (_,i)=>i);
@@ -894,12 +898,12 @@ function update() {
       rLabel.textContent = parseFloat(rEl.value).toFixed(2);
       thetaLabel.textContent = parseFloat(thetaEl.value).toFixed(2);
       LLabel.textContent = LEl.value;
-      aLabel.textContent = aEl.disabled ? '—' : parseFloat(aEl.value).toFixed(2);
+      rhoStarLabel.textContent = rhoStarEl.disabled ? '—' : parseFloat(rhoStarEl.value).toFixed(2);
     }
 
     function currentMode(){
       const m = modeEls.find(x=>x.checked)?.value || 'centered';
-      aCtrl.style.display = (m==='interior') ? '' : 'none';
+      rhoStarCtrl.style.display = (m==='interior') ? '' : 'none';
       return m;
     }
 
@@ -915,4 +919,4 @@ function update() {
 
 ### References
 
-{% bibliography --cited %} 
+{% bibliography --cited %}
