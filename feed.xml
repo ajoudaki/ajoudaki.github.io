@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-14T12:41:07+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-14T14:14:48+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 </subtitle><entry><title type="html">Complex-Analytic Proofs of Global Attraction for Neural Kernel Map</title><link href="https://ajoudaki.github.io/blog/2025/kernel-complex-analysis/" rel="alternate" type="text/html" title="Complex-Analytic Proofs of Global Attraction for Neural Kernel Map" /><published>2025-08-12T00:00:00+00:00</published><updated>2025-08-12T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/kernel-complex-analysis</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/kernel-complex-analysis/"><![CDATA[<h3 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with AI</h3>
 
 <p>In my AISTATS paper <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a>, we proved that the mean-field neural kernel (a.k.a. conjugate kernel, or NNGP kernel) sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. My proof involved using Hermite polynomials, and relying on the specific algebraic properties of the neural kernel. The proof was self-contained and was entirely elementary. 
@@ -640,12 +640,12 @@ function update() {
     rhoStar = (nonneg.length? nonneg[0] : fixeds.reduce((p,c)=>Math.abs(c)<Math.abs(p)?c:p, fixeds[0]));
   }
 
-  let rhoStar_show = '—', \kappa'(\rho^\star) = null;
+  let rhoStar_show = '—', q = null;
   if (mode==='interior' && rhoStar!==null){
     rhoStarEl.disabled = true;
     rhoStarEl.value = rhoStar.toFixed(2);
     rhoStar_show = rhoStar.toFixed(2);
-    \kappa'(\rho^\star) = kappaPrimeAt(ws, rhoStar);
+    q = kappaPrimeAt(ws, rhoStar);
   } else {
     rhoStarEl.disabled = true;
   }

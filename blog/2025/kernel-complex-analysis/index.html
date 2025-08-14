@@ -847,12 +847,12 @@ function update() {
     rhoStar = (nonneg.length? nonneg[0] : fixeds.reduce((p,c)=>Math.abs(c)<Math.abs(p)?c:p, fixeds[0]));
   }
 
-  let rhoStar_show = '—', \kappa'(\rho^\star) = null;
+  let rhoStar_show = '—', q = null;
   if (mode==='interior' && rhoStar!==null){
     rhoStarEl.disabled = true;
     rhoStarEl.value = rhoStar.toFixed(2);
     rhoStar_show = rhoStar.toFixed(2);
-    \kappa'(\rho^\star) = kappaPrimeAt(ws, rhoStar);
+    q = kappaPrimeAt(ws, rhoStar);
   } else {
     rhoStarEl.disabled = true;
   }
