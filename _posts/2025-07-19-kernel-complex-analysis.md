@@ -14,7 +14,7 @@ authors:
 toc:
   - name: "Prelude: bridging fields with AI"
   - name: "Setup and the original master theorem"
-  - name: "Alternative complex-analytic proofs"
+  - name: "An alternative complex-analytic proof"
   - name: "Neural implications and concrete comparison"
 
 include_scripts: []
@@ -137,11 +137,11 @@ The combination of these two reasons is why we suspect something deeper and more
 
 --- 
 
-## Alternative complex analysis proof 
+## An alternative complex-analytic proof
 
-#### A 10-minute primer: holomorphic self-maps of the disk and why they're useful
+First, let us go through a quick primer on holomorphic self-maps of the disk and why they're useful. 
 
-We embed our real kernel map $\kappa:[-1,1]\to[-1,1]$ into the complex unit disk
+We can embed our real kernel map $\kappa:[-1,1]\to[-1,1]$ into the complex unit disk
 
 $$
 \mathbb D \;=\;\{z\in\mathbb C:\ |z|<1\}
