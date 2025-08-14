@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-14T17:22:01+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-08-14T18:37:24+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 </subtitle><entry><title type="html">Complex-Analytic Proofs of Global Attraction for Neural Kernel Map</title><link href="https://ajoudaki.github.io/blog/2025/kernel-complex-analysis/" rel="alternate" type="text/html" title="Complex-Analytic Proofs of Global Attraction for Neural Kernel Map" /><published>2025-08-12T00:00:00+00:00</published><updated>2025-08-12T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/kernel-complex-analysis</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/kernel-complex-analysis/"><![CDATA[<h2 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with AI</h2>
 
 <p>In my AISTATS paper <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a>, we proved that the mean-field neural kernel (a.k.a. conjugate kernel, or NNGP kernel) sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. My proof involved using Hermite polynomials, and relying on the specific algebraic properties of the neural kernel. The proof was self-contained and was entirely elementary. 
@@ -339,20 +339,20 @@ Standard boundary dynamics (Denjoy–Wolff theory) ensures $\kappa$ is conjugate
 <ul>
   <li><strong>Which “distance” shrinks?</strong>
     <ul>
-      <li><em>Elementary proof (your paper):</em> a Lyapunov potential like $\Phi(\rho)=\dfrac{\vert\rho\vert}{1-\vert \rho\vert}$ (or its centered-at-$\rho^\star$ counterpart) tailored to the kernel subclass (non-negative power-series coefficients).</li>
+      <li><em>Elementary proof (my paper):</em> a Lyapunov potential like $\Phi(\rho)=\dfrac{\vert\rho\vert}{1-\vert \rho\vert}$ (or its centered-at-$\rho^\star$ counterpart) tailored to the kernel subclass (non-negative power-series coefficients).</li>
       <li><em>Complex-analytic proof (this section):</em> the <strong>hyperbolic</strong> distances $E_a=e^{d_{\mathbb D}(\cdot,a)}-1$ for interior fixed points and <strong>horodisk</strong> gauge $H_1$ for boundary fixed points. These are intrinsic, coordinate-free, and exactly preserved by automorphisms.</li>
     </ul>
   </li>
   <li><strong>Contraction constants.</strong>
     <ul>
-      <li><em>Centered interior (C1):</em> complex analysis yields $\tfrac{1+\kappa’(0)}{2}$, while your Lyapunov proof gave $\tfrac{1}{2-\kappa’(0)}$. For $\kappa’(0)\in(0,1)$ one has $\tfrac{1+\kappa’(0)}{2}&gt;\tfrac{1}{2-\kappa’(0)}$; i.e., your kernel-specific bound is <strong>tighter</strong> here (thanks to the extra positivity structure of coefficients).</li>
+      <li><em>Centered interior (C1):</em> complex analysis yields $\tfrac{1+\kappa’(0)}{2}$, while my Lyapunov proof gave $\tfrac{1}{2-\kappa’(0)}$. For $\kappa’(0)\in(0,1)$ one has $\tfrac{1+\kappa’(0)}{2}&gt;\tfrac{1}{2-\kappa’(0)}$; i.e., my kernel-specific bound is <strong>tighter</strong> here (thanks to the extra positivity structure of coefficients).</li>
       <li><em>Interior, non-centered (C4):</em> complex analysis gives the clean, automorphism-invariant $\tfrac{1+\kappa’(\rho^\star)}{2}$ in the right gauge $E_{\rho^\star}$. The elementary Euclidean-gauge bound had an extra term depending on $\kappa(0)$, and can become vacuous as $\kappa(0)\to0^{+}$. Using the hyperbolic gauge removes that discontinuity.</li>
       <li><em>Boundary, strictly attractive (C2):</em> Julia–Carathéodory gives the <strong>sharp</strong> factor $\kappa’(1)$ in $H_1$. This matches the best you can hope for.</li>
       <li><em>Boundary, parabolic (C3):</em> both approaches yield the optimal $O(1/\ell)$ law; the complex-analytic route pinpoints the natural $H_1$ gauge and ties $\gamma$ to boundary data (angular derivatives).</li>
     </ul>
   </li>
   <li><strong>Takeaway for practice.</strong>
-If you want constants that: (i) are <strong>absolute</strong> (depend only on $\kappa$, not on the starting point), (ii) are <strong>coordinate-free</strong>, and (iii) extend verbatim to any interior fixed point, use the hyperbolic/horodisk gauges. If you want the very best constant in the <strong>centered kernel subclass</strong>, your Hermite-based Lyapunov bound can be tighter, because it leverages positivity of the series coefficients—structure not available to general Schur maps.</li>
+If you want constants that: (i) are <strong>absolute</strong> (depend only on $\kappa$, not on the starting point), (ii) are <strong>coordinate-free</strong>, and (iii) extend verbatim to any interior fixed point, use the hyperbolic/horodisk gauges. If you want the very best constant in the <strong>centered kernel subclass</strong>, my Hermite-based Lyapunov bound can be tighter, because it leverages positivity of the series coefficients—structure not available to general Schur maps.</li>
 </ul>
 
 <hr />
