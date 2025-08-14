@@ -123,15 +123,13 @@ with $\rho_0\in(-1,1)$. Then the iterates converge globally to a unique attracti
 All remaining fixed points (only possibly $\pm1$) are non-attracting. 
 
 
-One of the central ingredients for formalizing these intuitions were the following two Lyapunov potential functions, that worked as gauges to look at kernel sequence convergence
+One of the central ingredients for formalizing these intuitions were the following two Lyapunov potential function, that worked as gauges to look at kernel sequence convergence
 
 $$
 \Phi(\rho) \;:=\; \frac{|\rho|}{1-|\rho|},
-\qquad
-H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.
 $$
 
-Roughly speaking, the first potential function was used for interior fixed points, i.e., $\rho^\star\in[0,1)$, and the second type was used for boundary fixed points, i.e., $\rho^\star=1. $  You can identify these potentials respectively under cases 1 and 4 of the master theorem. Other cases whose contraction was simpler and didn't require defining a special potential.  You can see {% cite joudaki2025aistats %} for the full and entirely elementatry proofs. 
+Roughly speaking, the first potential function was used for interior fixed points, i.e., $\rho^\star\in[0,1)$, and the second type was used for boundary fixed points, i.e., $\rho^\star=1. $  This potential was used mostly for cases 1 and 4 of the master theorem. Other cases whose contraction was simpler and didn't require defining a special potential. You can see {% cite joudaki2025aistats %} for the full and entirely elementatry proofs.
 
 One notable thing you will quickly realize from the proofs is that they are entirely elementary proofs. Not that this is a bad thing per se, but given the elegant and very simple form of this result and its seeming generality, it is befuddling to think that this result is a fundumentally new discovery, and has never been discovered by mathematicians. That was the point that was raised by my co-author, and stayed with me for quite a long time. A second reason for my unease was the discontinuity between some of the cases. Namely, if you compare the centered and interior cases (1 & 4), if we take the limit of $\kappa(0)\to 0^+$, which still falls under case 4, will be converging to a vacuous bound. However, having exactly $\kappa(0) = 0$ we fall under the still non-vacuous bound of case 1. 
 
