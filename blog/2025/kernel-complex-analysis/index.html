@@ -199,7 +199,7 @@
           </nav>
         </d-contents>
 
-        <h3 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with AI</h3>
+        <h2 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with AI</h2>
 
 <p>In my AISTATS paper <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a>, we proved that the mean-field neural kernel (a.k.a. conjugate kernel, or NNGP kernel) sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. My proof involved using Hermite polynomials, and relying on the specific algebraic properties of the neural kernel. The proof was self-contained and was entirely elementary. 
 Now, roughly a year later after that, with the help of GPT-5’s thinking and deep research mode, I found that my elementary proofs are connected to some deep concepts in classical complex analysis that date back almost a century back.</p>
@@ -212,7 +212,7 @@ Now, roughly a year later after that, with the help of GPT-5’s thinking and de
 
 <hr>
 
-<h3 id="setup-and-the-original-master-theorem">Setup and the original master theorem</h3>
+<h2 id="setup-and-the-original-master-theorem">Setup and the original master theorem</h2>
 
 <p>We work in the mean-field regime for a fully-connected, width-$d$ MLP at random initialization with activation $\phi$ that has a finite Gaussian second moment. Let</p>
 
@@ -297,13 +297,11 @@ with $\rho_0\in(-1,1)$. Then the iterates converge globally to a unique attracti
 
 <p>All remaining fixed points (only possibly $\pm1$) are non-attracting.</p>
 
-<p>One of the central ingredients for formalizing these intuitions were the following two Lyapunov potential functions, that worked as gauges to look at kernel sequence convergence</p>
+<p>One of the central ingredients for formalizing these intuitions were the following two Lyapunov potential function, that worked as gauges to look at kernel sequence convergence</p>
 
-\[\Phi(\rho) \;:=\; \frac{|\rho|}{1-|\rho|},
-\qquad
-H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.\]
+\[\Phi(\rho) \;:=\; \frac{|\rho|}{1-|\rho|},\]
 
-<p>Roughly speaking, the first potential function was used for interior fixed points, i.e., $\rho^\star\in[0,1)$, and the second type was used for boundary fixed points, i.e., $\rho^\star=1. $  You can identify these potentials respectively under cases 1 and 4 of the master theorem. Other cases whose contraction was simpler and didn’t require defining a special potential.  You can see <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a> for the full and entirely elementatry proofs.</p>
+<p>Roughly speaking, the first potential function was used for interior fixed points, i.e., $\rho^\star\in[0,1)$, and the second type was used for boundary fixed points, i.e., $\rho^\star=1. $  This potential was used mostly for cases 1 and 4 of the master theorem. Other cases whose contraction was simpler and didn’t require defining a special potential. You can see <a class="citation" href="#joudaki2025aistats">(Joudaki &amp; Hofmann, 2025)</a> for the full and entirely elementatry proofs.</p>
 
 <p>One notable thing you will quickly realize from the proofs is that they are entirely elementary proofs. Not that this is a bad thing per se, but given the elegant and very simple form of this result and its seeming generality, it is befuddling to think that this result is a fundumentally new discovery, and has never been discovered by mathematicians. That was the point that was raised by my co-author, and stayed with me for quite a long time. A second reason for my unease was the discontinuity between some of the cases. Namely, if you compare the centered and interior cases (1 &amp; 4), if we take the limit of $\kappa(0)\to 0^+$, which still falls under case 4, will be converging to a vacuous bound. However, having exactly $\kappa(0) = 0$ we fall under the still non-vacuous bound of case 1.</p>
 
@@ -311,210 +309,264 @@ H_1(z) \;:=\; \frac{|1-z|^2}{1-|z|^2}.\]
 
 <hr>
 
-<h3 id="alternative-complex-analytic-proofs">Alternative complex-analytic proofs</h3>
+<h2 id="alternative-complex-analysis-proof">Alternative complex analysis proof</h2>
 
-<p>We now re-derive global attraction using classical holomorphic dynamics on the unit disk. Let $d_{\mathbb D}$ be the Poincaré distance and the standard automorphism</p>
+<h4 id="a-10-minute-primer-holomorphic-self-maps-of-the-disk-and-why-theyre-useful">A 10-minute primer: holomorphic self-maps of the disk and why they’re useful</h4>
 
-\[\varphi_a(z)=(z-a)/(1-\overline a z)\]
+<p>We embed our real kernel map $\kappa:[-1,1]\to[-1,1]$ into the complex unit disk</p>
 
-<p>Define</p>
+\[\mathbb D \;=\;\{z\in\mathbb C:\ |z|&lt;1\}\]
 
-\[E_a(z) \;:=\; e^{d_{\mathbb D}(z,a)}-1 \;=\; \frac{2\,|\varphi_a(z)|}{1-|\varphi_a(z)|}.\]
+<p>by the same power series (it converges on $\mathbb D$): $\kappa(z)=\sum_{k\ge0}c_k^2\,z^k$. This makes $\kappa$ a <strong>holomorphic</strong> (complex-differentiable) self-map of $\mathbb D$. Classical function theory on $\mathbb D$ gives sharp, geometry-aware <strong>contraction</strong> inequalities for such maps, which we can reuse to get global attraction rates for $\rho_{\ell+1}=\kappa(\rho_\ell)$.</p>
 
-<p>We will use Schwarz–Pick, Julia–Carathéodory, and Rogosinski’s extremal bound <a class="citation" href="#cowenmaccluer1995">(Cowen &amp; MacCluer, 1995; Julia, 1918; Carathéodory, 1907; Rogosinski, 1936; Dieudonné, 1934; Mercer, 2018; Osserman, 2000; Ünkelbach, 1938)</a>.</p>
+<p>Two geometric gadgets appear repeatedly:</p>
 
-<h4 id="interior-fixed-point-at-the-origin-centered-case">Interior fixed point at the origin (centered case)</h4>
+<ul>
+  <li>
+    <p><strong>Automorphisms of $\mathbb D$</strong> (disk re-centerings). For any $a\in\mathbb D$,</p>
 
-<p>Assume</p>
+\[\varphi_a(z) \;=\; \frac{z-a}{1-\overline a\,z}\]
 
-\[\kappa(0)=0,
-\qquad
-\kappa'(0)\in[0,1),
-\qquad
-\text{$\kappa$ not an automorphism.}\]
+    <p>moves $a$ to $0$ without leaving $\mathbb D$. Think of it as a “change of coordinates” that recenters analysis at a desired fixed point.</p>
+  </li>
+  <li>
+    <p><strong>Poincaré (hyperbolic) distance.</strong> The intrinsic distance on $\mathbb D$ is</p>
 
-<p>Theorem 1 (global hyperbolic contraction with sharp constant):</p>
+\[d_{\mathbb D}(z,w)
+\;=\;
+\log\frac{1+|\varphi_w(z)|}{1-|\varphi_w(z)|}.\]
 
-\[E_0\big(\kappa(z)\big)
-\;\le\;
-\frac{1+\kappa'(0)}{2}\,E_0(z)
-\quad \text{for all } z\in\mathbb D.\]
+    <p>It measures how hard it is to move between $z$ and $w$ while staying in the disk; unlike Euclidean distance, it “blows up” near the boundary $\vert z\vert =1$. We will also use two equivalent gauges:</p>
 
-<p>Proof. By Rogosinski, for $r\in(0,1)$,</p>
+\[E_a(z)\;:=\;e^{d_{\mathbb D}(z,a)}-1
+\;=\;\frac{2\,|\varphi_a(z)|}{1-|\varphi_a(z)|}
+\quad\text{and}\quad
+H_1(z)\;:=\;\frac{|1-z|^2}{\,1-|z|^2\,}.\]
 
-\[|\kappa(r)|
-\;\le\;
-\frac{r(\kappa'(0)+r)}{1+\kappa'(0) r},\]
-
-<p>with equality for Blaschke extremals <a class="citation" href="#rogosinski1936">(Rogosinski, 1936; Cowen &amp; MacCluer, 1995)</a>. Then</p>
-
-\[\frac{E_0(\kappa(r))}{E_0(r)}
-=
-\frac{\dfrac{2|\kappa(r)|}{1-|\kappa(r)|}}{\dfrac{2r}{1-r}}
-=
-\frac{\kappa'(0)+r}{1+r}
-\;\le\;
-\frac{1+\kappa'(0)}{2},\]
-
-<p>and $r\uparrow1$ shows sharpness. ∎</p>
-
-<p>Iterating,</p>
-
-\[E_0\big(\kappa^{\circ \ell}(z)\big)
-\;\le\;
-\left(\frac{1+\kappa'(0)}{2}\right)^{\!\ell} E_0(z).\]
-
-<h4 id="interior-fixed-point-at-an-arbitrary-point">Interior fixed point at an arbitrary point</h4>
-
-<p>Assume</p>
-
-\[\kappa(\rho^\star)=\rho^\star,
-\qquad
-\kappa'(\rho^\star)\in[0,1),
-\qquad
-\text{$\kappa$ not an automorphism.}\]
-
-<p>Theorem 2 (global contraction about the fixed point):</p>
-
-\[E_{\rho^\star}\big(\kappa(z)\big)
-\;\le\;
-\frac{1+\kappa'(\rho^\star)}{2}\,E_{\rho^\star}(z)
-\quad \text{for all } z\in\mathbb D.\]
-
-<p>Proof. Conjugate by $\psi=\varphi_{\rho^\star}$. Then $g=\psi\circ\kappa\circ\psi^{-1}$ satisfies $g(0)=0$, $g’(0)=\kappa’(\rho^\star); $ apply Theorem 1 to $g$ and use $E_0(\psi(z))=E_{\rho^\star}(z)$. ∎</p>
-
-<p>Iterating,</p>
-
-\[E_{\rho^\star}\big(\kappa^{\circ \ell}(z)\big)
-\;\le\;
-\left(\frac{1+\kappa'(\rho^\star)}{2}\right)^{\!\ell} E_{\rho^\star}(z).\]
-
-<h4 id="strictly-attractive-boundary-denjoywolff-point">Strictly attractive boundary Denjoy–Wolff point</h4>
-
-<p>Assume</p>
-
-\[\kappa(1)=1 \qquad \text{ n.t.}, \qquad \kappa'(1):=\kappa'(1)\in(0,1).\]
-
-<p>Theorem 3 (sharp horodisk contraction at the boundary):</p>
-
-\[H_1\big(\kappa(z)\big)
-\;\le\;
-\kappa'(1)\, H_1(z)
-\quad \text{for all } z\in\mathbb D.\]
-
-<p>Proof. Julia–Carathéodory gives</p>
-
-\[\frac{1-|\kappa(z)|^2}{|1-\kappa(z)|^2}
-\;\ge\;
-\frac{1}{\kappa'(1)}\,\frac{1-|z|^2}{|1-z|^2},\]
-
-<p>equivalent to the stated $H_1$ contraction. This is sharp in the Schur class <a class="citation" href="#cowenmaccluer1995">(Cowen &amp; MacCluer, 1995; Mercer, 2018)</a>. ∎</p>
-
-<p>Iterating,</p>
-
-\[H_1\big(\kappa^{\circ \ell}(z)\big)
-\;\le\;
-\kappa'(1)^{\ell}\, H_1(z).\]
-
-<h4 id="parabolic-boundary-case">Parabolic boundary case</h4>
-
-<p>Assume</p>
-
-\[\kappa(1)=1 \text{ n.t.}, \qquad \kappa'(1)=1, \qquad \text{$\kappa$ not an automorphism.}\]
-
-<p>Theorem 4 (global polynomial decay). There exists $\gamma&gt;0$, determined by second-order boundary data of $\kappa$, such that</p>
-
-\[H_1\big(\kappa(z)\big)
-\;\le\;
-\frac{H_1(z)}{\,1+\gamma\,H_1(z)\,}
-\quad \text{for all } z\in\mathbb D.\]
-
-<p>Consequently,</p>
-
-\[H_1\big(\kappa^{\circ \ell}(z)\big)
-\;\le\;
-\frac{H_1(z)}{\,1+\gamma\,\ell\,H_1(z)\,}.\]
-
-<p>Sketch. Koenigs linearization conjugates $\kappa$ to a unit translation on a right half-plane <a class="citation" href="#cowenmaccluer1995">(Cowen &amp; MacCluer, 1995)</a>. In that model, the reciprocal Busemann function increases by a fixed increment each iterate,</p>
-
-\[\frac{1}{H_1\big(\kappa(z)\big)}
-\;\ge\;
-\frac{1}{H_1(z)}+\gamma,\]
-
-<p>which yields the one-step inequality and telescopes. Quantitative refinements for $\gamma$ follow from higher-order boundary data <a class="citation" href="#mercer2018">(Mercer, 2018; Osserman, 2000; Ünkelbach, 1938)</a>. ∎</p>
+    <p>$E_a$ is just a monotone reparameterization of hyperbolic distance to $a$. $H_1$ is the “horodisk gauge” anchored at the boundary point $1$ (it is the correct scale when the attracting fixed point sits on the boundary).</p>
+  </li>
+</ul>
 
 <hr>
 
-<h3 id="neural-net-implications-and-concrete-comparison">Neural net implications and concrete comparison</h3>
+<h4 id="the-three-classical-tools-we-need-with-intuition">The three classical tools we need (with intuition)</h4>
 
-<p>This section ties the constants to neural design and then compares, case by case, my elementary bounds with the complex-analytic ones.</p>
+<p>Below are the exact statements we will use, quoted in the standard disk notation. Each appears (or is recalled) in <a class="citation" href="#mercer2018">(Mercer, 2018)</a>, along with context and references to classical sources.</p>
 
-<h4 id="neural-net-interpretation-of-the-constants">Neural net interpretation of the constants</h4>
+<ol>
+  <li>
+<strong>Schwarz–Pick Lemma (global 1-Lipschitz in the hyperbolic metric).</strong>
+If $f:\mathbb D\to\mathbb D$ is analytic, then</li>
+</ol>
 
-<p>Centered regime. Here $\kappa’(0)=\kappa’(0)=c_1(\phi)^2$. The hyperbolic constant is</p>
+\[\Big|\frac{f(w)-f(z)}{\,1-\overline{f(w)}\,f(z)}\Big|
+\;\le\;
+\Big|\frac{w-z}{\,1-\overline w\,z}\Big|
+\quad\text{for all }z,w\in\mathbb D,\]
 
-\[\frac{1+\kappa'(0)}{2}
-\quad\text{in}\quad
-E_0(\cdot)=\frac{2|\cdot|}{1-|\cdot|}.\]
+<p>equivalently $d_{\mathbb D}(f(z),f(w))\le d_{\mathbb D}(z,w)$. Intuition: self-maps can only <strong>shrink</strong> hyperbolic distances; automorphisms are the only maps that preserve them.</p>
 
-<p>Smaller $c_1(\phi)$ (e.g., more symmetry) means faster decay of cross-correlation toward orthogonality.</p>
+<ol>
+  <li>
+<strong>Julia–Carathéodory boundary lemma (sharp boundary contraction).</strong>
+Assume $f:\mathbb D\to\mathbb D$ is analytic, $f(1)=1$ in the nontangential sense, and</li>
+</ol>
 
-<p>Interior non-centered regime. Let $\rho^\star$ be the interior fixed point and $q=\kappa’(\rho^\star)$. Contraction is</p>
+\[\beta
+=\liminf_{z\to 1}\frac{1-|f(z)|}{\,1-|z|\,}\in(0,\infty).\]
 
-\[\frac{1+\kappa'(\rho^\star)}{2}
-\quad\text{in}\quad
-E_{\rho^\star}(\cdot).\]
+<p>Then for all $z\in\mathbb D$,</p>
 
-<p>Residual connections convex-combine $\kappa$ with the identity, pushing derivatives toward $1$ and slowing contraction.</p>
+\[\frac{|1-f(z)|^2}{1-|f(z)|^2}
+\;\le\;
+\beta\;\frac{|1-z|^2}{\,1-|z|^2\,},\]
 
-<p>Boundary regimes. With $\kappa’(1)=\kappa’(1)\in(0,1)$, decay is exactly geometric at rate $\kappa’(1)$ in the natural horodisk gauge $H_1$. In the parabolic case $\kappa’(1)=1$, the optimal general rate is $O(1/\ell)$ with a computable $\gamma&gt;0$ from boundary data.</p>
+<p>and the (radial) boundary derivative exists with $\vert f’(1)\vert =\beta$. Intuition: relative to the horodisk gauge $H_1$, one step under $f$ incurs at most a multiplicative factor $\beta$.</p>
 
-<h4 id="sharpness-and-apples-to-apples-comparison">Sharpness and apples-to-apples comparison</h4>
+<ol>
+  <li>
+<strong>Dieudonné’s Lemma (two-point derivative control).</strong>
+If $f:\mathbb D\to\mathbb D$ is analytic with $f(z)=w$ and $f(z_1)=w_1$, then</li>
+</ol>
 
-<p><strong>Centered case ($\kappa(0)=0$).</strong> My elementary contraction for the potential
-$\Phi(\rho)=|\rho|/(1-|\rho|)$:</p>
+\[\big|\,f'(z)-c\,\big|\;\le\;r,\]
 
-\[\Phi(\kappa(\rho)) \;\le\; \frac{1}{\,2-\kappa'(0)\,}\,\Phi(\rho).\]
+<p>for explicit $c$ and $r$ built from the Möbius invariants $\varphi_{z}(z_1)$, $\varphi_{w}(w_1)$ <a class="citation" href="#dieudonne1934">(Dieudonné, 1934; Mercer, 2018)</a>. Intuition: among all Schur functions matching two interpolation constraints, the derivative at a third point lives in a computable disk; extremals are finite Blaschke products.</p>
 
-<p>Complex-analytic contraction (Rogosinski extremal) for the hyperbolic gauge $E_0=2\Phi$:</p>
+<blockquote>
+  <p><strong>Remark (Rogosinski’s one-point extremal, 1936).</strong>
+A classical corollary of Schwarz–Pick/Dieudonné is the <strong>Rogosinski bound</strong> <a class="citation" href="#rogosinski1936">(Rogosinski, 1936)</a>: if $f:\mathbb D\to\mathbb D$ with $f(0)=0$ and $|f’(0)|=\alpha\in[0,1)$, then for $r\in[0,1)$,</p>
 
-\[E_0(\kappa(z)) \;\le\; \frac{1+\kappa'(0)}{2}\,E_0(z).\]
+\[|f(r)| \;\le\; \frac{r(\alpha+r)}{1+\alpha r},\]
 
-<p>Because</p>
+  <p>with equality for the degree-2 Blaschke extremal $B_{\alpha}(z)=z\,\dfrac{\alpha+z}{1+\alpha z}$. Intuition: given the local slope $\alpha$ at the origin, this is the largest one-step radial gain still compatible with Schwarz–Pick.</p>
+</blockquote>
 
-\[\frac{1+\kappa'(0)}{2} \;&gt;\; \frac{1}{\,2-\kappa'(0)\,} \quad \text{for } \kappa'(0)\in(0,1),\]
+<hr>
 
-<p>the constant from my elementary proof is strictly smaller in this centered case. The reason is structural: kernel maps have non-negative Maclaurin coefficients, a special subclass of Schur maps that admits stronger coefficient-wise inequalities. Rogosinski’s factor is nevertheless sharp in the full Schur class and has the conceptual advantage of being purely geometric and automorphism-invariant <a class="citation" href="#rogosinski1936">(Rogosinski, 1936; Cowen &amp; MacCluer, 1995)</a>.</p>
+<h4 id="complex-analytic-master-theorem-camt">Complex-Analytic Master Theorem (CAMT)</h4>
 
-<p><strong>Interior non-centered case.</strong> My elementary theorem gives a Euclidean-gauge rate toward $\rho^\star$ based on</p>
+<p>Let $\kappa:\mathbb D\to\mathbb D$ be holomorphic and <strong>not</strong> a disk automorphism. Consider the iteration $\rho_{\ell+1}=\kappa(\rho_\ell)$ with $\rho_0\in(-1,1)$. Then:</p>
 
-\[|\rho_\ell-\rho^\star|
-   \;\le\;
-   \frac{|\rho_0-\rho^\star|}{\,1-|\rho_0|\,}\,
-   \alpha^{\,\ell}, \qquad \alpha \;=\; \max\Big\{1-\kappa(0),\, \kappa'(\rho^\star),\, \frac{1-\rho^\star}{\,2-\kappa'(\rho^\star)\,}\Big\}.\]
+<p><strong>(C1) Centered interior fixed point at $0$</strong>: if $\kappa(0)=0$ and $\alpha:=\kappa’(0)\in[0,1)$, then for all $z\in\mathbb D$</p>
 
-<p>The complex-analytic proof yields a clean, automorphism-invariant hyperbolic contraction</p>
+\[E_0\big(\kappa(z)\big)\;\le\;\frac{1+\alpha}{2}\;E_0(z)
+\quad\Longrightarrow\quad
+E_0\big(\kappa^{\circ \ell}(z)\big)\;\le\;\Big(\tfrac{1+\alpha}{2}\Big)^{\!\ell}E_0(z).\]
 
-\[E_{\rho^\star}(\kappa(z)) \;\le\; \frac{1+\kappa'(\rho^\star)}{2}\,E_{\rho^\star}(z),\qquad E_{\rho^\star}(z) = \frac{2|z-\rho^\star|}{|1-\rho^\star z| - |z-\rho^\star|}\]
+<p><strong>(C4) Interior fixed point at $\rho^\star\in\mathbb D$</strong>: if $\kappa(\rho^\star)=\rho^\star$ and $q:=\kappa’(\rho^\star)\in[0,1)$, then for all $z\in\mathbb D$</p>
 
-<p>In this case, complex-analytic rate might be a better (smaller coefficient) if $\kappa(0)$ is very small. In fact, the presence of $\kappa(0)$ in this bound was the most annoying thing that I tried very hard to get rid of to no avail. The main reason is if $\kappa(0)\to 0^+$, my bound will get vacuous $\alpha\to 0 , $ However, if we set $\kappa(0) = 0, $ we will fall back to the centered case and have a contraction rate of $\alpha = \kappa’(0).$ In other words, there was a discontinuity in my results that was almost certainly due to overly lax bounds.</p>
+\[E_{\rho^\star}\big(\kappa(z)\big)\;\le\;\frac{1+q}{2}\;E_{\rho^\star}(z)
+\quad\Longrightarrow\quad
+E_{\rho^\star}\big(\kappa^{\circ \ell}(z)\big)\;\le\;\Big(\tfrac{1+q}{2}\Big)^{\!\ell}E_{\rho^\star}(z).\]
 
-<p>The complex analytic result reveals that this was partly because I was using a Lyapunof that did not correspond to the Poincare metric (hyperbolic distance). This explains why there was such a discontinuinty in my proof.</p>
+<p><strong>(C2) Strictly attractive boundary fixed point at $1$</strong>: if $\kappa(1)=1$ (nontangentially) and $\beta:=\kappa’(1)\in(0,1)$, then for all $z\in\mathbb D$</p>
 
-<p><strong>Strictly attractive boundary.</strong> Both approaches yield the same sharp constant $\kappa’(1)=\kappa’(1)$, but the complex-analytic route identifies $H_1$ as the intrinsic gauge via Julia–Carathéodory, giving a one-line proof <a class="citation" href="#julia1918">(Julia, 1918; Carathéodory, 1907; Cowen &amp; MacCluer, 1995)</a>.</p>
+\[H_1\big(\kappa(z)\big)\;\le\;\beta\;H_1(z)
+\quad\Longrightarrow\quad
+H_1\big(\kappa^{\circ \ell}(z)\big)\;\le\;\beta^\ell H_1(z).\]
 
-<p>Parabolic boundary.</p>
+<p>(This is exactly Julia–Carathéodory in the $H_1$ gauge.)</p>
 
-<p>My elementary proof gives a logistic one-step improvement with</p>
+<p><strong>(C3) Parabolic boundary fixed point at $1$</strong>: if $\kappa(1)=1$ and $\kappa’(1)=1$ but $\kappa$ is not an automorphism, then there exists $\gamma&gt;0$ (determined by higher-order boundary data of $\kappa$) such that for all $z\in\mathbb D$</p>
 
-\[\alpha \;=\; 1-\kappa(0)-\kappa'(0), \quad \kappa'(0)=\kappa'(0),\]
+\[H_1\big(\kappa(z)\big)\;\le\;\frac{H_1(z)}{\,1+\gamma\,H_1(z)\,}
+\quad\Longrightarrow\quad
+H_1\big(\kappa^{\circ \ell}(z)\big)\;\le\;\frac{H_1(z)}{\,1+\gamma\,\ell\,H_1(z)\,}.\]
 
-<p>leading to 
-\(O(1/\ell)\) 
-decay of 
-\(|\rho_\ell-1|\). The complex-analytic version proves the same \(O(1/\ell)\) law in the natural horodisk gauge and ties the constant $\gamma$ to angular higher-order data via Koenigs linearization and modern boundary refinements <a class="citation" href="#cowenmaccluer1995">(Cowen &amp; MacCluer, 1995; Mercer, 2018; Osserman, 2000)</a>.</p>
+<p>(Intuition: the hyperbolic “height” increases by a fixed additive amount per iterate in a half-plane model.)</p>
 
-<p>Takeaway. In the centered interior case, my elementary constant is strictly stronger for the kernel subclass. In the other regimes, the complex-analytic route matches known sharp constants and repackages the argument in a coordinate-free, hyperbolic geometry that immediately generalizes (e.g., to any interior fixed point via automorphisms), with exact extremals known from classical function theory.</p>
+<blockquote>
+  <p><strong>What these say in plain ML terms.</strong>
+Work in the “right” metric for the position of the attracting fixed point (interior: $E_a$; boundary: $H_1$). Then <strong>one layer</strong> shrinks that metric by an <strong>absolute constant</strong>: $(1+\kappa’(\text{fix}))/2&lt;1$ in the interior, or $\kappa’(1)&lt;1$ on the boundary. Iterating multiplies those factors, giving geometric decay (and $O(1/\ell)$ in the parabolic boundary case).</p>
+</blockquote>
+
+<hr>
+
+<h4 id="proof-idea-one-paragraph">Proof idea (one paragraph)</h4>
+
+<p>Schwarz–Pick makes every holomorphic self-map <strong>non-expansive</strong> in the hyperbolic metric; we need a <strong>strict</strong> global contraction with an explicit factor. For interior fixed points we first <strong>recenter</strong> the disk so the fixed point is at $0$, then combine Schwarz–Pick with the <strong>Rogosinski extremal</strong> to convert knowledge of the local slope $\kappa’(0)$ into a sharp global one-step factor $(1+\kappa’(0))/2$. For strictly attractive <strong>boundary</strong> fixed points, the <strong>Julia–Carathéodory</strong> lemma already is the sharp one-step inequality in the natural horodisk gauge $H_1$. For the <strong>parabolic</strong> boundary case $\kappa’(1)=1$, Koenigs linearization conjugates the map to a unit translation on a right half-plane, yielding a one-step <strong>logistic</strong> improvement that telescopes to $O(1/\ell)$.</p>
+
+<hr>
+
+<h4 id="formal-proof">Formal proof</h4>
+
+<p>We treat (C1)–(C4) in turn.</p>
+
+<h5 id="c1-centered-interior-fixed-point-at-0">(C1) Centered interior fixed point at $0$</h5>
+
+<p><em>Setup.</em> Assume $\kappa:\mathbb D\to\mathbb D$ is holomorphic, $\kappa(0)=0$, $\alpha:=\kappa’(0)\in[0,1)$, and $\kappa$ is not an automorphism.</p>
+
+<p><em>Step 1 (extremal one-step envelope).</em>
+By the <strong>Rogosinski bound</strong> <a class="citation" href="#rogosinski1936">(Rogosinski, 1936)</a>, for every $r\in[0,1)$,</p>
+
+\[|\kappa(r)| \;\le\; \frac{r(\alpha+r)}{1+\alpha r}
+\quad\text{with equality for }B_\alpha(z)=z\,\frac{\alpha+z}{1+\alpha z}.\]
+
+<p><em>Step 2 (convert to the hyperbolic gauge $E_0$).</em>
+Since $E_0(z)=\dfrac{2|z|}{1-|z|}$, we get</p>
+
+\[\frac{E_0(\kappa(r))}{E_0(r)}
+=\frac{\dfrac{2|\kappa(r)|}{1-|\kappa(r)|}}{\dfrac{2r}{1-r}}
+=\frac{\alpha+r}{1+r}
+\;\le\;\frac{1+\alpha}{2}.\]
+
+<p>This holds for all $r$ and thus for all $z\in\mathbb D$ by radial majorization. Hence</p>
+
+\[E_0\big(\kappa(z)\big)\;\le\;\frac{1+\alpha}{2}\;E_0(z),
+\quad
+E_0\big(\kappa^{\circ \ell}(z)\big)\;\le\;\Big(\tfrac{1+\alpha}{2}\Big)^{\!\ell}E_0(z).\]
+
+<p>This proves (C1).</p>
+
+<h5 id="c4-interior-fixed-point-at-rhostar">(C4) Interior fixed point at $\rho^\star$</h5>
+
+<p><em>Setup.</em> Assume $\kappa(\rho^\star)=\rho^\star$ for some $\rho^\star\in\mathbb D$, and set $q:=\kappa’(\rho^\star)\in[0,1)$.</p>
+
+<p><em>Step 1 (recenter at the fixed point).</em>
+Let $\psi=\varphi_{\rho^\star}$. Define $g=\psi\circ\kappa\circ\psi^{-1}$. Then $g(0)=0$ and $g’(0)=q$.</p>
+
+<p><em>Step 2 (apply (C1) to $g$).</em>
+By (C1),</p>
+
+\[E_0\big(g(u)\big)\;\le\;\frac{1+q}{2}\;E_0(u)\quad\forall u\in\mathbb D.\]
+
+<p><em>Step 3 (translate back).</em>
+Since $E_0(\psi(z))=E_{\rho^\star}(z)$, we obtain</p>
+
+\[E_{\rho^\star}\big(\kappa(z)\big)
+=E_0\big(\psi(\kappa(z))\big)
+=E_0\big(g(\psi(z))\big)
+\le \frac{1+q}{2}\,E_0(\psi(z))
+=\frac{1+q}{2}\,E_{\rho^\star}(z).\]
+
+<p>Iterating proves (C4).</p>
+
+<h5 id="c2-strictly-attractive-boundary-fixed-point-at-1">(C2) Strictly attractive boundary fixed point at $1$</h5>
+
+<p><em>Setup.</em> Assume $\kappa(1)=1$ n.t. and $\beta:=\kappa’(1)\in(0,1)$.</p>
+
+<p><em>One-step contraction (Julia–Carathéodory).</em>
+By <strong>Julia’s Lemma</strong> <a class="citation" href="#julia1918">(Julia, 1918; Carathéodory, 1907)</a>,</p>
+
+\[\frac{|1-\kappa(z)|^2}{\,1-|\kappa(z)|^2\,}\;\le\;\beta\;\frac{|1-z|^2}{\,1-|z|^2\,}
+\quad\text{for all }z\in\mathbb D,\]
+
+<p>i.e.</p>
+
+\[H_1\big(\kappa(z)\big)\;\le\;\beta\;H_1(z).\]
+
+<p><em>Iterate.</em>
+Apply the inequality $\ell$ times to get $H_1(\kappa^{\circ \ell}(z))\le \beta^\ell H_1(z)$. This proves (C2).</p>
+
+<h5 id="c3-parabolic-boundary-fixed-point-kappa11-non-automorphism">(C3) Parabolic boundary fixed point ($\kappa’(1)=1$, non-automorphism)</h5>
+
+<p><em>Setup.</em> Assume $\kappa(1)=1$, $\kappa’(1)=1$, and $\kappa$ is not an automorphism.</p>
+
+<p><em>Koenigs linearization (proof sketch) and one-step inequality.</em>
+Standard boundary dynamics (Denjoy–Wolff theory) ensures $\kappa$ is conjugate to a <strong>unit translation</strong> on a right half-plane via a holomorphic change of variables (Koenigs function) <a class="citation" href="#cowenmaccluer1995">(Cowen &amp; MacCluer, 1995)</a>. In that model, the reciprocal horodisk height increases by a fixed increment per iterate, which translates back to the disk as the one-step <strong>logistic</strong> improvement</p>
+
+\[H_1\big(\kappa(z)\big)\;\le\;\frac{H_1(z)}{\,1+\gamma\,H_1(z)\,}\]
+
+<p>for some $\gamma&gt;0$ determined by higher-order boundary data (e.g., second angular derivative) <a class="citation" href="#mercer2018">(Mercer, 2018; Osserman, 2000; Ünkelbach, 1938)</a>. Iterating telescopes to</p>
+
+\[H_1\big(\kappa^{\circ \ell}(z)\big)\;\le\;\frac{H_1(z)}{\,1+\gamma\,\ell\,H_1(z)\,}.\]
+
+<blockquote>
+  <p><strong>Note.</strong> The $O(1/\ell)$ law is <strong>optimal in general</strong> for the parabolic case; no geometric (exponential) rate exists without extra structure.</p>
+</blockquote>
+
+<hr>
+
+<h4 id="how-these-complex-analytic-proofs-compare-to-the-elementary-hermitelyapunov-proofs">How these complex-analytic proofs compare to the elementary (Hermite/Lyapunov) proofs</h4>
+
+<ul>
+  <li>
+<strong>Which “distance” shrinks?</strong>
+    <ul>
+      <li>
+<em>Elementary proof (your paper):</em> a Lyapunov potential like $\Phi(\rho)=\dfrac{\vert\rho\vert}{1-\vert \rho\vert}$ (or its centered-at-$\rho^\star$ counterpart) tailored to the kernel subclass (non-negative power-series coefficients).</li>
+      <li>
+<em>Complex-analytic proof (this section):</em> the <strong>hyperbolic</strong> distances $E_a=e^{d_{\mathbb D}(\cdot,a)}-1$ for interior fixed points and <strong>horodisk</strong> gauge $H_1$ for boundary fixed points. These are intrinsic, coordinate-free, and exactly preserved by automorphisms.</li>
+    </ul>
+  </li>
+  <li>
+<strong>Contraction constants.</strong>
+    <ul>
+      <li>
+<em>Centered interior (C1):</em> complex analysis yields $\tfrac{1+\kappa’(0)}{2}$, while your Lyapunov proof gave $\tfrac{1}{2-\kappa’(0)}$. For $\kappa’(0)\in(0,1)$ one has $\tfrac{1+\kappa’(0)}{2}&gt;\tfrac{1}{2-\kappa’(0)}$; i.e., your kernel-specific bound is <strong>tighter</strong> here (thanks to the extra positivity structure of coefficients).</li>
+      <li>
+<em>Interior, non-centered (C4):</em> complex analysis gives the clean, automorphism-invariant $\tfrac{1+\kappa’(\rho^\star)}{2}$ in the right gauge $E_{\rho^\star}$. The elementary Euclidean-gauge bound had an extra term depending on $\kappa(0)$, and can become vacuous as $\kappa(0)\to0^{+}$. Using the hyperbolic gauge removes that discontinuity.</li>
+      <li>
+<em>Boundary, strictly attractive (C2):</em> Julia–Carathéodory gives the <strong>sharp</strong> factor $\kappa’(1)$ in $H_1$. This matches the best you can hope for.</li>
+      <li>
+<em>Boundary, parabolic (C3):</em> both approaches yield the optimal $O(1/\ell)$ law; the complex-analytic route pinpoints the natural $H_1$ gauge and ties $\gamma$ to boundary data (angular derivatives).</li>
+    </ul>
+  </li>
+  <li>
+<strong>Takeaway for practice.</strong>
+If you want constants that: (i) are <strong>absolute</strong> (depend only on $\kappa$, not on the starting point), (ii) are <strong>coordinate-free</strong>, and (iii) extend verbatim to any interior fixed point, use the hyperbolic/horodisk gauges. If you want the very best constant in the <strong>centered kernel subclass</strong>, your Hermite-based Lyapunov bound can be tighter, because it leverages positivity of the series coefficients—structure not available to general Schur maps.</li>
+</ul>
 
 <hr>
 
@@ -1183,20 +1235,96 @@ function drawMap(ws, alpha0, beta){
         <div class="col-sm-2 abbr"></div>
 
         <!-- Entry bib key -->
-        <div id="cowenmaccluer1995" class="col-sm-8">
+        <div id="mercer2018" class="col-sm-8">
         <!-- Title -->
-        <div class="title">Composition Operators on Spaces of Analytic Functions</div>
+        <div class="title">A sharpened Schwarz lemma at the boundary</div>
         <!-- Author -->
         <div class="author">
         
 
-        Carl C. Cowen, and Barbara D. MacCluer</div>
+        Peter R. Mercer</div>
 
         <!-- Journal/Book title and date -->
         
         
         <div class="periodical">
-          1995
+          <em>Complex Variables and Elliptic Equations</em>, 2018
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="dieudonne1934" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">Sur les fonctions holomorphes bornées dans le disque unité</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        Jean Dieudonné</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Comptes Rendus de l’Académie des Sciences de Paris</em>, 1934
+        </div>
+        <div class="periodical">
+          
+        </div>
+
+          <!-- Links/Buttons -->
+          <div class="links">
+          </div>
+          
+          <div class="badges">
+            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
+              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
+          </div>
+
+          
+        </div>
+      </div>
+</li>
+<li>
+<!-- _layouts/bib.html -->
+      <div class="row">
+        <div class="col-sm-2 abbr"></div>
+
+        <!-- Entry bib key -->
+        <div id="rogosinski1936" class="col-sm-8">
+        <!-- Title -->
+        <div class="title">On the maximum modulus of sections of power series bounded in the unit circle</div>
+        <!-- Author -->
+        <div class="author">
+        
+
+        W. W. Rogosinski</div>
+
+        <!-- Journal/Book title and date -->
+        
+        
+        <div class="periodical">
+          <em>Proceedings of the London Mathematical Society</em>, 1936
         </div>
         <div class="periodical">
           
@@ -1297,96 +1425,20 @@ function drawMap(ws, alpha0, beta){
         <div class="col-sm-2 abbr"></div>
 
         <!-- Entry bib key -->
-        <div id="rogosinski1936" class="col-sm-8">
+        <div id="cowenmaccluer1995" class="col-sm-8">
         <!-- Title -->
-        <div class="title">On the maximum modulus of sections of power series bounded in the unit circle</div>
+        <div class="title">Composition Operators on Spaces of Analytic Functions</div>
         <!-- Author -->
         <div class="author">
         
 
-        W. W. Rogosinski</div>
+        Carl C. Cowen, and Barbara D. MacCluer</div>
 
         <!-- Journal/Book title and date -->
         
         
         <div class="periodical">
-          <em>Proceedings of the London Mathematical Society</em>, 1936
-        </div>
-        <div class="periodical">
-          
-        </div>
-
-          <!-- Links/Buttons -->
-          <div class="links">
-          </div>
-          
-          <div class="badges">
-            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
-              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
-          </div>
-
-          
-        </div>
-      </div>
-</li>
-<li>
-<!-- _layouts/bib.html -->
-      <div class="row">
-        <div class="col-sm-2 abbr"></div>
-
-        <!-- Entry bib key -->
-        <div id="dieudonne1934" class="col-sm-8">
-        <!-- Title -->
-        <div class="title">Sur les fonctions holomorphes bornées dans le disque unité</div>
-        <!-- Author -->
-        <div class="author">
-        
-
-        Jean Dieudonné</div>
-
-        <!-- Journal/Book title and date -->
-        
-        
-        <div class="periodical">
-          <em>Comptes Rendus de l’Académie des Sciences de Paris</em>, 1934
-        </div>
-        <div class="periodical">
-          
-        </div>
-
-          <!-- Links/Buttons -->
-          <div class="links">
-          </div>
-          
-          <div class="badges">
-            <span class="altmetric-embed" data-hide-no-mentions="true" data-hide-less-than="15" data-badge-type="2" data-badge-popover="right"></span>
-              <span class="__dimensions_badge_embed__" data-pmid="" data-hide-zero-citations="true" data-style="small_rectangle" data-legend="hover-right" style="margin-bottom: 3px;"></span>
-          </div>
-
-          
-        </div>
-      </div>
-</li>
-<li>
-<!-- _layouts/bib.html -->
-      <div class="row">
-        <div class="col-sm-2 abbr"></div>
-
-        <!-- Entry bib key -->
-        <div id="mercer2018" class="col-sm-8">
-        <!-- Title -->
-        <div class="title">A sharpened Schwarz lemma at the boundary</div>
-        <!-- Author -->
-        <div class="author">
-        
-
-        Peter R. Mercer</div>
-
-        <!-- Journal/Book title and date -->
-        
-        
-        <div class="periodical">
-          <em>Complex Variables and Elliptic Equations</em>, 2018
+          1995
         </div>
         <div class="periodical">
           
