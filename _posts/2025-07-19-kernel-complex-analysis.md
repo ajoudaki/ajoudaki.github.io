@@ -240,7 +240,7 @@ $$
 Assume
 
 $$
-\kappa(1)=1 \qquad \text{ n.t.}, \qquad \kappa'(1):=\kappa'(1)\in(0,1).
+\kappa(1)=1 \qquad \text{ n.t.}, \qquad \kappa'(1)\in(0,1).
 $$
 
 Theorem 3 (sharp horodisk contraction at the boundary):
