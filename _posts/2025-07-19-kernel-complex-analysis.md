@@ -401,17 +401,17 @@ $$
 #### How these complex-analytic proofs compare to the elementary (Hermite/Lyapunov) proofs
 
 * **Which "distance" shrinks?**
-  - *Elementary proof (your paper):* a Lyapunov potential like $\Phi(\rho)=\dfrac{\vert\rho\vert}{1-\vert \rho\vert}$ (or its centered-at-$\rho^\star$ counterpart) tailored to the kernel subclass (non-negative power-series coefficients).
+  - *Elementary proof (my paper):* a Lyapunov potential like $\Phi(\rho)=\dfrac{\vert\rho\vert}{1-\vert \rho\vert}$ (or its centered-at-$\rho^\star$ counterpart) tailored to the kernel subclass (non-negative power-series coefficients).
   - *Complex-analytic proof (this section):* the **hyperbolic** distances $E_a=e^{d_{\mathbb D}(\cdot,a)}-1$ for interior fixed points and **horodisk** gauge $H_1$ for boundary fixed points. These are intrinsic, coordinate-free, and exactly preserved by automorphisms.
 
 * **Contraction constants.**
-  - *Centered interior (C1):* complex analysis yields $\tfrac{1+\kappa'(0)}{2}$, while your Lyapunov proof gave $\tfrac{1}{2-\kappa'(0)}$. For $\kappa'(0)\in(0,1)$ one has $\tfrac{1+\kappa'(0)}{2}>\tfrac{1}{2-\kappa'(0)}$; i.e., your kernel-specific bound is **tighter** here (thanks to the extra positivity structure of coefficients).
+  - *Centered interior (C1):* complex analysis yields $\tfrac{1+\kappa'(0)}{2}$, while my Lyapunov proof gave $\tfrac{1}{2-\kappa'(0)}$. For $\kappa'(0)\in(0,1)$ one has $\tfrac{1+\kappa'(0)}{2}>\tfrac{1}{2-\kappa'(0)}$; i.e., my kernel-specific bound is **tighter** here (thanks to the extra positivity structure of coefficients).
   - *Interior, non-centered (C4):* complex analysis gives the clean, automorphism-invariant $\tfrac{1+\kappa'(\rho^\star)}{2}$ in the right gauge $E_{\rho^\star}$. The elementary Euclidean-gauge bound had an extra term depending on $\kappa(0)$, and can become vacuous as $\kappa(0)\to0^{+}$. Using the hyperbolic gauge removes that discontinuity.
   - *Boundary, strictly attractive (C2):* Julia–Carathéodory gives the **sharp** factor $\kappa'(1)$ in $H_1$. This matches the best you can hope for.
   - *Boundary, parabolic (C3):* both approaches yield the optimal $O(1/\ell)$ law; the complex-analytic route pinpoints the natural $H_1$ gauge and ties $\gamma$ to boundary data (angular derivatives).
 
 * **Takeaway for practice.**
-  If you want constants that: (i) are **absolute** (depend only on $\kappa$, not on the starting point), (ii) are **coordinate-free**, and (iii) extend verbatim to any interior fixed point, use the hyperbolic/horodisk gauges. If you want the very best constant in the **centered kernel subclass**, your Hermite-based Lyapunov bound can be tighter, because it leverages positivity of the series coefficients—structure not available to general Schur maps.
+  If you want constants that: (i) are **absolute** (depend only on $\kappa$, not on the starting point), (ii) are **coordinate-free**, and (iii) extend verbatim to any interior fixed point, use the hyperbolic/horodisk gauges. If you want the very best constant in the **centered kernel subclass**, my Hermite-based Lyapunov bound can be tighter, because it leverages positivity of the series coefficients—structure not available to general Schur maps.
 
 ---
 
