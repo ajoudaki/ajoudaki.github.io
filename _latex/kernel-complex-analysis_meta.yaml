@@ -1,0 +1,18 @@
+layout: distill
+title: "Complex-Analytic Proofs of Global Attraction for Neural Kernel Map"
+description: A global contraction of the kernel map using Schwarz–Pick, Julia–Carathéodory, and Rogosinski extremals.
+date: 2025-08-12
+tags: complex-analysis, dynamical-systems, neural-kernels, mean-field, fixed-points
+giscus_comments: true
+related_publications: true
+authors:
+  - name: Amir Joudaki
+    affiliations:
+      name: ETH Zurich
+
+toc:
+  - name: "Prelude: bridging fields with AI"
+  - name: "Setup and the original master theorem"
+  - name: "An alternative complex-analytic proof"
+
+bibliography: ../assets/_bibliography/refs.bib

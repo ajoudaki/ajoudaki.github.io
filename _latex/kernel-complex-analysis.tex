@@ -1,0 +1,374 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}{Corollary}
+
+% Custom commands
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\C}{\mathbb{C}}
+\DeclareMathOperator{\He}{He}
+\usepackage{natbib}
+\bibliographystyle{apalike}
+
+\title{Complex-Analytic Proofs of Global Attraction for Neural Kernel Map}
+\author{Amir Joudaki\\ETH Zurich}
+\date{August 12, 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A global contraction of the kernel map using Schwarz–Pick, Julia–Carathéodory, and Rogosinski extremals.
+\end{abstract}
+
+% \tableofcontents
+
+\section{Prelude: bridging fields with AI}
+
+In my AISTATS paper \cite{joudaki2025aistats}, we proved that the mean-field neural kernel (a.k.a. conjugate kernel, or NNGP kernel) sequence of a deep MLP converges globally to a fixed point determined by the activation and architecture. My proof involved using Hermite polynomials, and relying on the specific algebraic properties of the neural kernel. The proof was self-contained and was entirely elementary. 
+Now, roughly a year later after that, with the help of GPT-5's thinking and deep research mode, I found that my elementary proofs are connected to some deep concepts in classical complex analysis that date back almost a century back. 
+
+The process of me finding out about the complex analytical results wasn't quite one-shot. My first attempts to uncover possible links with various branches of mathematics only revealed that a combination of Schwarz's lemma and could explain the global attraction result, but without any explicit convergence result. I tried several more times to find more advanced result to no avail. 
+
+In my final successful attempt, I kind of tried to reverse the process. First, I converted my explicit global convergence results to an statement about holomorphic functions. Once stated in these terms, I did a deep research to find if this statements are novel or are discovering some known complex analytic fact. This transformation of the statement apparently was sufficient to trigger GPT-5 to realize that these results were nearly identical to earlier and by now classical results, dating back to a work from almost a century ago. A little more digging revealed sharp lemmas and extremal principles scattered across function theory, allowing alternative proofs that are shorter and conceptually cleaner, and are actually sharper than my results.
+
+I think my story with my elementary proof and these new more involved proofs is only the tip of the iceberg. I believe models like like GPT-5 can act as literature compasses, and help bridge distant areas of knowledge, reuniting ideas that are separated across history and disciplines. If used thoughtfully, they reveal where to look, which classical stones to turn, and how far existing results already reach. I think it's no overstating to say that this could bring about a renaissance for mathematics, human knowledge, and more broadly understanding of the world around us.
+
+\section{Setup and the original master theorem}
+
+We work in the mean-field regime for a fully-connected, width-$d$ MLP at random initialization with activation $\phi$ that has a finite Gaussian second moment. Let
+\begin{equation}
+\rho_{\ell+1} = \kappa(\rho_\ell), \quad
+\kappa(\rho) = \mathbb{E}[\phi(X)\phi(Y)], \quad
+\begin{pmatrix}X\\Y\end{pmatrix}
+\sim \mathcal{N}\left(0,\begin{pmatrix}1&\rho\\ \rho&1\end{pmatrix}\right),
+\end{equation}
+as in \cite{poole2016exponential}. 
+
+Throughout this analysis we assume $\kappa(1) = 1$ which implies $E\phi(z)^2 = 1$ for $z\sim N(0,1)$. This implies that $\kappa$ is a mapping from $[-1,1]$ onto itself. This means we can study the kernel sequence as a fixed point iteration, and thus, ask the following key question:
+
+\begin{quote}
+{The key inquiry} in our work was the convergence behavior and speed of sequence $\rho_0, \kappa(\rho_0),\kappa(\kappa(\rho_0)) \ldots $ as a function of its starting point $\rho_0$ and properties of the activation.
+\end{quote}
+
+\begin{definition}[Kernel sequence terminology]
+\begin{itemize}
+\item {Kernel sequence}: starting from $\rho_0$, we denote the $\ell$-th point in the the sequence by $\rho_\ell$, or alternatively as $\kappa^{\circ \ell}(\rho_0),$ which indicates it is $\ell$ invocation of the kernel map on the input.
+\item {Fixed points}: are defined as invariant locations for the kernel map: $\kappa(\rho^\star) = \rho^\star.$
+\item {Locally attracting fixed points} are defined as $\rho^\star$ such that if starting from an infinitesmal neighborhood of $\rho^\star$, kernel sequence will converge to $\rho^\star.$
+\item {Locally repulsive fixed point}: are defined as $\rho^\star$ such that if starting from an infinitesmal neighborhood of $\rho^\star$, kernel sequence will diverge from $\rho^\star.$
+\item {Global attracting fixed point} are defined as $\rho^\star$ such that for all starting points other than some measure zero set of $[-1,1]$, the kernel sequence will converge to $\rho^\star.$
+\end{itemize}
+\end{definition}
+
+\textbf{High level insights from the proofs:} The most crucial first insight to the work is that we must expand $\phi$ in the normalized Hermite basis $\phi=\sum_{k\geq0} c_k\,\mathrm{He}_k$ yields the analytic self-map
+\begin{equation}
+\kappa(z) = \sum_{k=0}^\infty c_k^2\, z^k \quad \text{on } \mathbb{D}.
+\end{equation}
+
+Thus, based on the assumption that $\kappa(1)=1$ we will have $\sum_{k=0}^\infty c_k^2 = 1.$ This means that kernel map $\kappa$ is a highly smooth, aka analytic function, and it is also a mapping from $[-1,1]$ onto itself. These two restrictions were the essential ingredients to proof the bounds above. If we plot the kernel map for various functions, it becomes readily immediately clear that its smoothness will prevent us from crossing the identity more than two times. But to make this intuition formal, it took several days of painstaking step-by-step derivations.
+
+For comparison reasons, here is the statement of the master theorem in the paper:
+
+\subsection{Original master theorem}
+
+\begin{theorem}[Original Master Theorem]
+Assume forward stability $\kappa(1)=1$ and nonlinearity $\sum_{k\geq2} c_k^2>0$. Let 
+$\rho_{\ell+1}=\kappa(\rho_\ell)$ 
+with $\rho_0\in(-1,1)$. Then the iterates converge globally to a unique attracting fixed point $\rho^\star\in[0,1]$ with the following casewise rates:
+
+\begin{enumerate}
+\item \textbf{Centered activations} $\kappa(0)=0$:
+\begin{equation}
+\Phi(\rho_\ell) \leq \left(\frac{1}{2-\kappa'(0)}\right)^{\ell}\, \Phi(\rho_0), \quad \rho^\star=0.
+\end{equation}
+
+\item \textbf{Boundary Denjoy–Wolff with strict attraction} $\kappa(0)>0$ and $\kappa'(1)\in(0,1)$:
+\begin{equation}
+|\rho_\ell-1| \leq \kappa'(1)^{\ell}\,|\rho_0-1|, \quad \rho^\star=1.
+\end{equation}
+
+\item \textbf{Parabolic boundary case} $\kappa(0)>0$ and $\kappa'(1)=1$:
+\begin{equation}
+|\rho_\ell-1| \leq \frac{|\rho_0-1|}{1+\alpha\,\ell\,|\rho_0-1|}, \quad \alpha = 1-\kappa(0)-\kappa'(0), \quad \rho^\star=1.
+\end{equation}
+
+\item \textbf{Interior non-centered attractor} $\kappa(0)>0$ and $\kappa'(1)>1$:
+\begin{equation}
+|\rho_\ell-\rho^\star| \leq \frac{|\rho_0-\rho^\star|}{1-|\rho_0|}\, \alpha^{\ell}, \quad
+\alpha = \max\left\{1-\kappa(0),\, \kappa'(\rho^\star),\, \frac{1-\rho^\star}{2-q}\right\} < 1,
+\end{equation}
+where $q=\kappa'(\rho^\star)$.
+\end{enumerate}
+
+All remaining fixed points (only possibly $\pm1$) are non-attracting.
+\end{theorem}
+
+One of the central ingredients for formalizing these intuitions were the following two Lyapunov potential function, that worked as gauges to look at kernel sequence convergence
+\begin{equation}
+\Phi(\rho) := \frac{|\rho|}{1-|\rho|},
+\end{equation}
+
+Roughly speaking, the first potential function was used for interior fixed points, i.e., $\rho^\star\in[0,1)$, and the second type was used for boundary fixed points, i.e., $\rho^\star=1.$ This potential was used mostly for cases 1 and 4 of the master theorem. Other cases whose contraction was simpler and didn't require defining a special potential. You can see \cite{joudaki2025aistats} for the full and entirely elementary proofs.
+
+One notable thing you will quickly realize from the proofs is that they are entirely elementary proofs. Not that this is a bad thing per se, but given the elegant and very simple form of this result and its seeming generality, it is befuddling to think that this result is a fundamentally new discovery, and has never been discovered by mathematicians. That was the point that was raised by my co-author, and stayed with me for quite a long time. A second reason for my unease was the discontinuity between some of the cases. Namely, if you compare the centered and interior cases (1 \& 4), if we take the limit of $\kappa(0)\to 0^+$, which still falls under case 4, will be converging to a vacuous bound. However, having exactly $\kappa(0) = 0$ we fall under the still non-vacuous bound of case 1.
+
+The combination of these two reasons is why we suspect something deeper and more elegant under the surface of these proofs and results. As discussed in the sequel, these suspicions were deemed to be true.
+
+\section{An alternative complex-analytic proof}
+
+First, let us go through a quick primer on holomorphic self-maps of the disk and why they're useful.
+
+We can embed our real kernel map $\kappa:[-1,1]\to[-1,1]$ into the complex unit disk
+\begin{equation}
+\mathbb{D} = \{z\in\mathbb{C}:\ |z|<1\}
+\end{equation}
+by the same power series (it converges on $\mathbb{D}$): $\kappa(z)=\sum_{k\geq0}c_k^2\,z^k$. This makes $\kappa$ a \textbf{holomorphic} (complex-differentiable) self-map of $\mathbb{D}$. Classical function theory on $\mathbb{D}$ gives sharp, geometry-aware \textbf{contraction} inequalities for such maps, which we can reuse to get global attraction rates for $\rho_{\ell+1}=\kappa(\rho_\ell)$.
+
+\begin{definition}[Geometric gadgets]
+Two geometric gadgets appear repeatedly:
+
+\begin{itemize}
+\item \textbf{Automorphisms of $\mathbb{D}$} (disk re-centerings). For any $a\in\mathbb{D}$,
+\begin{equation}
+\varphi_a(z) = \frac{z-a}{1-\overline{a}\,z}
+\end{equation}
+moves $a$ to $0$ without leaving $\mathbb{D}$. Think of it as a ``change of coordinates'' that recenters analysis at a desired fixed point.
+
+\item \textbf{Poincaré (hyperbolic) distance.} The intrinsic distance on $\mathbb{D}$ is
+\begin{equation}
+d_{\mathbb{D}}(z,w) = \log\frac{1+|\varphi_w(z)|}{1-|\varphi_w(z)|}.
+\end{equation}
+It measures how hard it is to move between $z$ and $w$ while staying in the disk; unlike Euclidean distance, it ``blows up'' near the boundary $|z|=1$. We will also use two equivalent gauges:
+\begin{equation}
+E_a(z) := e^{d_{\mathbb{D}}(z,a)}-1 = \frac{2\,|\varphi_a(z)|}{1-|\varphi_a(z)|} \quad\text{and}\quad
+H_1(z) := \frac{|1-z|^2}{1-|z|^2}.
+\end{equation}
+$E_a$ is just a monotone reparameterization of hyperbolic distance to $a$. $H_1$ is the ``horodisk gauge'' anchored at the boundary point $1$ (it is the correct scale when the attracting fixed point sits on the boundary).
+\end{itemize}
+\end{definition}
+
+\subsection{The three classical tools we need (with intuition)}
+
+Below are the exact statements we will use, quoted in the standard disk notation. Each appears (or is recalled) in \cite{mercer2018}, along with context and references to classical sources.
+
+\begin{lemma}[Schwarz–Pick Lemma (global 1-Lipschitz in the hyperbolic metric)]
+If $f:\mathbb{D}\to\mathbb{D}$ is analytic, then
+\begin{equation}
+\left|\frac{f(w)-f(z)}{1-\overline{f(w)}\,f(z)}\right| \leq \left|\frac{w-z}{1-\overline{w}\,z}\right|
+\quad\text{for all }z,w\in\mathbb{D},
+\end{equation}
+equivalently $d_{\mathbb{D}}(f(z),f(w))\leq d_{\mathbb{D}}(z,w)$. 
+
+\textbf{Intuition}: self-maps can only \textbf{shrink} hyperbolic distances; automorphisms are the only maps that preserve them.
+\end{lemma}
+
+\begin{lemma}[Julia–Carathéodory boundary lemma (sharp boundary contraction)]
+Assume $f:\mathbb{D}\to\mathbb{D}$ is analytic, $f(1)=1$ in the nontangential sense, and
+\begin{equation}
+\beta = \liminf_{z\to 1}\frac{1-|f(z)|}{1-|z|}\in(0,\infty).
+\end{equation}
+Then for all $z\in\mathbb{D}$,
+\begin{equation}
+\frac{|1-f(z)|^2}{1-|f(z)|^2} \leq \beta\;\frac{|1-z|^2}{1-|z|^2},
+\end{equation}
+and the (radial) boundary derivative exists with $|f'(1)|=\beta$. 
+
+\textbf{Intuition}: relative to the horodisk gauge $H_1$, one step under $f$ incurs at most a multiplicative factor $\beta$.
+\end{lemma}
+
+\begin{lemma}[Dieudonné's Lemma (two-point derivative control)]
+If $f:\mathbb{D}\to\mathbb{D}$ is analytic with $f(z)=w$ and $f(z_1)=w_1$, then
+\begin{equation}
+|f'(z)-c| \leq r,
+\end{equation}
+for explicit $c$ and $r$ built from the Möbius invariants $\varphi_{z}(z_1)$, $\varphi_{w}(w_1)$ \cite{dieudonne1934,mercer2018}. 
+
+\textbf{Intuition}: among all Schur functions matching two interpolation constraints, the derivative at a third point lives in a computable disk; extremals are finite Blaschke products.
+\end{lemma}
+
+\begin{corollary}[Rogosinski's one-point extremal, 1936]
+A classical corollary of Schwarz–Pick/Dieudonné is the \textbf{Rogosinski bound} \cite{rogosinski1936}: if $f:\mathbb{D}\to\mathbb{D}$ with $f(0)=0$ and $|f'(0)|=\alpha\in[0,1)$, then for $r\in[0,1)$,
+\begin{equation}
+|f(r)| \leq \frac{r(\alpha+r)}{1+\alpha r},
+\end{equation}
+with equality for the degree-2 Blaschke extremal $B_{\alpha}(z)=z\,\dfrac{\alpha+z}{1+\alpha z}$. 
+
+\textbf{Intuition}: given the local slope $\alpha$ at the origin, this is the largest one-step radial gain still compatible with Schwarz–Pick.
+\end{corollary}
+
+\subsection{Complex-Analytic Master Theorem (CAMT)}
+
+\begin{theorem}[Complex-Analytic Master Theorem]
+Let $\kappa:\mathbb{D}\to\mathbb{D}$ be holomorphic and \textbf{not} a disk automorphism. Consider the iteration $\rho_{\ell+1}=\kappa(\rho_\ell)$ with $\rho_0\in(-1,1)$. Let $q = \kappa'(\rho^*), \alpha = \kappa'(0), \beta= \kappa'(1)$. Then:
+
+\textbf{(C1) Centered interior fixed point at $0$}: if $\kappa(0)=0$ and $\alpha:=\kappa'(0)\in[0,1)$, then for all $z\in\mathbb{D}$
+\begin{equation}
+E_0\big(\kappa(z)\big) \leq \frac{1+\alpha}{2}\;E_0(z)
+\quad\Longrightarrow\quad
+E_0\big(\kappa^{\circ \ell}(z)\big) \leq \left(\tfrac{1+\alpha}{2}\right)^{\ell}E_0(z).
+\end{equation}
+
+\textbf{(C4) Interior fixed point at $\rho^\star\in\mathbb{D}$}: if $\kappa(\rho^\star)=\rho^\star$ and $q:=\kappa'(\rho^\star)\in[0,1)$, then for all $z\in\mathbb{D}$
+\begin{equation}
+E_{\rho^\star}\big(\kappa(z)\big) \leq \frac{1+q}{2}\;E_{\rho^\star}(z)
+\quad\Longrightarrow\quad
+E_{\rho^\star}\big(\kappa^{\circ \ell}(z)\big) \leq \left(\tfrac{1+q}{2}\right)^{\ell}E_{\rho^\star}(z).
+\end{equation}
+
+\textbf{(C2) Strictly attractive boundary fixed point at $1$}: if $\kappa(1)=1$ (nontangentially) and $\beta:=\kappa'(1)\in(0,1)$, then for all $z\in\mathbb{D}$
+\begin{equation}
+H_1\big(\kappa(z)\big) \leq \beta\;H_1(z)
+\quad\Longrightarrow\quad
+H_1\big(\kappa^{\circ \ell}(z)\big) \leq \beta^\ell H_1(z).
+\end{equation}
+(This is exactly Julia–Carathéodory in the $H_1$ gauge.)
+
+\textbf{(C3) Parabolic boundary fixed point at $1$}: if $\kappa(1)=1$ and $\kappa'(1)=1$ but $\kappa$ is not an automorphism, then there exists $\gamma>0$ (determined by higher-order boundary data of $\kappa$) such that for all $z\in\mathbb{D}$
+\begin{equation}
+H_1\big(\kappa(z)\big) \leq \frac{H_1(z)}{1+\gamma\,H_1(z)}
+\quad\Longrightarrow\quad
+H_1\big(\kappa^{\circ \ell}(z)\big) \leq \frac{H_1(z)}{1+\gamma\,\ell\,H_1(z)}.
+\end{equation}
+(Intuition: the hyperbolic ``height'' increases by a fixed additive amount per iterate in a half-plane model.)
+\end{theorem}
+
+\begin{remark}[Plain ML interpretation]
+Work in the ``right'' metric for the position of the attracting fixed point (interior: $E_a$; boundary: $H_1$). Then \textbf{one layer} shrinks that metric by an \textbf{absolute constant}: $(1+\kappa'(\text{fix}))/2<1$ in the interior, or $\kappa'(1)<1$ on the boundary. Iterating multiplies those factors, giving geometric decay (and $O(1/\ell)$ in the parabolic boundary case).
+\end{remark}
+
+\subsection{Proof idea}
+
+Schwarz–Pick makes every holomorphic self-map non-expansive in the hyperbolic metric; we need a strict global contraction with an explicit factor. For interior fixed points we first recenter the disk so the fixed point is at $0$, then combine Schwarz–Pick with the Rogosinski extremal to convert knowledge of the local slope $\kappa'(0)$ into a sharp global one-step factor $(1+\kappa'(0))/2$. For strictly attractive boundary fixed points, the Julia–Carathéodory lemma already is the sharp one-step inequality in the natural horodisk gauge $H_1$. For the parabolic boundary case $\kappa'(1)=1$, Koenigs linearization conjugates the map to a unit translation on a right half-plane, yielding a one-step logistic improvement that telescopes to $O(1/\ell)$.
+
+\subsection{Formal proof}
+
+We treat (C1)–(C4) in turn.
+
+\subsubsection{(C1) Centered interior fixed point at $0$}
+
+\begin{proof}
+\textit{Setup.} Assume $\kappa:\mathbb{D}\to\mathbb{D}$ is holomorphic, $\kappa(0)=0$, $\alpha:=\kappa'(0)\in[0,1)$, and $\kappa$ is not an automorphism.
+
+\textit{Step 1 (extremal one-step envelope).}
+By the \textbf{Rogosinski bound} \cite{rogosinski1936}, for every $r\in[0,1)$,
+\begin{equation}
+|\kappa(r)| \leq \frac{r(\alpha+r)}{1+\alpha r}
+\quad\text{with equality for }B_\alpha(z)=z\,\frac{\alpha+z}{1+\alpha z}.
+\end{equation}
+
+\textit{Step 2 (convert to the hyperbolic gauge $E_0$).}
+Since $E_0(z)=\dfrac{2|z|}{1-|z|}$, we get
+\begin{equation}
+\frac{E_0(\kappa(r))}{E_0(r)} = \frac{\dfrac{2|\kappa(r)|}{1-|\kappa(r)|}}{\dfrac{2r}{1-r}} = \frac{\alpha+r}{1+r} \leq \frac{1+\alpha}{2}.
+\end{equation}
+
+This holds for all $r$ and thus for all $z\in\mathbb{D}$ by radial majorization. Hence
+\begin{equation}
+E_0\big(\kappa(z)\big) \leq \frac{1+\alpha}{2}\;E_0(z), \quad
+E_0\big(\kappa^{\circ \ell}(z)\big) \leq \left(\tfrac{1+\alpha}{2}\right)^{\ell}E_0(z).
+\end{equation}
+\end{proof}
+
+\subsubsection{(C4) Interior fixed point at $\rho^\star$}
+
+\begin{proof}
+\textit{Setup.} Assume $\kappa(\rho^\star)=\rho^\star$ for some $\rho^\star\in\mathbb{D}$, and set $q:=\kappa'(\rho^\star)\in[0,1)$.
+
+\textit{Step 1 (recenter at the fixed point).}
+Let $\psi=\varphi_{\rho^\star}$. Define $g=\psi\circ\kappa\circ\psi^{-1}$. Then $g(0)=0$ and $g'(0)=q$.
+
+\textit{Step 2 (apply (C1) to $g$).}
+By (C1),
+\begin{equation}
+E_0\big(g(u)\big) \leq \frac{1+q}{2}\;E_0(u)\quad\forall u\in\mathbb{D}.
+\end{equation}
+
+\textit{Step 3 (translate back).}
+Since $E_0(\psi(z))=E_{\rho^\star}(z)$, we obtain
+\begin{equation}
+E_{\rho^\star}\big(\kappa(z)\big) = E_0\big(\psi(\kappa(z))\big) = E_0\big(g(\psi(z))\big)
+\leq \frac{1+q}{2}\,E_0(\psi(z)) = \frac{1+q}{2}\,E_{\rho^\star}(z).
+\end{equation}
+
+Iterating proves (C4).
+\end{proof}
+
+\subsubsection{(C2) Strictly attractive boundary fixed point at $1$}
+
+\begin{proof}
+\textit{Setup.} Assume $\kappa(1)=1$ n.t. and $\beta:=\kappa'(1)\in(0,1)$.
+
+\textit{One-step contraction (Julia–Carathéodory).}
+By \textbf{Julia's Lemma} \cite{julia1918,caratheodory1907},
+\begin{equation}
+\frac{|1-\kappa(z)|^2}{1-|\kappa(z)|^2} \leq \beta\;\frac{|1-z|^2}{1-|z|^2}
+\quad\text{for all }z\in\mathbb{D},
+\end{equation}
+i.e.
+\begin{equation}
+H_1\big(\kappa(z)\big) \leq \beta\;H_1(z).
+\end{equation}
+
+\textit{Iterate.}
+Apply the inequality $\ell$ times to get $H_1(\kappa^{\circ \ell}(z))\leq \beta^\ell H_1(z)$.
+\end{proof}
+
+\subsubsection{(C3) Parabolic boundary fixed point ($\kappa'(1)=1$, non-automorphism)}
+
+\begin{proof}[Proof sketch]
+\textit{Setup.} Assume $\kappa(1)=1$, $\kappa'(1)=1$, and $\kappa$ is not an automorphism.
+
+\textit{Koenigs linearization and one-step inequality.}
+Standard boundary dynamics (Denjoy–Wolff theory) ensures $\kappa$ is conjugate to a unit translation on a right half-plane via a holomorphic change of variables (Koenigs function) \cite{cowenmaccluer1995}. In that model, the reciprocal horodisk height increases by a fixed increment per iterate, which translates back to the disk as the one-step logistic improvement
+\begin{equation}
+H_1\big(\kappa(z)\big) \leq \frac{H_1(z)}{1+\gamma\,H_1(z)}
+\end{equation}
+for some $\gamma>0$ determined by higher-order boundary data (e.g., second angular derivative) \cite{mercer2018,osserman2000,unkelbach1938}. Iterating telescopes to
+\begin{equation}
+H_1\big(\kappa^{\circ \ell}(z)\big) \leq \frac{H_1(z)}{1+\gamma\,\ell\,H_1(z)}.
+\end{equation}
+\end{proof}
+
+\begin{remark}
+The $O(1/\ell)$ law is optimal in general for the parabolic case; no geometric (exponential) rate exists without extra structure.
+\end{remark}
+
+\subsection{Comparison between proofs}
+
+\begin{itemize}
+\item Which ``distance'' shrinks?
+\begin{itemize}
+\item \textit{Elementary proof (my paper):} a Lyapunov potential like $\Phi(\rho)=\dfrac{|\rho|}{1-|\rho|}$ (or its centered-at-$\rho^\star$ counterpart) tailored to the kernel subclass (non-negative power-series coefficients).
+\item \textit{Complex-analytic proof (this section):} the hyperbolic distances $E_a=e^{d_{\mathbb{D}}(\cdot,a)}-1$ for interior fixed points and horodisk gauge $H_1$ for boundary fixed points. These are intrinsic, coordinate-free, and exactly preserved by automorphisms.
+\end{itemize}
+
+\item Contraction constants.
+\begin{itemize}
+\item \textit{Centered interior (C1):} complex analysis yields $\tfrac{1+\kappa'(0)}{2}$, while my Lyapunov proof gave $\tfrac{1}{2-\kappa'(0)}$. For $\kappa'(0)\in(0,1)$ one has $\tfrac{1+\kappa'(0)}{2}>\tfrac{1}{2-\kappa'(0)}$; i.e., my kernel-specific bound is tighter here (thanks to the extra positivity structure of coefficients).
+\item \textit{Interior, non-centered (C4):} complex analysis gives the clean, automorphism-invariant $\tfrac{1+\kappa'(\rho^\star)}{2}$ in the right gauge $E_{\rho^\star}$. The elementary Euclidean-gauge bound had an extra term depending on $\kappa(0)$, and can become vacuous as $\kappa(0)\to0^{+}$. Using the hyperbolic gauge removes that discontinuity.
+\item \textit{Boundary, strictly attractive (C2):} Julia–Carathéodory gives the {sharp} factor $\kappa'(1)$ in $H_1$. This matches the best you can hope for.
+\item \textit{Boundary, parabolic (C3):} both approaches yield the optimal $O(1/\ell)$ law; the complex-analytic route pinpoints the natural $H_1$ gauge and ties $\gamma$ to boundary data (angular derivatives).
+\end{itemize}
+
+\item {Takeaway for practice.}
+If you want constants that: (i) are {absolute} (depend only on $\kappa$, not on the starting point), (ii) are {coordinate-free}, and (iii) extend verbatim to any interior fixed point, use the hyperbolic/horodisk gauges. If you want the very best constant in the {centered kernel subclass}, my Hermite-based Lyapunov bound can be tighter, because it leverages positivity of the series coefficients—structure not available to general Schur maps.
+\end{itemize}
+
+
+\bibliography{refs}
+
+\end{document}
