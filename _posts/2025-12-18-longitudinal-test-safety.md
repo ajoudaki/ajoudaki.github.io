@@ -11,12 +11,6 @@ authors:
     affiliations:
       name: ETH Zurich
 
-toc:
-  - name: "Introduction"
-  - name: "Takens' Embedding Theorem"
-  - name: "From Human Trust to AI Alignment"
-  - name: "Longitudinal Alignment Testing"
-  - name: "Conclusion"
 
 ---
 
