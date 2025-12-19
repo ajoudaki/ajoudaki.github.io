@@ -44,34 +44,42 @@ for tex_file in _latex/*.tex; do
     if [ -n "$bib_file" ]; then
         echo "  Using bibliography: $bib_file"
         pandoc "$tex_file" \
-            --from=latex \
+            --from=latex+raw_tex \
             --to=html5 \
             --mathjax \
             --bibliography="$bib_file" \
             --citeproc \
             --csl="_latex/chicago.csl" \
             --metadata link-citations=true \
-            --section-divs \
             --no-highlight \
             -o temp_body.html
     else
         echo "  Warning: No bibliography file found, citations won't be processed"
         pandoc "$tex_file" \
-            --from=latex \
+            --from=latex+raw_tex \
             --to=html5 \
             --mathjax \
-            --section-divs \
             --no-highlight \
             -o temp_body.html
     fi
 
-    # Simple post-processing to ensure References header exists
+    # Post-processing for references and equations
     perl -i -0777 -pe '
         # Add References header if we have a refs div without header
         s/<div id="refs"([^>]*)>/<h2>References<\/h2>\n<div id="refs"$1>/g;
         
         # Ensure bibliography entries are properly wrapped
         s/<div id="refs"[^>]*>\n(?!<div)/<div id="refs" class="references">\n/g;
+        
+        # Fix equation environments with labels
+        s/\\\[\s*\\label\{([^}]+)\}(.*?)\\\]/\\begin{equation}\\label{$1}$2\\end{equation}/gs;
+        
+        # Fix theorem/lemma references (hardcoded for this document)
+        s/\\ref\{thm:master\}/2/g;
+        s/\\ref\{thm:peak\}/6/g;
+        s/\\ref\{lem:sine-cancel\}/1/g;
+        s/\\ref\{prop:var\}/4/g;
+        s/\\ref\{cor:bochner\}/3/g;
     ' temp_body.html
     
     # Combine metadata and HTML
@@ -80,6 +88,22 @@ for tex_file in _latex/*.tex; do
         cat "$meta_file"
         echo ""
         echo "---"
+        echo ""
+        echo '<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+<style>
+#refs {
+  padding-left: 0;
+}
+#refs .csl-entry {
+  margin-bottom: 0.8em;
+  padding-left: 2em;
+  text-indent: -2em;
+}
+</style>'
         echo ""
         cat temp_body.html
     } > "$output_file"

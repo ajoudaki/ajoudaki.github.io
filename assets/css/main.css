@@ -803,6 +803,9 @@ d-article p, d-article h1, d-article h2, d-article h3, d-article h4, d-article h
 d-article h1, d-article h2, d-article hr, d-article table, d-article table th, d-article table td {
   border-bottom-color: var(--global-divider-color) !important;
 }
+d-article h2, d-article h3, d-article h4, d-article h5, d-article h6 {
+  font-weight: normal !important;
+}
 d-article a {
   color: var(--global-theme-color) !important;
 }

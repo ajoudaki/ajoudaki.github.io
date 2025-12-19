@@ -1,5 +1,497 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-12-18T22:58:21+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
-</subtitle><entry><title type="html">In Search of Lost Time: The Longitudinal Alignment</title><link href="https://ajoudaki.github.io/blog/2025/longitudinal-test-safety/" rel="alternate" type="text/html" title="In Search of Lost Time: The Longitudinal Alignment" /><published>2025-12-18T00:00:00+00:00</published><updated>2025-12-18T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/longitudinal-test-safety</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/longitudinal-test-safety/"><![CDATA[<!-- ## Introduction -->
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://ajoudaki.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://ajoudaki.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-12-19T14:03:17+00:00</updated><id>https://ajoudaki.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+</subtitle><entry><title type="html">RFF-RoPE: Adjust your RoPE using Random Fourier Features</title><link href="https://ajoudaki.github.io/blog/2025/rff_rope/" rel="alternate" type="text/html" title="RFF-RoPE: Adjust your RoPE using Random Fourier Features" /><published>2025-12-19T00:00:00+00:00</published><updated>2025-12-19T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/rff_rope</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/rff_rope/"><![CDATA[<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+<style>
+#refs {
+  padding-left: 0;
+}
+#refs .csl-entry {
+  margin-bottom: 0.8em;
+  padding-left: 2em;
+  text-indent: -2em;
+}
+</style>
+
+<h1 id="introduction">Introduction</h1>
+<p>Self-attention is permutation-equivariant, hence Transformers require
+positional information to represent ordered or structured inputs <span class="citation" data-cites="vaswani2017attention">(<a href="#ref-vaswani2017attention" role="doc-biblioref">Vaswani et al.
+2017</a>)</span>. Rotary Position Embedding (RoPE) <span class="citation" data-cites="su2021roformer">(<a href="#ref-su2021roformer" role="doc-biblioref">Su et al.
+2021</a>)</span> injects relative position information by applying
+position-dependent <span class="math inline">\(2\times 2\)</span>
+rotations to query/key feature pairs. In its common deterministic form,
+RoPE uses a fixed geometric progression of frequencies (angles) <span class="citation" data-cites="su2021roformer">(<a href="#ref-su2021roformer" role="doc-biblioref">Su et al.
+2021</a>)</span>, which couples the induced positional interactions to a
+particular spectral profile and limits the ability to encode
+domain-specific inductive biases. Extensions and adaptations of RoPE to
+higher-dimensional structure (e.g., 2D vision) further motivate a
+principled design view <span class="citation" data-cites="li2021learnablefourier heo2024ropevit">(<a href="#ref-li2021learnablefourier" role="doc-biblioref">Li et al.
+2021</a>; <a href="#ref-heo2024ropevit" role="doc-biblioref">Heo et al.
+2024</a>)</span>.</p>
+<p>We introduce <em>Random Feature RoPE (RF-RoPE)</em>: rather than
+fixing frequencies, we <em>sample</em> them from a designed distribution
+<span class="math inline">\(p(\boldsymbol{\omega})\)</span>. Our central
+result is a kernel-design theorem showing that RF-RoPE implements any
+desired shift-invariant kernel in expectation at initialization. This
+turns positional-encoding design into a mathematically grounded inverse
+problem: <span class="math display">\[\Phi(\Delta \mathbf{p})
+\;\longrightarrow\; p(\boldsymbol{\omega}) \;\longrightarrow\;
+\{\boldsymbol{\omega}_i\}_{i=1}^{D},\]</span> with the inverse map
+justified by Bochner’s theorem <span class="citation" data-cites="bochner1955harmonic rasmussen2006gpml">(<a href="#ref-bochner1955harmonic" role="doc-biblioref">Bochner 1955</a>;
+<a href="#ref-rasmussen2006gpml" role="doc-biblioref">Rasmussen and
+Williams 2006</a>)</span> and operationalized via random features <span class="citation" data-cites="rahimi2007random">(<a href="#ref-rahimi2007random" role="doc-biblioref">Rahimi and Recht
+2007</a>)</span>.</p>
+<h1 id="background-and-related-work">Background and Related Work</h1>
+<h4 id="random-fourier-features-and-bochner.">Random Fourier Features
+and Bochner.</h4>
+<p>Random Fourier Features (RFF) approximate shift-invariant kernels via
+Monte Carlo samples from their spectral density <span class="citation" data-cites="rahimi2007random">(<a href="#ref-rahimi2007random" role="doc-biblioref">Rahimi and Recht 2007</a>)</span>. Bochner’s
+theorem characterizes such kernels as Fourier transforms of nonnegative
+measures <span class="citation" data-cites="bochner1955harmonic rasmussen2006gpml">(<a href="#ref-bochner1955harmonic" role="doc-biblioref">Bochner 1955</a>;
+<a href="#ref-rasmussen2006gpml" role="doc-biblioref">Rasmussen and
+Williams 2006</a>)</span>.</p>
+<h4 id="random-features-in-efficient-attention-and-positional-encoding.">Random
+features in efficient attention and positional encoding.</h4>
+<p>Random features have been used to approximate attention kernels in
+linear-time Transformers (e.g., Performer) <span class="citation" data-cites="choromanski2021performer">(<a href="#ref-choromanski2021performer" role="doc-biblioref">Choromanski et
+al. 2021</a>)</span>. Separately, Stochastic Positional Encoding (SPE)
+generates relative positional behavior compatible with linear attention
+<span class="citation" data-cites="liutkus2021relative">(<a href="#ref-liutkus2021relative" role="doc-biblioref">Liutkus et al.
+2021</a>)</span>, and F-StrIPE extends random-feature positional
+encodings with structure-informed priors in symbolic music <span class="citation" data-cites="agarwal2025fstripe">(<a href="#ref-agarwal2025fstripe" role="doc-biblioref">Agarwal et al.
+2025</a>)</span>. In parallel, RoPE variants have explored learned or
+content-dependent rotations (e.g., Selective RoPE) <span class="citation" data-cites="movahedi2025selectiverope">(<a href="#ref-movahedi2025selectiverope" role="doc-biblioref">Movahedi et
+al. 2025</a>)</span>.</p>
+<h4 id="novelty-gap.">Novelty gap.</h4>
+<p>Prior random-feature PE work primarily builds additive feature maps
+for (often linear) attention. Our contribution is to identify the
+<em>RoPE rotation operator itself</em> as an RFF-style kernel estimator
+when frequencies are sampled symmetrically. This yields a direct,
+efficient pathway to import kernel-design theory into the RoPE
+mechanism.</p>
+<h1 id="the-rf-rope-framework">The RF-RoPE Framework</h1>
+<h2 id="generalized-rotational-encoding-for-mathbfpinmathbbrk">Generalized
+rotational encoding for <span class="math inline">\(\mathbf{p}\in\mathbb{R}^k\)</span></h2>
+<p>Let <span class="math inline">\(\mathbf{q}_m,\mathbf{k}_n\in\mathbb{R}^d\)</span>
+be query/key vectors at positions <span class="math inline">\(\mathbf{p}_m,\mathbf{p}_n\in\mathbb{R}^k\)</span>.
+Assume <span class="math inline">\(d\)</span> is even and split features
+into <span class="math inline">\(D=d/2\)</span> two-dimensional blocks:
+<span class="math display">\[\mathbf{q}_m =
+(\mathbf{q}_{m,1},\ldots,\mathbf{q}_{m,D}),\qquad
+\mathbf{k}_n = (\mathbf{k}_{n,1},\ldots,\mathbf{k}_{n,D}),\]</span>
+where each <span class="math inline">\(\mathbf{q}_{m,i},\mathbf{k}_{n,i}\in\mathbb{R}^2\)</span>.</p>
+<p>For each block <span class="math inline">\(i\)</span>, sample an
+i.i.d. frequency vector <span class="math inline">\(\boldsymbol{\omega}_i\in\mathbb{R}^k\)</span> from
+<span class="math inline">\(p(\boldsymbol{\omega})\)</span>. Define the
+<span class="math inline">\(2\times 2\)</span> rotation <span class="math display">\[R(\alpha) \;=\;
+\begin{pmatrix}
+\cos\alpha &amp; -\sin\alpha\\
+\sin\alpha &amp; \cos\alpha
+\end{pmatrix}.\]</span> RF-RoPE applies the phase <span class="math inline">\(\alpha=\mathbf{p}\cdot\boldsymbol{\omega}_i\)</span>:
+<span class="math display">\[\mathbf{q}&#39;_{m,i} =
+R(\mathbf{p}_m\cdot\boldsymbol{\omega}_i)\,\mathbf{q}_{m,i},
+\qquad
+\mathbf{k}&#39;_{n,i} =
+R(\mathbf{p}_n\cdot\boldsymbol{\omega}_i)\,\mathbf{k}_{n,i},\]</span>
+and concatenates <span class="math inline">\(\mathbf{q}&#39;_m=(\mathbf{q}&#39;_{m,1},\dots,\mathbf{q}&#39;_{m,D})\)</span>,
+<span class="math inline">\(\mathbf{k}&#39;_n=(\mathbf{k}&#39;_{n,1},\dots,\mathbf{k}&#39;_{n,D})\)</span>.</p>
+<h2 id="per-block-inner-product-decomposition">Per-block inner product
+decomposition</h2>
+<p>Let <span class="math inline">\(\Delta\mathbf{p}=\mathbf{p}_n-\mathbf{p}_m\)</span>
+and <span class="math inline">\(u_i=\Delta\mathbf{p}\cdot\boldsymbol{\omega}_i\)</span>.
+Using the rotation identity <span class="math inline">\(R(a)^\top
+R(b)=R(b-a)\)</span>, the contribution of block <span class="math inline">\(i\)</span> to the RoPE-modulated dot product is
+<span class="math display">\[\begin{aligned}
+S_i
+\;:=\;
+(\mathbf{q}&#39;_{m,i})^\top \mathbf{k}&#39;_{n,i}
+&amp;=
+\mathbf{q}_{m,i}^\top R(u_i)\,\mathbf{k}_{n,i}.
+\end{aligned}\]</span> Introduce the <span class="math inline">\(+90^\circ\)</span> rotation matrix <span class="math inline">\(J=
+\begin{pmatrix}
+0 &amp; -1\\
+1 &amp; 0
+\end{pmatrix}\)</span> so that <span class="math inline">\(J\mathbf{x}\)</span> rotates <span class="math inline">\(\mathbf{x}\)</span> by <span class="math inline">\(+90^\circ\)</span>. Then <span class="math display">\[R(u) = \cos u \,I_2 + \sin u \,J.\]</span>
+Substituting yields the exact decomposition <span class="math display">\begin{equation}\label{eq:Si-decomp}
+S_i
+=
+(\mathbf{q}_{m,i}^\top \mathbf{k}_{n,i})\cos u_i
++
+(\mathbf{q}_{m,i}^\top J\mathbf{k}_{n,i})\sin u_i.\end{equation}</span> The full
+RF-RoPE attention score (pre-softmax) is <span class="math display">\[S(\mathbf{p}_m,\mathbf{p}_n)
+:= (\mathbf{q}&#39;_m)^\top \mathbf{k}&#39;_n
+= \sum_{i=1}^{D} S_i.\]</span></p>
+<h2 id="master-theorem-kernelization-in-expectation">Master Theorem:
+kernelization in expectation</h2>
+<div class="lemma">
+<p><strong>Lemma 1</strong> (Odd-term cancellation under central
+symmetry). <em> Fix <span class="math inline">\(\Delta\mathbf{p}\in\mathbb{R}^k\)</span> and let
+<span class="math inline">\(u=\Delta\mathbf{p}\cdot\boldsymbol{\omega}\)</span>
+with <span class="math inline">\(\boldsymbol{\omega}\sim
+p(\boldsymbol{\omega})\)</span>. If <span class="math inline">\(p\)</span> is centrally symmetric, i.e. <span class="math inline">\(p(\boldsymbol{\omega})=p(-\boldsymbol{\omega})\)</span>,
+then <span class="math display">\[\mathbb{E}[\sin u]=0,
+\qquad
+\mathbb{E}[\sin u \cos u]=0.\]</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> By symmetry and the change of variables <span class="math inline">\(\boldsymbol{\omega}\mapsto
+-\boldsymbol{\omega}\)</span>, <span class="math display">\[\mathbb{E}[\sin(\Delta\mathbf{p}\cdot\boldsymbol{\omega})]
+=
+\int_{\mathbb{R}^k}\sin(\Delta\mathbf{p}\cdot\boldsymbol{\omega})\,p(\boldsymbol{\omega})\,d\boldsymbol{\omega}
+=
+\int_{\mathbb{R}^k}\sin(\Delta\mathbf{p}\cdot(-\boldsymbol{\omega}))\,p(-\boldsymbol{\omega})\,d\boldsymbol{\omega}
+=
+-\mathbb{E}[\sin(\Delta\mathbf{p}\cdot\boldsymbol{\omega})],\]</span>
+hence it must be <span class="math inline">\(0\)</span>. The second
+identity follows since <span class="math inline">\(\sin u\cos
+u=\tfrac{1}{2}\sin(2u)\)</span> is also odd in <span class="math inline">\(u\)</span>. ◻</p>
+</div>
+<p>Define the <em>RF-RoPE positional kernel</em> induced by <span class="math inline">\(p\)</span> as the cosine transform <span class="math display">\begin{equation}\label{eq:Phi-def}
+\Phi(\Delta\mathbf{p})
+:= \mathbb{E}_{\boldsymbol{\omega}\sim
+p}\!\left[\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})\right]
+=
+\int_{\mathbb{R}^k}\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})\,p(\boldsymbol{\omega})\,d\boldsymbol{\omega}.\end{equation}</span></p>
+<div class="theorem">
+<p><strong>Theorem 2</strong> (Master Theorem (RF-RoPE kernelization)).
+<em> Assume <span class="math inline">\(\boldsymbol{\omega}_1,\ldots,\boldsymbol{\omega}_D\)</span>
+are i.i.d. from a centrally symmetric distribution <span class="math inline">\(p(\boldsymbol{\omega})\)</span> and RF-RoPE is
+applied as above. Then for any fixed content vectors <span class="math inline">\(\mathbf{q}_m,\mathbf{k}_n\)</span> and positions
+<span class="math inline">\(\mathbf{p}_m,\mathbf{p}_n\)</span>, <span class="math display">\[\mathbb{E}_{\boldsymbol{\omega}_{1:D}}\!\left[S(\mathbf{p}_m,\mathbf{p}_n)\right]
+=
+(\mathbf{q}_m^\top
+\mathbf{k}_n)\,\Phi(\mathbf{p}_n-\mathbf{p}_m),\]</span> where <span class="math inline">\(\Phi\)</span> is given by <span class="math inline">\(\eqref{eq:Phi-def}\)</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> From <span class="math inline">\(\eqref{eq:Si-decomp}\)</span> and <span class="math inline">\(u_i=\Delta\mathbf{p}\cdot\boldsymbol{\omega}_i\)</span>,
+<span class="math display">\[S_i
+=
+A_i\cos u_i + B_i\sin u_i,
+\qquad
+A_i:=\mathbf{q}_{m,i}^\top \mathbf{k}_{n,i},\;\;
+B_i:=\mathbf{q}_{m,i}^\top J\mathbf{k}_{n,i}.\]</span> Taking
+expectation over <span class="math inline">\(\boldsymbol{\omega}_i\)</span> and applying
+Lemma <span class="math inline">\(1\)</span>, <span class="math display">\[\mathbb{E}[S_i]
+=
+A_i\,\mathbb{E}[\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})]
++
+B_i\,\mathbb{E}[\sin(\Delta\mathbf{p}\cdot\boldsymbol{\omega})]
+=
+A_i\,\Phi(\Delta\mathbf{p}).\]</span> Summing over blocks and using
+linearity of expectation, <span class="math display">\[\mathbb{E}\!\left[S(\mathbf{p}_m,\mathbf{p}_n)\right]
+=
+\sum_{i=1}^{D}\mathbb{E}[S_i]
+=
+\Phi(\Delta\mathbf{p})\sum_{i=1}^{D}A_i
+=
+\Phi(\Delta\mathbf{p})\,\mathbf{q}_m^\top \mathbf{k}_n,\]</span> since
+<span class="math inline">\(\mathbf{q}_m^\top \mathbf{k}_n=\sum_{i=1}^D
+\mathbf{q}_{m,i}^\top \mathbf{k}_{n,i}=\sum_{i=1}^D A_i\)</span>. ◻</p>
+</div>
+<div class="corollary">
+<p><strong>Corollary 3</strong> (Inverse kernel design via Bochner).
+<em> Let <span class="math inline">\(\Phi:\mathbb{R}^k\to\mathbb{R}\)</span> be
+continuous, shift-invariant, and positive definite with <span class="math inline">\(\Phi(\mathbf{0})=1\)</span>. Then there exists a
+centrally symmetric probability measure <span class="math inline">\(p(\boldsymbol{\omega})\)</span> such that <span class="math inline">\(\eqref{eq:Phi-def}\)</span> holds. Consequently,
+RF-RoPE can realize <span class="math inline">\(\Phi\)</span> in
+expectation at initialization by sampling <span class="math inline">\(\boldsymbol{\omega}_i\sim p\)</span> and applying
+Theorem <span class="math inline">\(2\)</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> By Bochner’s theorem <span class="citation" data-cites="bochner1955harmonic rasmussen2006gpml">(<a href="#ref-bochner1955harmonic" role="doc-biblioref">Bochner 1955</a>;
+<a href="#ref-rasmussen2006gpml" role="doc-biblioref">Rasmussen and
+Williams 2006</a>)</span>, <span class="math inline">\(\Phi\)</span>
+admits a representation <span class="math display">\[\Phi(\Delta\mathbf{p})=\int_{\mathbb{R}^k}
+e^{i\,\Delta\mathbf{p}^\top
+\boldsymbol{\omega}}\,d\mu(\boldsymbol{\omega})\]</span> for a finite
+nonnegative measure <span class="math inline">\(\mu\)</span>. The
+normalization <span class="math inline">\(\Phi(\mathbf{0})=1\)</span>
+implies <span class="math inline">\(\mu(\mathbb{R}^k)=1\)</span>, so
+<span class="math inline">\(\mu\)</span> is a probability measure. Since
+<span class="math inline">\(\Phi\)</span> is real-valued, <span class="math inline">\(\mu\)</span> can be chosen centrally symmetric,
+and taking real parts yields <span class="math display">\[\Phi(\Delta\mathbf{p})
+=
+\int_{\mathbb{R}^k}\cos(\Delta\mathbf{p}^\top
+\boldsymbol{\omega})\,d\mu(\boldsymbol{\omega}),\]</span> which is <span class="math inline">\(\eqref{eq:Phi-def}\)</span> with <span class="math inline">\(p=\mu\)</span>. ◻</p>
+</div>
+<h2 id="variance-analysis-and-convergence">Variance analysis and
+convergence</h2>
+<p>The Master Theorem describes the mean behavior. With finite <span class="math inline">\(D\)</span>, <span class="math inline">\(S\)</span>
+is a random estimator of its expectation.</p>
+<div class="proposition">
+<p><strong>Proposition 4</strong> (Second moment and variance of a
+block). <em> Assume <span class="math inline">\(p(\boldsymbol{\omega})\)</span> is centrally
+symmetric and let <span class="math inline">\(u=\Delta\mathbf{p}\cdot\boldsymbol{\omega}\)</span>.
+For a fixed block <span class="math inline">\(i\)</span>, define <span class="math inline">\(A_i=\mathbf{q}_{m,i}^\top
+\mathbf{k}_{n,i}\)</span> and <span class="math inline">\(B_i=\mathbf{q}_{m,i}^\top
+J\mathbf{k}_{n,i}\)</span> as in the proof of Theorem <span class="math inline">\(2\)</span>. Let <span class="math inline">\(\Phi(\Delta\mathbf{p})=\mathbb{E}[\cos u]\)</span>
+and <span class="math inline">\(\Phi_2(\Delta\mathbf{p})=\mathbb{E}[\cos(2u)]\)</span>.
+Then <span class="math display">\[\mathbb{E}[S_i] =
+A_i\,\Phi(\Delta\mathbf{p}),\]</span> and the variance satisfies <span class="math display">\[\mathrm{Var}(S_i)
+=
+\frac{A_i^2+B_i^2}{2}
++
+\frac{A_i^2-B_i^2}{2}\,\Phi_2(\Delta\mathbf{p})
+-
+A_i^2\,\Phi(\Delta\mathbf{p})^2.\]</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> We already derived <span class="math inline">\(\mathbb{E}[S_i]=A_i\Phi(\Delta\mathbf{p})\)</span>.
+For the second moment, write <span class="math inline">\(S_i=A_i\cos u +
+B_i\sin u\)</span>. Expanding, <span class="math display">\[S_i^2 =
+A_i^2\cos^2 u + B_i^2\sin^2 u + 2A_iB_i\sin u\cos u.\]</span> Taking
+expectations and applying Lemma <span class="math inline">\(1\)</span> gives <span class="math inline">\(\mathbb{E}[\sin u\cos u]=0\)</span>. Using the
+identities <span class="math display">\[\cos^2
+u=\frac{1+\cos(2u)}{2},\qquad \sin^2 u=\frac{1-\cos(2u)}{2},\]</span> we
+obtain <span class="math display">\[\mathbb{E}[S_i^2]
+=
+A_i^2\frac{1+\mathbb{E}[\cos(2u)]}{2}
++
+B_i^2\frac{1-\mathbb{E}[\cos(2u)]}{2}
+=
+\frac{A_i^2+B_i^2}{2}+\frac{A_i^2-B_i^2}{2}\,\Phi_2(\Delta\mathbf{p}).\]</span>
+Finally, <span class="math inline">\(\mathrm{Var}(S_i)=\mathbb{E}[S_i^2]-\mathbb{E}[S_i]^2\)</span>
+yields the stated expression. ◻</p>
+</div>
+<p>Because <span class="math inline">\(\boldsymbol{\omega}_i\)</span>
+are i.i.d., the random variables <span class="math inline">\(S_i\)</span> are independent conditioned on fixed
+content vectors. Hence, <span class="math display">\[\mathrm{Var}(S)=\sum_{i=1}^{D}\mathrm{Var}(S_i).\]</span>
+In regimes where block magnitudes are comparable (e.g., after
+layernorm), the standard deviation grows like <span class="math inline">\(\sqrt{D}\)</span> while the mean magnitude grows
+like <span class="math inline">\(D\)</span>, yielding a typical
+<em>relative</em> Monte Carlo error that scales as <span class="math inline">\(O(D^{-1/2})=O(d^{-1/2})\)</span>.</p>
+<h1 id="application-to-rf-rope-design">Application to RF-RoPE
+Design</h1>
+<p>By Corollary <span class="math inline">\(3\)</span>,
+specifying a desired kernel <span class="math inline">\(\Phi\)</span>
+determines a spectral distribution <span class="math inline">\(p(\boldsymbol{\omega})\)</span> (or density when
+it exists), from which RF-RoPE samples frequencies. The following
+standard examples follow directly from classical kernel/spectral pairs
+<span class="citation" data-cites="rasmussen2006gpml rahimi2007random">(<a href="#ref-rasmussen2006gpml" role="doc-biblioref">Rasmussen and
+Williams 2006</a>; <a href="#ref-rahimi2007random" role="doc-biblioref">Rahimi and Recht 2007</a>)</span>.</p>
+<h4 id="gaussian-rbf-kernel.">Gaussian (RBF) kernel.</h4>
+<p><span class="math display">\[\Phi(\Delta\mathbf{p})=\exp\!\left(-\frac{1}{2\sigma^2}\|\Delta\mathbf{p}\|^2\right),
+\qquad
+\boldsymbol{\omega}\sim
+\mathcal{N}(\mathbf{0},\sigma^{-2}I_k).\]</span></p>
+<h4 id="cauchy-kernel-1d.">Cauchy kernel (1D).</h4>
+<p><span class="math display">\[\Phi(\Delta m)=\left(1+(\Delta
+m/b)^2\right)^{-1},
+\qquad
+\omega \sim \mathrm{Laplace}(0,b^{-1})\ \ (\text{equivalently
+}p(\omega)\propto e^{-|\omega|/b}).\]</span></p>
+<h4 id="sinc-band-limited-kernel.">Sinc / band-limited kernel.</h4>
+<p>For separable bandwidths <span class="math inline">\(W_j\)</span>,
+<span class="math display">\[\Phi(\Delta\mathbf{p})=\prod_{j=1}^{k}\mathrm{sinc}(W_j\Delta
+p_j),
+\qquad
+\omega_j \sim \mathrm{Unif}(-W_j,W_j)\ \text{
+independently.}\]</span></p>
+<h4 id="matérn-family.">Matérn family.</h4>
+<p>Matérn kernels interpolate between rough and smooth locality <span class="citation" data-cites="matern1960spatial rasmussen2006gpml">(<a href="#ref-matern1960spatial" role="doc-biblioref">Matérn 1960</a>; <a href="#ref-rasmussen2006gpml" role="doc-biblioref">Rasmussen and
+Williams 2006</a>)</span>. Their spectral densities exhibit
+Student-<span class="math inline">\(t\)</span>-like heavy tails,
+motivating heavy-tailed sampling schemes for <span class="math inline">\(\boldsymbol{\omega}\)</span>.</p>
+<h1 id="analytical-re-assessment-of-standard-rope">Analytical
+Re-Assessment of Standard RoPE</h1>
+<p>Standard deterministic RoPE for <span class="math inline">\(k=1\)</span> uses a fixed geometric frequency list
+<span class="citation" data-cites="su2021roformer">(<a href="#ref-su2021roformer" role="doc-biblioref">Su et al.
+2021</a>)</span>. Writing these frequencies as <span class="math inline">\(\theta_i=B^{-2i/d}\)</span>, the RoPE-modulated
+dot product can be expressed in the form <span class="math display">\[S(m,n)=\sum_{i=1}^{D}\Big[A_i\cos(\Delta
+m\,\theta_i)+B_i\sin(\Delta m\,\theta_i)\Big],\]</span> for coefficients
+<span class="math inline">\(A_i,B_i\)</span> determined by the content
+vectors within each 2D block (cf. <span class="math inline">\(\eqref{eq:Si-decomp}\)</span>).</p>
+<h2 id="asymmetry-and-loss-of-multiplicative-kernel-form">Asymmetry and
+loss of multiplicative kernel form</h2>
+<p>RF-RoPE relies on symmetric sampling to guarantee <span class="math inline">\(\mathbb{E}[\sin(\Delta m\,\omega)]=0\)</span> and
+hence a clean multiplicative modulation (Theorem <span class="math inline">\(2\)</span>). In standard RoPE, the
+frequency list is strictly positive, so there is no mechanism enforcing
+cancellation of the sine term. As a result, standard RoPE does not, in
+general, admit a representation of the form <span class="math display">\[S(m,n)\stackrel{?}{=}(\mathbf{q}_m^\top\mathbf{k}_n)\,\Phi(\Delta
+m)\]</span> for a single real-valued scalar kernel <span class="math inline">\(\Phi\)</span> without additional assumptions on
+the content-dependent coefficients.</p>
+<h2 id="implied-spectral-density-and-slow-decay-heuristic-continuum-limit">Implied
+spectral density and slow decay (heuristic continuum limit)</h2>
+<p>A geometric grid <span class="math inline">\(\theta_i=B^{-2i/d}\)</span> corresponds to an
+approximately log-uniform spacing. Treat <span class="math inline">\(i\)</span> as continuous and solve for <span class="math inline">\(i(\theta)\)</span>: <span class="math display">\[\theta = B^{-2i/d}
+\quad\Longrightarrow\quad
+i(\theta)= -\frac{d}{2}\log_B\theta.\]</span> Thus, <span class="math display">\[\left|\frac{di}{d\theta}\right|
+=
+\frac{d}{2}\cdot \frac{1}{|\ln B|}\cdot \frac{1}{\theta}
+\;\propto\; \frac{1}{\theta}.\]</span> Interpreting <span class="math inline">\(\left|di/d\theta\right|\)</span> as a continuum
+density suggests an implied heavy-tailed spectrum <span class="math inline">\(p(\theta)\propto 1/\theta\)</span> over the
+covered band. Heavy tails place substantial mass on low frequencies,
+which tends to induce slowly decaying correlations in position space,
+consistent with RoPE’s empirically weak inherent locality prior <span class="citation" data-cites="su2021roformer">(<a href="#ref-su2021roformer" role="doc-biblioref">Su et al.
+2021</a>)</span>.</p>
+<div class="remark">
+<p><em>Remark 5</em>. The above <span class="math inline">\(p(\theta)\propto 1/\theta\)</span> argument is a
+density-of-states approximation: it describes how densely the
+deterministic grid samples log-frequency. RF-RoPE replaces this implicit
+bias with an explicit, designer-chosen <span class="math inline">\(p(\omega)\)</span> tied to a target kernel via
+Corollary <span class="math inline">\(3\)</span>.</p>
+</div>
+<h1 id="beyond-initialization-learned-adaptations-and-shifted-attention">Beyond
+Initialization: Learned Adaptations and Shifted Attention</h1>
+<p>RF-RoPE controls the <em>initialization</em> kernel. Yet Transformers
+learn attention heads that focus on fixed, nonzero offsets (e.g.,
+induction heads) <span class="citation" data-cites="olsson2022incontext">(<a href="#ref-olsson2022incontext" role="doc-biblioref">Olsson et al. 2022</a>)</span>. We now formalize
+why RF-RoPE kernels are necessarily centered and how learning can induce
+shifts.</p>
+<h2 id="a-locality-constraint-at-initialization">A locality constraint
+at initialization</h2>
+<div class="theorem">
+<p><strong>Theorem 6</strong> (Peak at the origin). <em> Let <span class="math inline">\(\Phi(\Delta\mathbf{p})=\mathbb{E}_{\boldsymbol{\omega}\sim
+p}[\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})]\)</span> for any
+probability distribution <span class="math inline">\(p\)</span>. Then
+<span class="math inline">\(\Phi\)</span> attains its global maximum at
+<span class="math inline">\(\Delta\mathbf{p}=\mathbf{0}\)</span>, and
+<span class="math inline">\(\Phi(\Delta\mathbf{p})\le 1\)</span> for all
+<span class="math inline">\(\Delta\mathbf{p}\)</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span class="math inline">\(\Phi(\mathbf{0})=\mathbb{E}[\cos 0]=1\)</span>.
+For any <span class="math inline">\(\Delta\mathbf{p}\)</span>, <span class="math inline">\(\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})\le
+1\)</span> pointwise, hence <span class="math inline">\(\Phi(\Delta\mathbf{p})=\mathbb{E}[\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})]\le
+1\)</span>. ◻</p>
+</div>
+<p>Thus, selecting a different <span class="math inline">\(p(\boldsymbol{\omega})\)</span> can change the
+<em>shape</em> (width, smoothness, tails) of locality, but cannot move
+the peak away from <span class="math inline">\(\Delta\mathbf{p}=\mathbf{0}\)</span> at
+initialization.</p>
+<h2 id="learned-phase-shifts-from-w_q-and-w_k">Learned phase shifts from
+<span class="math inline">\(W_Q\)</span> and <span class="math inline">\(W_K\)</span></h2>
+<p>Consider a single block <span class="math inline">\(i\)</span> and
+suppose training makes the query/key projections implement additional
+content-dependent rotations within that <span class="math inline">\(2\)</span>D subspace. Concretely, assume there
+exist angles <span class="math inline">\(\phi_{q,i},\phi_{k,i}\)</span>
+(possibly head- and block-specific) such that the pre-RoPE projected
+vectors satisfy <span class="math display">\[\tilde{\mathbf{q}}_{m,i}\approx
+R(\phi_{q,i})\,\mathbf{v}_{m,i},
+\qquad
+\tilde{\mathbf{k}}_{n,i}\approx
+R(\phi_{k,i})\,\mathbf{v}_{n,i},\]</span> for some base content vectors
+<span class="math inline">\(\mathbf{v}_{m,i},\mathbf{v}_{n,i}\)</span>.
+Applying RF-RoPE yields <span class="math display">\[\mathbf{q}&#39;_{m,i}=R(\mathbf{p}_m\cdot\boldsymbol{\omega}_i)\tilde{\mathbf{q}}_{m,i},
+\qquad
+\mathbf{k}&#39;_{n,i}=R(\mathbf{p}_n\cdot\boldsymbol{\omega}_i)\tilde{\mathbf{k}}_{n,i}.\]</span>
+Since rotations commute in 2D, <span class="math display">\[\mathbf{q}&#39;_{m,i}\approx
+R(\mathbf{p}_m\cdot\boldsymbol{\omega}_i+\phi_{q,i})\mathbf{v}_{m,i},
+\qquad
+\mathbf{k}&#39;_{n,i}\approx
+R(\mathbf{p}_n\cdot\boldsymbol{\omega}_i+\phi_{k,i})\mathbf{v}_{n,i}.\]</span>
+Therefore, the relative phase entering the dot product is shifted by
+<span class="math display">\[(\mathbf{p}_n-\mathbf{p}_m)\cdot\boldsymbol{\omega}_i
++ (\phi_{k,i}-\phi_{q,i}).\]</span> Let <span class="math inline">\(\Phi_i:=\phi_{k,i}-\phi_{q,i}\)</span>. Then block
+<span class="math inline">\(i\)</span> contributes approximately <span class="math display">\[S_i(\Delta\mathbf{p})\approx
+C_i\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega}_i+\Phi_i),
+\qquad
+C_i:=\mathbf{v}_{m,i}^\top\mathbf{v}_{n,i}.\]</span></p>
+<h2 id="shifted-local-attention-as-learned-recentering">Shifted-local
+attention as learned recentering</h2>
+<p>Suppose the training objective encourages attention to peak near
+<span class="math inline">\(\Delta\mathbf{p}=-\mathbf{L}\)</span>.
+Maximizing <span class="math inline">\(S(-\mathbf{L})\)</span> over
+phases pushes <span class="math display">\[-\mathbf{L}\cdot\boldsymbol{\omega}_i+\Phi_i
+\approx 0
+\quad\Longrightarrow\quad
+\Phi_i \approx \mathbf{L}\cdot\boldsymbol{\omega}_i.\]</span>
+Substituting gives the shifted form <span class="math display">\[S(\Delta\mathbf{p})
+\approx \sum_{i=1}^{D}
+C_i\cos\big((\Delta\mathbf{p}+\mathbf{L})\cdot\boldsymbol{\omega}_i\big),\]</span>
+i.e. learning can <em>recenter</em> the effective kernel away from the
+origin even though initialization kernels (Theorem <span class="math inline">\(6\)</span>) must be centered. This
+provides a simple mechanistic explanation for how RoPE-based models can
+develop fixed-offset heads such as induction heads <span class="citation" data-cites="olsson2022incontext">(<a href="#ref-olsson2022incontext" role="doc-biblioref">Olsson et al.
+2022</a>)</span>.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>RF-RoPE reframes RoPE frequency selection as kernel engineering. By
+sampling frequencies from a designed spectral density, RF-RoPE realizes
+any desired shift-invariant positive-definite kernel in expectation at
+initialization (Theorem <span class="math inline">\(2\)</span>), with principled
+inverse design via Bochner’s theorem (Corollary <span class="math inline">\(3\)</span>). We also characterized
+finite-sample variance (Proposition <span class="math inline">\(4\)</span>) and clarified why
+initialization kernels are necessarily centered (Theorem <span class="math inline">\(6\)</span>), while learned
+projections can induce shifted-local attention via phase shifts.
+Together, these results provide a rigorous foundation for designing and
+interpreting RoPE-style positional mechanisms.</p>
+<h2>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-agarwal2025fstripe" class="csl-entry" role="listitem">
+Agarwal, Manvi, Changhong Wang, and Gaël Richard. 2025. <span>“F-StrIPE:
+Fast Structure-Informed Positional Encoding for Symbolic Music
+Generation.”</span> <em>arXiv Preprint arXiv:2502.10491</em>. <a href="https://arxiv.org/abs/2502.10491">https://arxiv.org/abs/2502.10491</a>.
+</div>
+<div id="ref-bochner1955harmonic" class="csl-entry" role="listitem">
+Bochner, Salomon. 1955. <em>Harmonic Analysis and the Theory of
+Probability</em>. University of California Press.
+</div>
+<div id="ref-choromanski2021performer" class="csl-entry" role="listitem">
+Choromanski, Krzysztof M., Valerii Likhosherstov, David Dohan, et al.
+2021. <span>“Rethinking Attention with Performers.”</span>
+<em>International Conference on Learning Representations</em>. <a href="https://arxiv.org/abs/2009.14794">https://arxiv.org/abs/2009.14794</a>.
+</div>
+<div id="ref-heo2024ropevit" class="csl-entry" role="listitem">
+Heo, Byeongho, Song Park, Dongyoon Han, and Sangdoo Yun. 2024.
+<span>“Rotary Position Embedding for Vision Transformer.”</span>
+<em>European Conference on Computer Vision</em>. <a href="https://arxiv.org/abs/2403.13298">https://arxiv.org/abs/2403.13298</a>.
+</div>
+<div id="ref-li2021learnablefourier" class="csl-entry" role="listitem">
+Li, Yang, Si Si, Gang Li, Cho-Jui Hsieh, and Samy Bengio. 2021.
+<span>“Learnable Fourier Features for Multi-Dimensional Spatial
+Positional Encoding.”</span> <em>Advances in Neural Information
+Processing Systems</em>. <a href="https://openreview.net/forum?id=R0h3NUMao_U">https://openreview.net/forum?id=R0h3NUMao_U</a>.
+</div>
+<div id="ref-liutkus2021relative" class="csl-entry" role="listitem">
+Liutkus, Antoine, Ondřej Cı́fka, Shih-Lun Wu, Umut Şimşekli, Yi-Hsuan
+Yang, and Gaël Richard. 2021. <span>“Relative Positional Encoding for
+Transformers with Linear Complexity.”</span> <em>Proceedings of the 38th
+International Conference on Machine Learning</em>, Proceedings of
+machine learning research, vol. 139: 7067–79. <a href="https://proceedings.mlr.press/v139/liutkus21a.html">https://proceedings.mlr.press/v139/liutkus21a.html</a>.
+</div>
+<div id="ref-matern1960spatial" class="csl-entry" role="listitem">
+Matérn, Bertil. 1960. <em>Spatial Variation: Stochastic Models and Their
+Application to Some Problems in Forest Surveys and Other Sampling
+Investigations</em>. Statens Skogsforskningsinstitut.
+</div>
+<div id="ref-movahedi2025selectiverope" class="csl-entry" role="listitem">
+Movahedi, Sajad, Timur Carstensen, Arshia Afzal, Frank Hutter, Antonio
+Orvieto, and Volkan Cevher. 2025. <span>“Selective Rotary Position
+Embedding.”</span> <em>arXiv Preprint arXiv:2511.17388</em>. <a href="https://arxiv.org/abs/2511.17388">https://arxiv.org/abs/2511.17388</a>.
+</div>
+<div id="ref-olsson2022incontext" class="csl-entry" role="listitem">
+Olsson, Catherine, Nelson Elhage, Neel Nanda, et al. 2022.
+<span>“In-Context Learning and Induction Heads.”</span> <em>arXiv
+Preprint arXiv:2209.11895</em>. <a href="https://arxiv.org/abs/2209.11895">https://arxiv.org/abs/2209.11895</a>.
+</div>
+<div id="ref-rahimi2007random" class="csl-entry" role="listitem">
+Rahimi, Ali, and Benjamin Recht. 2007. <span>“Random Features for
+Large-Scale Kernel Machines.”</span> <em>Advances in Neural Information
+Processing Systems</em> 20. <a href="https://papers.nips.cc/paper/3182-random-features-for-large-scale-kernel-machines">https://papers.nips.cc/paper/3182-random-features-for-large-scale-kernel-machines</a>.
+</div>
+<div id="ref-rasmussen2006gpml" class="csl-entry" role="listitem">
+Rasmussen, Carl Edward, and Christopher K. I. Williams. 2006.
+<em>Gaussian Processes for Machine Learning</em>. MIT Press. <a href="https://gaussianprocess.org/gpml/chapters/RW.pdf">https://gaussianprocess.org/gpml/chapters/RW.pdf</a>.
+</div>
+<div id="ref-su2021roformer" class="csl-entry" role="listitem">
+Su, Jianlin, Yu Lu, Shengfeng Pan, Ahmed Murtadha, Bo Wen, and Yunfeng
+Liu. 2021. <span>“RoFormer: Enhanced Transformer with Rotary Position
+Embedding.”</span> <em>arXiv Preprint arXiv:2104.09864</em>. <a href="https://arxiv.org/abs/2104.09864">https://arxiv.org/abs/2104.09864</a>.
+</div>
+<div id="ref-touvron2023llama" class="csl-entry" role="listitem">
+Touvron, Hugo, Thibaut Lavril, Gautier Izacard, et al. 2023.
+<span>“<span>LLaMA</span>: Open and Efficient Foundation Language
+Models.”</span> <em>arXiv Preprint arXiv:2302.13971</em>. <a href="https://arxiv.org/abs/2302.13971">https://arxiv.org/abs/2302.13971</a>.
+</div>
+<div id="ref-vaswani2017attention" class="csl-entry" role="listitem">
+Vaswani, Ashish, Noam Shazeer, Niki Parmar, et al. 2017.
+<span>“Attention Is All You Need.”</span> <em>Advances in Neural
+Information Processing Systems</em> 30: 5998–6008. <a href="https://arxiv.org/abs/1706.03762">https://arxiv.org/abs/1706.03762</a>.
+</div>
+</div>]]></content><author><name>Amir Joudaki</name></author><category term="machine-learning," /><category term="neural-networks," /><category term="position-embeddings" /><summary type="html"><![CDATA[Random Fourier Features and Rotary Position Embeddings]]></summary></entry><entry><title type="html">In Search of Lost Time: The Longitudinal Alignment</title><link href="https://ajoudaki.github.io/blog/2025/longitudinal-test-safety/" rel="alternate" type="text/html" title="In Search of Lost Time: The Longitudinal Alignment" /><published>2025-12-18T00:00:00+00:00</published><updated>2025-12-18T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/longitudinal-test-safety</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/longitudinal-test-safety/"><![CDATA[<!-- ## Introduction -->
 
 <p>I’ve been thinking for a long time about what it would actually mean to be safe around AI systems that are much more intelligent than we are. My suspicion is that any plan centered on “understanding what’s inside the model” will eventually crack. Modern systems are too complex for any tidy account of motives, and a sufficiently capable system could also shape what we learn about it—by selective honesty, misdirection, or simply telling us what we want to hear.</p>
 
@@ -57,8 +549,25 @@
 
 <p>But that isn’t an argument against longitudinal testing. It’s an argument that <strong>snapshots are the easiest thing in the world to counterfeit</strong>, and trajectories are harder. Time does not magically solve alignment, but it raises the standard from “it looked fine when asked” to “it remained fine when it would have been convenient not to.”</p>
 
-<p>If we are going to trust systems that can outthink us, we should demand evidence that cannot be produced cheaply. We should demand histories, not speeches. And we should be wary of any training paradigm that treats long stretches of time as something to be compressed, shuffled, and forgotten—because that is exactly where the structure of safety tends to live.</p>]]></content><author><name>Amir Joudaki</name></author><category term="dynamical-systems," /><category term="ai-safety," /><category term="takens-theorem," /><category term="longitudinal-testing" /><summary type="html"><![CDATA[When understanding AI internals is fragile, watching behavior over time may be our most honest evidence of safety.]]></summary></entry><entry><title type="html">Complex-Analytic Proofs of Global Attraction for Neural Kernel Map</title><link href="https://ajoudaki.github.io/blog/2025/kernel-complex-analysis/" rel="alternate" type="text/html" title="Complex-Analytic Proofs of Global Attraction for Neural Kernel Map" /><published>2025-08-12T00:00:00+00:00</published><updated>2025-08-12T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/kernel-complex-analysis</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/kernel-complex-analysis/"><![CDATA[<section id="prelude-bridging-fields-with-ai" class="level1">
-<h1>Prelude: bridging fields with AI</h1>
+<p>If we are going to trust systems that can outthink us, we should demand evidence that cannot be produced cheaply. We should demand histories, not speeches. And we should be wary of any training paradigm that treats long stretches of time as something to be compressed, shuffled, and forgotten—because that is exactly where the structure of safety tends to live.</p>]]></content><author><name>Amir Joudaki</name></author><category term="dynamical-systems," /><category term="ai-safety," /><category term="takens-theorem," /><category term="longitudinal-testing" /><summary type="html"><![CDATA[When understanding AI internals is fragile, watching behavior over time may be our most honest evidence of safety.]]></summary></entry><entry><title type="html">Complex-Analytic Proofs of Global Attraction for Neural Kernel Map</title><link href="https://ajoudaki.github.io/blog/2025/kernel-complex-analysis/" rel="alternate" type="text/html" title="Complex-Analytic Proofs of Global Attraction for Neural Kernel Map" /><published>2025-08-12T00:00:00+00:00</published><updated>2025-08-12T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/kernel-complex-analysis</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/kernel-complex-analysis/"><![CDATA[<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+<style>
+#refs {
+  padding-left: 0;
+}
+#refs .csl-entry {
+  margin-bottom: 0.8em;
+  padding-left: 2em;
+  text-indent: -2em;
+}
+</style>
+
+<h1 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with
+AI</h1>
 <p>In my AISTATS paper <span class="citation" data-cites="joudaki2025aistats">(<a href="#ref-joudaki2025aistats" role="doc-biblioref">Joudaki and Hofmann 2025</a>)</span>, we proved
 that the mean-field neural kernel (a.k.a. conjugate kernel, or NNGP
 kernel) sequence of a deep MLP converges globally to a fixed point
@@ -95,9 +604,8 @@ classical stones to turn, and how far existing results already reach. I
 think it’s no overstating to say that this could bring about a
 renaissance for mathematics, human knowledge, and more broadly
 understanding of the world around us.</p>
-</section>
-<section id="setup-and-the-original-master-theorem" class="level1">
-<h1>Setup and the original master theorem</h1>
+<h1 id="setup-and-the-original-master-theorem">Setup and the original
+master theorem</h1>
 <p>We work in the mean-field regime for a fully-connected, width-<span class="math inline">\(d\)</span> MLP at random initialization with
 activation <span class="math inline">\(\phi\)</span> that has a finite
 Gaussian second moment. Let <span class="math display">\[\rho_{\ell+1} =
@@ -156,8 +664,7 @@ identity more than two times. But to make this intuition formal, it took
 several days of painstaking step-by-step derivations.</p>
 <p>For comparison reasons, here is the statement of the master theorem
 in the paper:</p>
-<section id="original-master-theorem" class="level2">
-<h2>Original master theorem</h2>
+<h2 id="original-master-theorem">Original master theorem</h2>
 <div class="theorem">
 <p><strong>Theorem 1</strong> (Original Master Theorem). <em>Assume
 forward stability <span class="math inline">\(\kappa(1)=1\)</span> and
@@ -210,10 +717,8 @@ still non-vacuous bound of case 1.</p>
 <p>The combination of these two reasons is why we suspect something
 deeper and more elegant under the surface of these proofs and results.
 As discussed in the sequel, these suspicions were deemed to be true.</p>
-</section>
-</section>
-<section id="an-alternative-complex-analytic-proof" class="level1">
-<h1>An alternative complex-analytic proof</h1>
+<h1 id="an-alternative-complex-analytic-proof">An alternative
+complex-analytic proof</h1>
 <p>First, let us go through a quick primer on holomorphic self-maps of
 the disk and why they’re useful.</p>
 <p>We can embed our real kernel map <span class="math inline">\(\kappa:[-1,1]\to[-1,1]\)</span> into the complex
@@ -249,8 +754,8 @@ correct scale when the attracting fixed point sits on the
 boundary).</em></p></li>
 </ul>
 </div>
-<section id="the-three-classical-tools-we-need-with-intuition" class="level2">
-<h2>The three classical tools we need (with intuition)</h2>
+<h2 id="the-three-classical-tools-we-need-with-intuition">The three
+classical tools we need (with intuition)</h2>
 <p>Below are the exact statements we will use, quoted in the standard
 disk notation. Each appears (or is recalled) in <span class="citation" data-cites="mercer2018">(<a href="#ref-mercer2018" role="doc-biblioref">Mercer 2018</a>)</span>, along with context and
 references to classical sources.</p>
@@ -294,9 +799,8 @@ z}\)</span>.</em></p>
 <p><em><strong>Intuition</strong>: given the local slope <span class="math inline">\(\alpha\)</span> at the origin, this is the largest
 one-step radial gain still compatible with Schwarz–Pick.</em></p>
 </div>
-</section>
-<section id="complex-analytic-master-theorem-camt" class="level2">
-<h2>Complex-Analytic Master Theorem (CAMT)</h2>
+<h2 id="complex-analytic-master-theorem-camt">Complex-Analytic Master
+Theorem (CAMT)</h2>
 <div class="theorem">
 <p><strong>Theorem 2</strong> (Complex-Analytic Master Theorem). <em>Let
 <span class="math inline">\(\kappa:\mathbb{D}\to\mathbb{D}\)</span> be
@@ -343,9 +847,7 @@ the boundary. Iterating multiplies those factors, giving geometric decay
 (and <span class="math inline">\(O(1/\ell)\)</span> in the parabolic
 boundary case).</em></p>
 </div>
-</section>
-<section id="proof-idea" class="level2">
-<h2>Proof idea</h2>
+<h2 id="proof-idea">Proof idea</h2>
 <p>Schwarz–Pick makes every holomorphic self-map non-expansive in the
 hyperbolic metric; we need a strict global contraction with an explicit
 factor. For interior fixed points we first recenter the disk so the
@@ -359,12 +861,10 @@ is the sharp one-step inequality in the natural horodisk gauge <span class="math
 linearization conjugates the map to a unit translation on a right
 half-plane, yielding a one-step logistic improvement that telescopes to
 <span class="math inline">\(O(1/\ell)\)</span>.</p>
-</section>
-<section id="formal-proof" class="level2">
-<h2>Formal proof</h2>
+<h2 id="formal-proof">Formal proof</h2>
 <p>We treat (C1)–(C4) in turn.</p>
-<section id="c1-centered-interior-fixed-point-at-0" class="level3">
-<h3>(C1) Centered interior fixed point at <span class="math inline">\(0\)</span></h3>
+<h3 id="c1-centered-interior-fixed-point-at-0">(C1) Centered interior
+fixed point at <span class="math inline">\(0\)</span></h3>
 <div class="proof">
 <p><em>Proof.</em> <em>Setup.</em> Assume <span class="math inline">\(\kappa:\mathbb{D}\to\mathbb{D}\)</span> is
 holomorphic, <span class="math inline">\(\kappa(0)=0\)</span>, <span class="math inline">\(\alpha:=\kappa&#39;(0)\in[0,1)\)</span>, and <span class="math inline">\(\kappa\)</span> is not an automorphism.</p>
@@ -382,9 +882,8 @@ majorization. Hence <span class="math display">\[E_0\big(\kappa(z)\big)
 E_0\big(\kappa^{\circ \ell}(z)\big) \leq
 \left(\tfrac{1+\alpha}{2}\right)^{\ell}E_0(z).\]</span> ◻</p>
 </div>
-</section>
-<section id="c4-interior-fixed-point-at-rhostar" class="level3">
-<h3>(C4) Interior fixed point at <span class="math inline">\(\rho^\star\)</span></h3>
+<h3 id="c4-interior-fixed-point-at-rhostar">(C4) Interior fixed point at
+<span class="math inline">\(\rho^\star\)</span></h3>
 <div class="proof">
 <p><em>Proof.</em> <em>Setup.</em> Assume <span class="math inline">\(\kappa(\rho^\star)=\rho^\star\)</span> for some
 <span class="math inline">\(\rho^\star\in\mathbb{D}\)</span>, and set
@@ -400,9 +899,8 @@ E_0\big(\psi(\kappa(z))\big) = E_0\big(g(\psi(z))\big)
 \frac{1+q}{2}\,E_{\rho^\star}(z).\]</span></p>
 <p>Iterating proves (C4). ◻</p>
 </div>
-</section>
-<section id="c2-strictly-attractive-boundary-fixed-point-at-1" class="level3">
-<h3>(C2) Strictly attractive boundary fixed point at <span class="math inline">\(1\)</span></h3>
+<h3 id="c2-strictly-attractive-boundary-fixed-point-at-1">(C2) Strictly
+attractive boundary fixed point at <span class="math inline">\(1\)</span></h3>
 <div class="proof">
 <p><em>Proof.</em> <em>Setup.</em> Assume <span class="math inline">\(\kappa(1)=1\)</span> n.t. and <span class="math inline">\(\beta:=\kappa&#39;(1)\in(0,1)\)</span>.</p>
 <p><em>One-step contraction (Julia–Carathéodory).</em> By
@@ -413,9 +911,8 @@ E_0\big(\psi(\kappa(z))\big) = E_0\big(g(\psi(z))\big)
 <p><em>Iterate.</em> Apply the inequality <span class="math inline">\(\ell\)</span> times to get <span class="math inline">\(H_1(\kappa^{\circ \ell}(z))\leq \beta^\ell
 H_1(z)\)</span>. ◻</p>
 </div>
-</section>
-<section id="c3-parabolic-boundary-fixed-point-kappa11-non-automorphism" class="level3">
-<h3>(C3) Parabolic boundary fixed point (<span class="math inline">\(\kappa&#39;(1)=1\)</span>, non-automorphism)</h3>
+<h3 id="c3-parabolic-boundary-fixed-point-kappa11-non-automorphism">(C3)
+Parabolic boundary fixed point (<span class="math inline">\(\kappa&#39;(1)=1\)</span>, non-automorphism)</h3>
 <div class="proof">
 <p><em>Proof sketch.</em> <em>Setup.</em> Assume <span class="math inline">\(\kappa(1)=1\)</span>, <span class="math inline">\(\kappa&#39;(1)=1\)</span>, and <span class="math inline">\(\kappa\)</span> is not an automorphism.</p>
 <p><em>Koenigs linearization and one-step inequality.</em> Standard
@@ -435,10 +932,7 @@ boundary data (e.g., second angular derivative) <span class="citation" data-cite
 the parabolic case; no geometric (exponential) rate exists without extra
 structure.</em></p>
 </div>
-</section>
-</section>
-<section id="comparison-between-proofs" class="level2">
-<h2>Comparison between proofs</h2>
+<h2 id="comparison-between-proofs">Comparison between proofs</h2>
 <ul>
 <li><p>Which “distance” shrinks?</p>
 <ul>
@@ -538,9 +1032,7 @@ London Mathematical Society</em>, 2nd series, vol. 40: 263–76.
 Lemma Und Die Randwerte Analytischer Funktionen.”</span>
 <em>Mathematische Annalen</em> 115: 336–51.
 </div>
-</div>
-</section>
-</section>]]></content><author><name>Amir Joudaki</name></author><category term="complex-analysis," /><category term="dynamical-systems," /><category term="neural-kernels," /><category term="mean-field," /><category term="fixed-points" /><summary type="html"><![CDATA[A global contraction of the kernel map using Schwarz–Pick, Julia–Carathéodory, and Rogosinski extremals.]]></summary></entry><entry><title type="html">From a Stochastic Traffic Jam to a Solvable PDE</title><link href="https://ajoudaki.github.io/blog/2025/traffic-pde/" rel="alternate" type="text/html" title="From a Stochastic Traffic Jam to a Solvable PDE" /><published>2025-07-20T00:00:00+00:00</published><updated>2025-07-20T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/traffic-pde</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/traffic-pde/"><![CDATA[<p>Complex systems composed of many interacting, random parts are ubiquitous in science and engineering. From statistical physics and neural networks analysis, to traffic flow on a highway and pedestrian crowds in a city, tracking each individual agent is often a hopeless task. The goal of theoretical modeling is to find a simpler, macroscopic law that governs the system’s average behavior. This “mean-field” approach shifts our focus from the chaotic micro-scale to the predictable macro-scale.</p>
+</div>]]></content><author><name>Amir Joudaki</name></author><category term="complex-analysis," /><category term="dynamical-systems," /><category term="neural-kernels," /><category term="mean-field," /><category term="fixed-points" /><summary type="html"><![CDATA[A global contraction of the kernel map using Schwarz–Pick, Julia–Carathéodory, and Rogosinski extremals.]]></summary></entry><entry><title type="html">From a Stochastic Traffic Jam to a Solvable PDE</title><link href="https://ajoudaki.github.io/blog/2025/traffic-pde/" rel="alternate" type="text/html" title="From a Stochastic Traffic Jam to a Solvable PDE" /><published>2025-07-20T00:00:00+00:00</published><updated>2025-07-20T00:00:00+00:00</updated><id>https://ajoudaki.github.io/blog/2025/traffic-pde</id><content type="html" xml:base="https://ajoudaki.github.io/blog/2025/traffic-pde/"><![CDATA[<p>Complex systems composed of many interacting, random parts are ubiquitous in science and engineering. From statistical physics and neural networks analysis, to traffic flow on a highway and pedestrian crowds in a city, tracking each individual agent is often a hopeless task. The goal of theoretical modeling is to find a simpler, macroscopic law that governs the system’s average behavior. This “mean-field” approach shifts our focus from the chaotic micro-scale to the predictable macro-scale.</p>
 
 <p>This post tells the story of one such journey. We begin with a stochastic, discrete model of cars at intersections. This setup is quite difficult to analyze, mostly due to its infinite state space (the number of cars at various intersection points). We will then show how this system can be mapped to a continuous approximation, which, with one powerful physical assumption, can be described by a solvable Partial Differential Equation (PDE).</p>
 
