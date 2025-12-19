@@ -19,6 +19,12 @@ toc:
 bibliography: ../assets/_bibliography/refs.bib
 ---
 
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
 <h1 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with
 AI</h1>
 <p>In my AISTATS paper <span class="citation"

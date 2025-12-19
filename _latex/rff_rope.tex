@@ -2,12 +2,19 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{amsthm} % For theorem and proof environments
+\usepackage{amsthm}
 \usepackage{graphicx}
 \usepackage{hyperref}
 
-% Define Theorem Environment
-\newtheorem{theorem}{Theorem}
+% Theorem-like environments (numbered within sections for readability)
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
 
 % Title and Author
 \title{RF-RoPE: Adjust your RoPE using Random Fourier Features}
@@ -15,166 +22,378 @@
 \date{\today}
 
 \begin{document}
-
 \maketitle
 
 \begin{abstract}
-Rotary Position Embedding (RoPE) is a widely used positional encoding in modern Transformers \cite{su2021roformer,touvron2023llama}, yet its standard implementation employs a fixed, geometrically decaying set of frequencies \cite{su2021roformer}. This choice implicitly enforces a singular, fixed positional kernel, limiting architectural flexibility. This paper introduces the Random Feature RoPE (RF-RoPE) framework, a generative design methodology that enables architects to implement any desired shift-invariant kernel $\Phi(\Delta \mathbf{p})$ as an expected attention modulation at initialization, by leveraging Random Fourier Features (RFF) \cite{rahimi2007random} and Bochner's theorem \cite{bochner1955harmonic,rasmussen2006gpml}. We generalize RoPE to vector positional inputs $\mathbf{p} \in \mathbb{R}^k$ and prove that the expectation of the resulting attention score, taken over frequencies sampled from a distribution $p(\mathbf{\omega})$, yields the inner product scaled by the kernel: $E[S(\mathbf{p}_m, \mathbf{p}_n)] = (\mathbf{q}_m^T \mathbf{k}_n) \cdot \Phi(\Delta \mathbf{p})$. Our core contribution, the Master Theorem, leverages Bochner's theorem to establish an inverse Fourier-pair relationship between the desired kernel $\Phi(\Delta \mathbf{p})$ and the required frequency distribution $p(\mathbf{\omega})$. This transforms positional encoding design from ad-hoc tuning into a mathematically grounded selection process. We analyze the variance of the estimator, introduce novel embeddings (e.g., Gaussian, Cauchy, Matérn) \cite{rasmussen2006gpml,matern1960spatial}, and provide a formal analysis of standard RoPE's implicit bias. Furthermore, we demonstrate that while the Master Theorem guarantees a locally centered kernel at initialization, the learned weight matrices ($W_Q, W_K$) can adapt the RoPE mechanism during training to realize ``shifted-local'' attention kernels via a learned phase shift mechanism.
+Rotary Position Embedding (RoPE) is a widely used positional encoding in modern Transformers \cite{su2021roformer,touvron2023llama}, yet its standard implementation employs a fixed, geometrically decaying set of frequencies \cite{su2021roformer}. This choice implicitly enforces a singular, fixed positional kernel, limiting architectural flexibility. This paper introduces the Random Feature RoPE (RF-RoPE) framework, a generative design methodology that enables architects to implement any desired shift-invariant kernel $\Phi(\Delta \mathbf{p})$ as an expected attention modulation at initialization, by leveraging Random Fourier Features (RFF) \cite{rahimi2007random} and Bochner's theorem \cite{bochner1955harmonic,rasmussen2006gpml}. We generalize RoPE to vector positional inputs $\mathbf{p} \in \mathbb{R}^k$ and prove that the expectation of the resulting attention score, taken over frequencies sampled from a distribution $p(\boldsymbol{\omega})$, yields the inner product scaled by the kernel:
+\[
+\mathbb{E}[S(\mathbf{p}_m,\mathbf{p}_n)] = (\mathbf{q}_m^\top \mathbf{k}_n)\,\Phi(\mathbf{p}_n-\mathbf{p}_m).
+\]
+Our core contribution, the \emph{Master Theorem}, leverages Bochner's theorem to establish an inverse Fourier-pair relationship between the desired kernel $\Phi$ and the required frequency distribution $p(\boldsymbol{\omega})$. We analyze estimator variance, instantiate novel embeddings (e.g., Gaussian, Cauchy, Mat\'ern) \cite{rasmussen2006gpml,matern1960spatial}, and give a formal re-assessment of standard RoPE's implicit spectral bias. Finally, we explain how learned projections ($W_Q,W_K$) can induce \emph{shifted-local} attention via a learned phase-shift mechanism, even when initialization kernels are necessarily centered.
 \end{abstract}
 
 \section{Introduction}
-The Transformer architecture's self-attention mechanism, being permutation-equivariant, requires explicit positional encoding (PE) \cite{vaswani2017attention}. Rotary Position Embedding (RoPE) \cite{su2021roformer} has achieved widespread success by injecting relative position information via rotation matrices $R(m \theta_i)$. However, RoPE's reliance on fixed frequencies (e.g., $\theta_i = 10000^{-2i/d}$) \cite{su2021roformer,vaswani2017attention} couples the model to a specific, fixed decay profile. This rigidity restricts the flexibility needed to inject domain-specific inductive biases or handle structured data; extensions of RoPE to multi-dimensional settings have been explored in vision and spatial domains \cite{li2021learnablefourier,heo2024ropevit}.
+Self-attention is permutation-equivariant, hence Transformers require positional information to represent ordered or structured inputs \cite{vaswani2017attention}. Rotary Position Embedding (RoPE) \cite{su2021roformer} injects relative position information by applying position-dependent $2\times 2$ rotations to query/key feature pairs. In its common deterministic form, RoPE uses a fixed geometric progression of frequencies (angles) \cite{su2021roformer}, which couples the induced positional interactions to a particular spectral profile and limits the ability to encode domain-specific inductive biases. Extensions and adaptations of RoPE to higher-dimensional structure (e.g., 2D vision) further motivate a principled design view \cite{li2021learnablefourier,heo2024ropevit}.
 
-In this work, we present a synthesis that unifies kernel theory with the RoPE operator, creating a generative design methodology termed Random Frequency RoPE (RF-RoPE). We extend the one-dimensional RoPE to support arbitrary $k$-dimensional position vectors $\mathbf{p} \in \mathbb{R}^k$.
-
-Our central contribution is the establishment of the Master Theorem for rotational positional kernels. This theorem provides a principled inverse design recipe:
+We introduce \emph{Random Feature RoPE (RF-RoPE)}: rather than fixing frequencies, we \emph{sample} them from a designed distribution $p(\boldsymbol{\omega})$. Our central result is a kernel-design theorem showing that RF-RoPE implements any desired shift-invariant kernel in expectation at initialization. This turns positional-encoding design into a mathematically grounded inverse problem:
 \[
-\Phi(\Delta \mathbf{p}) \rightarrow \text{Inverse Fourier Transform } p(\mathbf{\omega}) \rightarrow \text{Sampled Frequencies } \mathbf{\omega}_i.
+\Phi(\Delta \mathbf{p}) \;\longrightarrow\; p(\boldsymbol{\omega}) \;\longrightarrow\; \{\boldsymbol{\omega}_i\}_{i=1}^{D},
 \]
-This framework allows for the selection of rotational frequencies that provably realize any desired shift-invariant kernel in expectation at initialization. We further analyze how this mechanism adapts during training to support complex attention patterns such as shifted-local attention.
+with the inverse map justified by Bochner's theorem \cite{bochner1955harmonic,rasmussen2006gpml} and operationalized via random features \cite{rahimi2007random}.
 
 \section{Background and Related Work}
-The connection between positional encoding and kernel methods is established through Random Fourier Features (RFF) \cite{rahimi2007random} and Bochner's theorem \cite{bochner1955harmonic,rasmussen2006gpml}.
+\paragraph{Random Fourier Features and Bochner.}
+Random Fourier Features (RFF) approximate shift-invariant kernels via Monte Carlo samples from their spectral density \cite{rahimi2007random}. Bochner's theorem characterizes such kernels as Fourier transforms of nonnegative measures \cite{bochner1955harmonic,rasmussen2006gpml}.
 
-\subsection{Foundation: The RFF Framework}
-Bochner's theorem states that any continuous, shift-invariant positive-definite kernel $K(\mathbf{x}, \mathbf{y}) = \Phi(\mathbf{x} - \mathbf{y})$ can be represented as the Fourier transform of a non-negative measure $p(\mathbf{\omega})$ \cite{bochner1955harmonic,rasmussen2006gpml}:
-\[
-\Phi(\Delta \mathbf{p}) = \int_{\mathbb{R}^k} e^{i \Delta \mathbf{p}^T \mathbf{\omega}} p(\mathbf{\omega}) d\mathbf{\omega}.
-\]
-The RFF methodology uses Monte Carlo sampling from the spectral density $p(\mathbf{\omega})$ to approximate the kernel \cite{rahimi2007random}.
+\paragraph{Random features in efficient attention and positional encoding.}
+Random features have been used to approximate attention kernels in linear-time Transformers (e.g., Performer) \cite{choromanski2021performer}. Separately, Stochastic Positional Encoding (SPE) generates relative positional behavior compatible with linear attention \cite{liutkus2021relative}, and F-StrIPE extends random-feature positional encodings with structure-informed priors in symbolic music \cite{agarwal2025fstripe}. In parallel, RoPE variants have explored learned or content-dependent rotations (e.g., Selective RoPE) \cite{movahedi2025selectiverope}.
 
-\subsection{Precedents and the Novelty Gap}
-Random features have been used both to approximate attention kernels in linear-time Transformers (e.g., Performer) \cite{choromanski2021performer} and to build stochastic relative positional encodings compatible with linear-complexity attention (e.g., Stochastic Positional Encoding (SPE)) \cite{liutkus2021relative}. More recently, structure-informed variants such as F-StrIPE extend these ideas for domain-specific priors \cite{agarwal2025fstripe}. In parallel, work on generalized RoPE mechanisms has explored learned or input-dependent rotations (e.g., Selective RoPE) \cite{movahedi2025selectiverope}.
-
-Our contribution is the synthesis: we identify the RoPE rotation mechanism itself as a direct implementation of an RFF-style expectation, provided the frequency distribution is centrally symmetric. This allows the RFF kernel-design toolkit to be integrated into the efficient RoPE operator as a general design methodology.
+\paragraph{Novelty gap.}
+Prior random-feature PE work primarily builds additive feature maps for (often linear) attention. Our contribution is to identify the \emph{RoPE rotation operator itself} as an RFF-style kernel estimator when frequencies are sampled symmetrically. This yields a direct, efficient pathway to import kernel-design theory into the RoPE mechanism.
 
 \section{The RF-RoPE Framework}
-We generalize the scalar RoPE rotation to arbitrary $k$-dimensional position vectors $\mathbf{p} \in \mathbb{R}^k$.
 
-\subsection{Generalized Rotational Inner Product}
-We define query $\mathbf{q}_m \in \mathbb{R}^d$ and key $\mathbf{k}_n \in \mathbb{R}^d$ vectors, associated with positions $\mathbf{p}_m$ and $\mathbf{p}_n$. We split the feature dimension $d$ into $D=d/2$ pairs. For each pair $i \in \{1, \dots, D\}$, we draw a $k$-dimensional random frequency vector $\mathbf{\omega}_i \in \mathbb{R}^k$, i.i.d. from a distribution $p(\mathbf{\omega})$.
-
-The rotated query $\mathbf{q}'_m$ and key $\mathbf{k}'_n$ are formed by applying a 2D rotation parameterized by the phase $\mathbf{p} \cdot \mathbf{\omega}_i$:
+\subsection{Generalized rotational encoding for $\mathbf{p}\in\mathbb{R}^k$}
+Let $\mathbf{q}_m,\mathbf{k}_n\in\mathbb{R}^d$ be query/key vectors at positions $\mathbf{p}_m,\mathbf{p}_n\in\mathbb{R}^k$. Assume $d$ is even and split features into $D=d/2$ two-dimensional blocks:
 \[
-\mathbf{q}'_{m, i} = R(\mathbf{p}_m \cdot \mathbf{\omega}_i) \mathbf{q}_{m, i} \quad \text{and} \quad \mathbf{k}'_{n, i} = R(\mathbf{p}_n \cdot \mathbf{\omega}_i) \mathbf{k}_{n, i}.
+\mathbf{q}_m = (\mathbf{q}_{m,1},\ldots,\mathbf{q}_{m,D}),\qquad
+\mathbf{k}_n = (\mathbf{k}_{n,1},\ldots,\mathbf{k}_{n,D}),
 \]
-Letting $\Delta \mathbf{p} = \mathbf{p}_n - \mathbf{p}_m$, the local inner product for pair $i$ simplifies to:
+where each $\mathbf{q}_{m,i},\mathbf{k}_{n,i}\in\mathbb{R}^2$.
+
+For each block $i$, sample an i.i.d.\ frequency vector $\boldsymbol{\omega}_i\in\mathbb{R}^k$ from $p(\boldsymbol{\omega})$. Define the $2\times 2$ rotation
 \[
-S_i = (\mathbf{q}_{m, i}^T \mathbf{k}_{n, i}) \cdot \cos(\Delta \mathbf{p} \cdot \mathbf{\omega}_i) + (\mathbf{q}_{m, i}^T \mathbf{\hat{k}}_{n, i}) \cdot \sin(\Delta \mathbf{p} \cdot \mathbf{\omega}_i),
+R(\alpha) \;=\;
+\begin{pmatrix}
+\cos\alpha & -\sin\alpha\\
+\sin\alpha & \cos\alpha
+\end{pmatrix}.
 \]
-where $\mathbf{\hat{k}}_{n, i}$ is $\mathbf{k}_{n, i}$ rotated by $+90^{\circ}$.
-
-\subsection{The Master Theorem for RF-RoPE Kernels}
-We analyze the expected value of the attention score, $E_{\mathbf{\omega}}[S(\mathbf{p}_m, \mathbf{p}_n)]$. Since $\sin(\cdot)$ is an odd function, $E[\sin(\Delta \mathbf{p} \cdot \mathbf{\omega})]=0$ if the frequency distribution $p(\mathbf{\omega})$ is centrally symmetric (i.e., $p(\mathbf{\omega}) = p(-\mathbf{\omega})$).
-
-This yields the Master Theorem:
+RF-RoPE applies the phase $\alpha=\mathbf{p}\cdot\boldsymbol{\omega}_i$:
 \[
-\boxed{
-E_{\mathbf{\omega}}[S(\mathbf{p}_m, \mathbf{p}_n)] = (\mathbf{q}_m^T \mathbf{k}_n) \cdot \Phi(\Delta \mathbf{p})
-}
+\mathbf{q}'_{m,i} = R(\mathbf{p}_m\cdot\boldsymbol{\omega}_i)\,\mathbf{q}_{m,i},
+\qquad
+\mathbf{k}'_{n,i} = R(\mathbf{p}_n\cdot\boldsymbol{\omega}_i)\,\mathbf{k}_{n,i},
 \]
-where the resultant positional kernel $\Phi(\Delta \mathbf{p})$ is the $k$-dimensional cosine transform of $p(\mathbf{\omega})$:
+and concatenates $\mathbf{q}'_m=(\mathbf{q}'_{m,1},\dots,\mathbf{q}'_{m,D})$, $\mathbf{k}'_n=(\mathbf{k}'_{n,1},\dots,\mathbf{k}'_{n,D})$.
+
+\subsection{Per-block inner product decomposition}
+Let $\Delta\mathbf{p}=\mathbf{p}_n-\mathbf{p}_m$ and $u_i=\Delta\mathbf{p}\cdot\boldsymbol{\omega}_i$. Using the rotation identity
+$R(a)^\top R(b)=R(b-a)$, the contribution of block $i$ to the RoPE-modulated dot product is
+\begin{align*}
+S_i
+\;:=\;
+(\mathbf{q}'_{m,i})^\top \mathbf{k}'_{n,i}
+&=
+\mathbf{q}_{m,i}^\top R(u_i)\,\mathbf{k}_{n,i}.
+\end{align*}
+Introduce the $+90^\circ$ rotation matrix
+$
+J=
+\begin{pmatrix}
+0 & -1\\
+1 & 0
+\end{pmatrix}
+$
+so that $J\mathbf{x}$ rotates $\mathbf{x}$ by $+90^\circ$. Then
 \[
-\Phi(\Delta \mathbf{p}) = E[\cos(\Delta \mathbf{p} \cdot \mathbf{\omega})] = \int_{\mathbb{R}^k} \cos(\Delta \mathbf{p} \cdot \mathbf{\omega}) p(\mathbf{\omega}) d\mathbf{\omega}.
+R(u) = \cos u \,I_2 + \sin u \,J.
 \]
-By Bochner's theorem, this establishes the inverse-design recipe: choose a desired symmetric, shift-invariant kernel $\Phi(\Delta \mathbf{p})$ and compute its (inverse) Fourier transform to obtain the required $p(\mathbf{\omega})$ \cite{bochner1955harmonic,rasmussen2006gpml}, from which the frequencies $\mathbf{\omega}_i$ must be sampled (typically once at initialization).
-
-\subsection{Variance Analysis and Convergence}
-The Master Theorem holds in expectation. In practice, we use a finite set of $D=d/2$ samples. We analyze the variance of the attention score $S$ as an estimator of $E[S]$.
-
-The variance $Var(S_i)$ depends on the content vectors and the kernel properties. Crucially, the variance introduced by the sine terms is unavoidable in a single realization, even though their expectation is zero.
-
-The total variance of the score $S = \sum S_i$ is $\sum Var[S_i]$. Since $S$ is the sum of $D$ i.i.d. random variables with finite variance, the Central Limit Theorem applies. The realized attention score converges to the expected kernelized attention, with the approximation error typically bounded by $O(1/\sqrt{D}) = O(1/\sqrt{d})$.
-
-\section{Application to RF-RoPE Design}
-The RF-RoPE methodology allows us to realize various kernels by sampling from their corresponding spectral densities \cite{rahimi2007random,rasmussen2006gpml}.
-
-\paragraph{Gaussian (RBF) Kernel:} $\Phi(\Delta \mathbf{p}) = \exp\left(-\frac{1}{2\sigma^2} \| \Delta \mathbf{p} \|^2\right)$. Requires sampling $\mathbf{\omega}$ from a Gaussian distribution $\mathcal{N}(\mathbf{0}, \sigma^{-2} I_k)$. Enforces strong, smooth locality \cite{rasmussen2006gpml}.
-
-\paragraph{Cauchy Kernel (1D):} $\Phi(\Delta m) = (1 + (\Delta m / b)^2)^{-1}$. Requires sampling $\omega$ from a Laplace distribution $p(\omega) \propto \exp(-|\omega|/b)$ \cite{rasmussen2006gpml}. Allows for heavy-tailed (global) interactions.
-
-\paragraph{Sinc Kernel:} $\Phi(\Delta \mathbf{p}) = \prod \text{sinc}(W_j \cdot \Delta p_j)$. Requires sampling $\mathbf{\omega}$ from a Uniform distribution $U(-W_j, W_j)$. Corresponds to an ideal band-limited filter.
-
-\paragraph{Mat\'ern Kernel:} A flexible family parameterized by $\nu$, interpolating between Exponential and Gaussian kernels \cite{matern1960spatial,rasmussen2006gpml}. Its spectral density corresponds to (multivariate) Student-$t$-like tails, motivating sampling schemes based on heavy-tailed frequency distributions.
-
-\section{Analytical Re-Assessment of Standard RoPE}
-The standard, deterministic RoPE (for $k=1$) uses a fixed geometric progression of frequencies \cite{su2021roformer}: $\theta_i = B^{-2i/d}$.
-
-\subsection{Asymmetry and the Complex Kernel}
-In standard RoPE, the frequencies $\theta_i$ are fixed and strictly positive \cite{su2021roformer}. The attention score is:
+Substituting yields the exact decomposition
+\begin{equation}
+\label{eq:Si-decomp}
+S_i
+=
+(\mathbf{q}_{m,i}^\top \mathbf{k}_{n,i})\cos u_i
++
+(\mathbf{q}_{m,i}^\top J\mathbf{k}_{n,i})\sin u_i.
+\end{equation}
+The full RF-RoPE attention score (pre-softmax) is
 \[
-S(m,n) = \sum_{i=1}^{D} \left[ C_i \cos(\Delta m \cdot \theta_i) + X_i \sin(\Delta m \cdot \theta_i) \right].
+S(\mathbf{p}_m,\mathbf{p}_n)
+:= (\mathbf{q}'_m)^\top \mathbf{k}'_n
+= \sum_{i=1}^{D} S_i.
 \]
-Since the set of frequencies is not symmetric around zero, the sine term does not vanish. The resulting kernel is complex and lacks the simple multiplicative form. This highlights the elegance of the RF-RoPE approach, which guarantees a real-valued, multiplicative kernel in expectation by design.
 
-\subsection{The Implied Frequency Distribution and Slow Decay}
-We analyze the decay properties of standard RoPE by determining the continuous distribution $p(\theta)$ that the discrete set $\{\theta_i\}$ approximates. The density of frequencies is proportional to the derivative of the index $i$ with respect to the frequency $\theta$:
+\subsection{Master Theorem: kernelization in expectation}
+
+\begin{lemma}[Odd-term cancellation under central symmetry]
+\label{lem:sine-cancel}
+Fix $\Delta\mathbf{p}\in\mathbb{R}^k$ and let $u=\Delta\mathbf{p}\cdot\boldsymbol{\omega}$ with $\boldsymbol{\omega}\sim p(\boldsymbol{\omega})$. If $p$ is centrally symmetric, i.e.\ $p(\boldsymbol{\omega})=p(-\boldsymbol{\omega})$, then
 \[
-p(\theta) \propto \left| \frac{di}{d\theta} \right| \propto \frac{1}{\theta}.
+\mathbb{E}[\sin u]=0,
+\qquad
+\mathbb{E}[\sin u \cos u]=0.
 \]
-The implied frequency distribution of standard RoPE follows a $p(\theta) \propto 1/\theta$ distribution. This is a heavy-tailed distribution that heavily emphasizes lower frequencies.
+\end{lemma}
 
-The resulting kernel $\Phi(\Delta m)$ (the cosine transform) exhibits very slow decay. This helps explain why standard RoPE can struggle to enforce strong locality bias without additional modifications \cite{su2021roformer}.
+\begin{proof}
+By symmetry and the change of variables $\boldsymbol{\omega}\mapsto -\boldsymbol{\omega}$,
+\[
+\mathbb{E}[\sin(\Delta\mathbf{p}\cdot\boldsymbol{\omega})]
+=
+\int_{\mathbb{R}^k}\sin(\Delta\mathbf{p}\cdot\boldsymbol{\omega})\,p(\boldsymbol{\omega})\,d\boldsymbol{\omega}
+=
+\int_{\mathbb{R}^k}\sin(\Delta\mathbf{p}\cdot(-\boldsymbol{\omega}))\,p(-\boldsymbol{\omega})\,d\boldsymbol{\omega}
+=
+-\mathbb{E}[\sin(\Delta\mathbf{p}\cdot\boldsymbol{\omega})],
+\]
+hence it must be $0$. The second identity follows since $\sin u\cos u=\tfrac{1}{2}\sin(2u)$ is also odd in $u$.
+\end{proof}
 
-\section{Beyond Initialization: Learned Adaptations and Shifted Attention}
-The RF-RoPE framework provides a methodology for designing the positional kernel at initialization. However, Transformers often develop specialized heads that attend at fixed, non-zero offsets (e.g., induction heads) \cite{olsson2022incontext}. This section analyzes how the architecture learns such ``shifted-local'' attention.
+Define the \emph{RF-RoPE positional kernel} induced by $p$ as the cosine transform
+\begin{equation}
+\label{eq:Phi-def}
+\Phi(\Delta\mathbf{p})
+:= \mathbb{E}_{\boldsymbol{\omega}\sim p}\!\left[\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})\right]
+=
+\int_{\mathbb{R}^k}\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})\,p(\boldsymbol{\omega})\,d\boldsymbol{\omega}.
+\end{equation}
 
-\subsection{The Locality Constraint of the Master Theorem}
-The kernels designed via the Master Theorem (Section 3.2) are inherently centered at the origin.
-
-\begin{theorem}[Peak at Origin]
-A kernel $\Phi(\Delta \mathbf{p})$ derived from the cosine transform of a probability distribution $p(\mathbf{\omega})$ achieves its global maximum at $\Delta \mathbf{p} = \mathbf{0}$.
+\begin{theorem}[Master Theorem (RF-RoPE kernelization)]
+\label{thm:master}
+Assume $\boldsymbol{\omega}_1,\ldots,\boldsymbol{\omega}_D$ are i.i.d.\ from a centrally symmetric distribution $p(\boldsymbol{\omega})$ and RF-RoPE is applied as above. Then for any fixed content vectors $\mathbf{q}_m,\mathbf{k}_n$ and positions $\mathbf{p}_m,\mathbf{p}_n$,
+\[
+\mathbb{E}_{\boldsymbol{\omega}_{1:D}}\!\left[S(\mathbf{p}_m,\mathbf{p}_n)\right]
+=
+(\mathbf{q}_m^\top \mathbf{k}_n)\,\Phi(\mathbf{p}_n-\mathbf{p}_m),
+\]
+where $\Phi$ is given by \eqref{eq:Phi-def}.
 \end{theorem}
 
 \begin{proof}
-$\Phi(\mathbf{0}) = E[\cos(0)] = 1$. For any $\Delta \mathbf{p} \neq \mathbf{0}$, since $\cos(x) \le 1$, the expectation $E[\cos(\Delta \mathbf{p} \cdot \mathbf{\omega})] \le 1$. Therefore, $\Phi(\Delta \mathbf{p}) \le \Phi(\mathbf{0})$.
+From \eqref{eq:Si-decomp} and $u_i=\Delta\mathbf{p}\cdot\boldsymbol{\omega}_i$,
+\[
+S_i
+=
+A_i\cos u_i + B_i\sin u_i,
+\qquad
+A_i:=\mathbf{q}_{m,i}^\top \mathbf{k}_{n,i},\;\;
+B_i:=\mathbf{q}_{m,i}^\top J\mathbf{k}_{n,i}.
+\]
+Taking expectation over $\boldsymbol{\omega}_i$ and applying Lemma~\ref{lem:sine-cancel},
+\[
+\mathbb{E}[S_i]
+=
+A_i\,\mathbb{E}[\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})]
++
+B_i\,\mathbb{E}[\sin(\Delta\mathbf{p}\cdot\boldsymbol{\omega})]
+=
+A_i\,\Phi(\Delta\mathbf{p}).
+\]
+Summing over blocks and using linearity of expectation,
+\[
+\mathbb{E}\!\left[S(\mathbf{p}_m,\mathbf{p}_n)\right]
+=
+\sum_{i=1}^{D}\mathbb{E}[S_i]
+=
+\Phi(\Delta\mathbf{p})\sum_{i=1}^{D}A_i
+=
+\Phi(\Delta\mathbf{p})\,\mathbf{q}_m^\top \mathbf{k}_n,
+\]
+since $\mathbf{q}_m^\top \mathbf{k}_n=\sum_{i=1}^D \mathbf{q}_{m,i}^\top \mathbf{k}_{n,i}=\sum_{i=1}^D A_i$.
 \end{proof}
 
-This proves that we cannot design a shifted-local kernel merely by selecting a different frequency distribution $p(\mathbf{\omega})$. The adaptation must occur within the learned parameters.
+\begin{corollary}[Inverse kernel design via Bochner]
+\label{cor:bochner}
+Let $\Phi:\mathbb{R}^k\to\mathbb{R}$ be continuous, shift-invariant, and positive definite with $\Phi(\mathbf{0})=1$. Then there exists a centrally symmetric probability measure $p(\boldsymbol{\omega})$ such that \eqref{eq:Phi-def} holds. Consequently, RF-RoPE can realize $\Phi$ in expectation at initialization by sampling $\boldsymbol{\omega}_i\sim p$ and applying Theorem~\ref{thm:master}.
+\end{corollary}
 
-\subsection{The Mechanism of Learned Phase Shifts}
-The capacity for shifted attention arises from the adaptability of the query and key projection matrices ($W_Q$ and $W_K$). These matrices are applied before the RoPE rotation.
+\begin{proof}
+By Bochner's theorem \cite{bochner1955harmonic,rasmussen2006gpml}, $\Phi$ admits a representation
+\[
+\Phi(\Delta\mathbf{p})=\int_{\mathbb{R}^k} e^{i\,\Delta\mathbf{p}^\top \boldsymbol{\omega}}\,d\mu(\boldsymbol{\omega})
+\]
+for a finite nonnegative measure $\mu$. The normalization $\Phi(\mathbf{0})=1$ implies $\mu(\mathbb{R}^k)=1$, so $\mu$ is a probability measure. Since $\Phi$ is real-valued, $\mu$ can be chosen centrally symmetric, and taking real parts yields
+\[
+\Phi(\Delta\mathbf{p})
+=
+\int_{\mathbb{R}^k}\cos(\Delta\mathbf{p}^\top \boldsymbol{\omega})\,d\mu(\boldsymbol{\omega}),
+\]
+which is \eqref{eq:Phi-def} with $p=\mu$.
+\end{proof}
 
-We hypothesize that during training, the projection matrices $W_{Q,i}$ and $W_{K,i}$ learn to implement a fixed rotation within the 2D subspace corresponding to frequency $\mathbf{\omega}_i$. Let these learned rotations be $R(\phi_{q,i})$ and $R(\phi_{k,i})$.
+\subsection{Variance analysis and convergence}
+The Master Theorem describes the mean behavior. With finite $D$, $S$ is a random estimator of its expectation.
 
-The effective transformation becomes (where $\mathbf{v}_{m,i}, \mathbf{v}_{n,i}$ are base content vectors):
-\begin{align*}
-\mathbf{q}'_{m,i} &\approx R(\mathbf{p}_m \cdot \mathbf{\omega}_i) [ R(\phi_{q,i}) \mathbf{v}_{m,i} ] \\
-\mathbf{k}'_{n,i} &\approx R(\mathbf{p}_n \cdot \mathbf{\omega}_i) [ R(\phi_{k,i}) \mathbf{v}_{n,i} ].
-\end{align*}
-Since 2D rotations commute:
-\begin{align*}
-\mathbf{q}'_{m,i} &= R(\mathbf{p}_m \cdot \mathbf{\omega}_i + \phi_{q,i}) \mathbf{v}_{m,i} \\
-\mathbf{k}'_{n,i} &= R(\mathbf{p}_n \cdot \mathbf{\omega}_i + \phi_{k,i}) \mathbf{v}_{n,i}.
-\end{align*}
-The attention score $S_i$ depends on the relative angle:
+\begin{proposition}[Second moment and variance of a block]
+\label{prop:var}
+Assume $p(\boldsymbol{\omega})$ is centrally symmetric and let $u=\Delta\mathbf{p}\cdot\boldsymbol{\omega}$. For a fixed block $i$, define
+$A_i=\mathbf{q}_{m,i}^\top \mathbf{k}_{n,i}$ and $B_i=\mathbf{q}_{m,i}^\top J\mathbf{k}_{n,i}$ as in the proof of Theorem~\ref{thm:master}.
+Let $\Phi(\Delta\mathbf{p})=\mathbb{E}[\cos u]$ and $\Phi_2(\Delta\mathbf{p})=\mathbb{E}[\cos(2u)]$.
+Then
 \[
-\Delta\text{Angle}_i = (\Delta \mathbf{p} \cdot \mathbf{\omega}_i) + (\phi_{k,i} - \phi_{q,i}).
+\mathbb{E}[S_i] = A_i\,\Phi(\Delta\mathbf{p}),
 \]
-Let the net Learned Phase Shift be $\Phi_i = \phi_{k,i} - \phi_{q,i}$. The attention score for this pair is:
+and the variance satisfies
 \[
-S_i(\Delta \mathbf{p}) = (\mathbf{v}_{m,i}^T \mathbf{v}_{n,i}) \cdot \cos(\Delta \mathbf{p} \cdot \mathbf{\omega}_i + \Phi_i).
+\mathrm{Var}(S_i)
+=
+\frac{A_i^2+B_i^2}{2}
++
+\frac{A_i^2-B_i^2}{2}\,\Phi_2(\Delta\mathbf{p})
+-
+A_i^2\,\Phi(\Delta\mathbf{p})^2.
+\]
+\end{proposition}
+
+\begin{proof}
+We already derived $\mathbb{E}[S_i]=A_i\Phi(\Delta\mathbf{p})$.
+For the second moment, write $S_i=A_i\cos u + B_i\sin u$. Expanding,
+\[
+S_i^2 = A_i^2\cos^2 u + B_i^2\sin^2 u + 2A_iB_i\sin u\cos u.
+\]
+Taking expectations and applying Lemma~\ref{lem:sine-cancel} gives $\mathbb{E}[\sin u\cos u]=0$.
+Using the identities
+\[
+\cos^2 u=\frac{1+\cos(2u)}{2},\qquad \sin^2 u=\frac{1-\cos(2u)}{2},
+\]
+we obtain
+\[
+\mathbb{E}[S_i^2]
+=
+A_i^2\frac{1+\mathbb{E}[\cos(2u)]}{2}
++
+B_i^2\frac{1-\mathbb{E}[\cos(2u)]}{2}
+=
+\frac{A_i^2+B_i^2}{2}+\frac{A_i^2-B_i^2}{2}\,\Phi_2(\Delta\mathbf{p}).
+\]
+Finally,
+$\mathrm{Var}(S_i)=\mathbb{E}[S_i^2]-\mathbb{E}[S_i]^2$
+yields the stated expression.
+\end{proof}
+
+Because $\boldsymbol{\omega}_i$ are i.i.d., the random variables $S_i$ are independent conditioned on fixed content vectors. Hence,
+\[
+\mathrm{Var}(S)=\sum_{i=1}^{D}\mathrm{Var}(S_i).
+\]
+In regimes where block magnitudes are comparable (e.g., after layernorm), the standard deviation grows like $\sqrt{D}$ while the mean magnitude grows like $D$, yielding a typical \emph{relative} Monte Carlo error that scales as $O(D^{-1/2})=O(d^{-1/2})$.
+
+\section{Application to RF-RoPE Design}
+By Corollary~\ref{cor:bochner}, specifying a desired kernel $\Phi$ determines a spectral distribution $p(\boldsymbol{\omega})$ (or density when it exists), from which RF-RoPE samples frequencies. The following standard examples follow directly from classical kernel/spectral pairs \cite{rasmussen2006gpml,rahimi2007random}.
+
+\paragraph{Gaussian (RBF) kernel.}
+\[
+\Phi(\Delta\mathbf{p})=\exp\!\left(-\frac{1}{2\sigma^2}\|\Delta\mathbf{p}\|^2\right),
+\qquad
+\boldsymbol{\omega}\sim \mathcal{N}(\mathbf{0},\sigma^{-2}I_k).
 \]
 
-\subsection{Derivation of the Shifted-Local Kernel}
-The total attention score for this head is:
+\paragraph{Cauchy kernel (1D).}
 \[
-S(\Delta \mathbf{p}) = \sum_{i=1}^{D} C_i \cos(\Delta \mathbf{p} \cdot \mathbf{\omega}_i + \Phi_i).
+\Phi(\Delta m)=\left(1+(\Delta m/b)^2\right)^{-1},
+\qquad
+\omega \sim \mathrm{Laplace}(0,b^{-1})\ \ (\text{equivalently }p(\omega)\propto e^{-|\omega|/b}).
 \]
-If the training objective incentivizes this head to focus attention at a specific relative position $\Delta \mathbf{p} = -\mathbf{L}$, the optimizer will adjust the weights to maximize $S(-\mathbf{L})$. This requires the argument of the cosine to be zero:
+
+\paragraph{Sinc / band-limited kernel.}
+For separable bandwidths $W_j$,
 \[
--\mathbf{L} \cdot \mathbf{\omega}_i + \Phi_i \approx 0 \implies \Phi_i \approx \mathbf{L} \cdot \mathbf{\omega}_i.
+\Phi(\Delta\mathbf{p})=\prod_{j=1}^{k}\mathrm{sinc}(W_j\Delta p_j),
+\qquad
+\omega_j \sim \mathrm{Unif}(-W_j,W_j)\ \text{ independently.}
 \]
-The network learns a phase shift proportional to the dot product of the frequency vector and the desired shift vector. Substituting this back yields the form of the learned shifted-local kernel:
+
+\paragraph{Mat\'ern family.}
+Mat\'ern kernels interpolate between rough and smooth locality \cite{matern1960spatial,rasmussen2006gpml}. Their spectral densities exhibit Student-$t$-like heavy tails, motivating heavy-tailed sampling schemes for $\boldsymbol{\omega}$.
+
+\section{Analytical Re-Assessment of Standard RoPE}
+Standard deterministic RoPE for $k=1$ uses a fixed geometric frequency list \cite{su2021roformer}. Writing these frequencies as $\theta_i=B^{-2i/d}$, the RoPE-modulated dot product can be expressed in the form
 \[
-\boxed{
-S(\Delta \mathbf{p}) \approx \sum_{i=1}^{D} C_i \cos( (\Delta \mathbf{p} + \mathbf{L}) \cdot \mathbf{\omega}_i )
-}.
+S(m,n)=\sum_{i=1}^{D}\Big[A_i\cos(\Delta m\,\theta_i)+B_i\sin(\Delta m\,\theta_i)\Big],
 \]
-This demonstrates that while the RF-RoPE framework dictates the kernel at initialization (where $\Phi_i=0$), the RoPE mechanism is flexible enough to allow the learned weight matrices to recenter the kernel at any desired location $\Delta \mathbf{p} = -\mathbf{L}$. The shape of this shifted kernel will depend on the newly learned coefficients $C_i$, which may differ from the local kernel, potentially allowing for sharper concentration if required by the task.
+for coefficients $A_i,B_i$ determined by the content vectors within each 2D block (cf.\ \eqref{eq:Si-decomp}).
+
+\subsection{Asymmetry and loss of multiplicative kernel form}
+RF-RoPE relies on symmetric sampling to guarantee $\mathbb{E}[\sin(\Delta m\,\omega)]=0$ and hence a clean multiplicative modulation (Theorem~\ref{thm:master}). In standard RoPE, the frequency list is strictly positive, so there is no mechanism enforcing cancellation of the sine term. As a result, standard RoPE does not, in general, admit a representation of the form
+\[
+S(m,n)\stackrel{?}{=}(\mathbf{q}_m^\top\mathbf{k}_n)\,\Phi(\Delta m)
+\]
+for a single real-valued scalar kernel $\Phi$ without additional assumptions on the content-dependent coefficients.
+
+\subsection{Implied spectral density and slow decay (heuristic continuum limit)}
+A geometric grid $\theta_i=B^{-2i/d}$ corresponds to an approximately log-uniform spacing. Treat $i$ as continuous and solve for $i(\theta)$:
+\[
+\theta = B^{-2i/d}
+\quad\Longrightarrow\quad
+i(\theta)= -\frac{d}{2}\log_B\theta.
+\]
+Thus,
+\[
+\left|\frac{di}{d\theta}\right|
+=
+\frac{d}{2}\cdot \frac{1}{|\ln B|}\cdot \frac{1}{\theta}
+\;\propto\; \frac{1}{\theta}.
+\]
+Interpreting $\left|di/d\theta\right|$ as a continuum density suggests an implied heavy-tailed spectrum $p(\theta)\propto 1/\theta$ over the covered band. Heavy tails place substantial mass on low frequencies, which tends to induce slowly decaying correlations in position space, consistent with RoPE's empirically weak inherent locality prior \cite{su2021roformer}.
+
+\begin{remark}
+The above $p(\theta)\propto 1/\theta$ argument is a density-of-states approximation: it describes how densely the deterministic grid samples log-frequency. RF-RoPE replaces this implicit bias with an explicit, designer-chosen $p(\omega)$ tied to a target kernel via Corollary~\ref{cor:bochner}.
+\end{remark}
+
+\section{Beyond Initialization: Learned Adaptations and Shifted Attention}
+RF-RoPE controls the \emph{initialization} kernel. Yet Transformers learn attention heads that focus on fixed, nonzero offsets (e.g., induction heads) \cite{olsson2022incontext}. We now formalize why RF-RoPE kernels are necessarily centered and how learning can induce shifts.
+
+\subsection{A locality constraint at initialization}
+
+\begin{theorem}[Peak at the origin]
+\label{thm:peak}
+Let $\Phi(\Delta\mathbf{p})=\mathbb{E}_{\boldsymbol{\omega}\sim p}[\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})]$ for any probability distribution $p$. Then $\Phi$ attains its global maximum at $\Delta\mathbf{p}=\mathbf{0}$, and $\Phi(\Delta\mathbf{p})\le 1$ for all $\Delta\mathbf{p}$.
+\end{theorem}
+
+\begin{proof}
+$\Phi(\mathbf{0})=\mathbb{E}[\cos 0]=1$. For any $\Delta\mathbf{p}$, $\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})\le 1$ pointwise, hence $\Phi(\Delta\mathbf{p})=\mathbb{E}[\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega})]\le 1$.
+\end{proof}
+
+Thus, selecting a different $p(\boldsymbol{\omega})$ can change the \emph{shape} (width, smoothness, tails) of locality, but cannot move the peak away from $\Delta\mathbf{p}=\mathbf{0}$ at initialization.
+
+\subsection{Learned phase shifts from $W_Q$ and $W_K$}
+Consider a single block $i$ and suppose training makes the query/key projections implement additional content-dependent rotations within that $2$D subspace. Concretely, assume there exist angles $\phi_{q,i},\phi_{k,i}$ (possibly head- and block-specific) such that the pre-RoPE projected vectors satisfy
+\[
+\tilde{\mathbf{q}}_{m,i}\approx R(\phi_{q,i})\,\mathbf{v}_{m,i},
+\qquad
+\tilde{\mathbf{k}}_{n,i}\approx R(\phi_{k,i})\,\mathbf{v}_{n,i},
+\]
+for some base content vectors $\mathbf{v}_{m,i},\mathbf{v}_{n,i}$.
+Applying RF-RoPE yields
+\[
+\mathbf{q}'_{m,i}=R(\mathbf{p}_m\cdot\boldsymbol{\omega}_i)\tilde{\mathbf{q}}_{m,i},
+\qquad
+\mathbf{k}'_{n,i}=R(\mathbf{p}_n\cdot\boldsymbol{\omega}_i)\tilde{\mathbf{k}}_{n,i}.
+\]
+Since rotations commute in 2D,
+\[
+\mathbf{q}'_{m,i}\approx R(\mathbf{p}_m\cdot\boldsymbol{\omega}_i+\phi_{q,i})\mathbf{v}_{m,i},
+\qquad
+\mathbf{k}'_{n,i}\approx R(\mathbf{p}_n\cdot\boldsymbol{\omega}_i+\phi_{k,i})\mathbf{v}_{n,i}.
+\]
+Therefore, the relative phase entering the dot product is shifted by
+\[
+(\mathbf{p}_n-\mathbf{p}_m)\cdot\boldsymbol{\omega}_i + (\phi_{k,i}-\phi_{q,i}).
+\]
+Let $\Phi_i:=\phi_{k,i}-\phi_{q,i}$. Then block $i$ contributes approximately
+\[
+S_i(\Delta\mathbf{p})\approx C_i\cos(\Delta\mathbf{p}\cdot\boldsymbol{\omega}_i+\Phi_i),
+\qquad
+C_i:=\mathbf{v}_{m,i}^\top\mathbf{v}_{n,i}.
+\]
+
+\subsection{Shifted-local attention as learned recentering}
+Suppose the training objective encourages attention to peak near $\Delta\mathbf{p}=-\mathbf{L}$. Maximizing $S(-\mathbf{L})$ over phases pushes
+\[
+-\mathbf{L}\cdot\boldsymbol{\omega}_i+\Phi_i \approx 0
+\quad\Longrightarrow\quad
+\Phi_i \approx \mathbf{L}\cdot\boldsymbol{\omega}_i.
+\]
+Substituting gives the shifted form
+\[
+S(\Delta\mathbf{p})
+\approx \sum_{i=1}^{D} C_i\cos\big((\Delta\mathbf{p}+\mathbf{L})\cdot\boldsymbol{\omega}_i\big),
+\]
+i.e.\ learning can \emph{recenter} the effective kernel away from the origin even though initialization kernels (Theorem~\ref{thm:peak}) must be centered. This provides a simple mechanistic explanation for how RoPE-based models can develop fixed-offset heads such as induction heads \cite{olsson2022incontext}.
 
 \section{Conclusion}
-The Random Frequency RoPE (RF-RoPE) framework transcends RoPE's fixed design limitations by establishing a principled, generative design methodology rooted in Bochner's theorem \cite{bochner1955harmonic,rasmussen2006gpml}. By framing the frequency list as a sample from a designed spectral density $p(\mathbf{\omega})$, we enable the implementation of any desired shift-invariant kernel $\Phi(\Delta \mathbf{p})$ as an expected attention modulation at initialization, using the RFF design toolkit \cite{rahimi2007random}. This shifts the paradigm of positional encoding design from empirical tuning to mathematically precise kernel engineering. Furthermore, we have demonstrated that the underlying rotational mechanism is flexible enough to allow the model to learn adaptations during training, such as shifted-local attention via learned phase shifts in the $W_Q$ and $W_K$ matrices, providing a comprehensive understanding of the RoPE mechanism both at initialization and after training.
+RF-RoPE reframes RoPE frequency selection as kernel engineering. By sampling frequencies from a designed spectral density, RF-RoPE realizes any desired shift-invariant positive-definite kernel in expectation at initialization (Theorem~\ref{thm:master}), with principled inverse design via Bochner's theorem (Corollary~\ref{cor:bochner}). We also characterized finite-sample variance (Proposition~\ref{prop:var}) and clarified why initialization kernels are necessarily centered (Theorem~\ref{thm:peak}), while learned projections can induce shifted-local attention via phase shifts. Together, these results provide a rigorous foundation for designing and interpreting RoPE-style positional mechanisms.
 
 \bibliographystyle{plain}
 \bibliography{references}
