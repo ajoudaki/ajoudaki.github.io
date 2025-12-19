@@ -1,0 +1,18 @@
+layout: distill
+title: "RFF-RoPE: Adjust your RoPE using Random Fourier Features"
+description: Random Fourier Features and Rotary Position Embeddings
+date: 2025-12-19
+tags: machine-learning, neural-networks, position-embeddings
+giscus_comments: true
+related_publications: true
+authors:
+  - name: Amir Joudaki
+    affiliations:
+      name: ETH Zurich
+
+toc:
+  - name: "Introduction"
+  - name: "Random Fourier Features"
+  - name: "Rotary Position Embeddings"
+
+bibliography: ../assets/_bibliography/refs.bib

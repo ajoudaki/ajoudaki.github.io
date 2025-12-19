@@ -51,7 +51,6 @@ for tex_file in _latex/*.tex; do
             --citeproc \
             --csl="_latex/chicago.csl" \
             --metadata link-citations=true \
-            --section-divs \
             --no-highlight \
             -o temp_body.html
     else
@@ -60,7 +59,6 @@ for tex_file in _latex/*.tex; do
             --from=latex \
             --to=html5 \
             --mathjax \
-            --section-divs \
             --no-highlight \
             -o temp_body.html
     fi

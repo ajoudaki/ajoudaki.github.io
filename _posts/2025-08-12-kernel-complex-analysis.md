@@ -19,8 +19,8 @@ toc:
 bibliography: ../assets/_bibliography/refs.bib
 ---
 
-<section id="prelude-bridging-fields-with-ai" class="level1">
-<h1>Prelude: bridging fields with AI</h1>
+<h1 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with
+AI</h1>
 <p>In my AISTATS paper <span class="citation"
 data-cites="joudaki2025aistats">(<a href="#ref-joudaki2025aistats"
 role="doc-biblioref">Joudaki and Hofmann 2025</a>)</span>, we proved
@@ -59,9 +59,8 @@ classical stones to turn, and how far existing results already reach. I
 think it’s no overstating to say that this could bring about a
 renaissance for mathematics, human knowledge, and more broadly
 understanding of the world around us.</p>
-</section>
-<section id="setup-and-the-original-master-theorem" class="level1">
-<h1>Setup and the original master theorem</h1>
+<h1 id="setup-and-the-original-master-theorem">Setup and the original
+master theorem</h1>
 <p>We work in the mean-field regime for a fully-connected, width-<span
 class="math inline">\(d\)</span> MLP at random initialization with
 activation <span class="math inline">\(\phi\)</span> that has a finite
@@ -138,8 +137,7 @@ identity more than two times. But to make this intuition formal, it took
 several days of painstaking step-by-step derivations.</p>
 <p>For comparison reasons, here is the statement of the master theorem
 in the paper:</p>
-<section id="original-master-theorem" class="level2">
-<h2>Original master theorem</h2>
+<h2 id="original-master-theorem">Original master theorem</h2>
 <div class="theorem">
 <p><strong>Theorem 1</strong> (Original Master Theorem). <em>Assume
 forward stability <span class="math inline">\(\kappa(1)=1\)</span> and
@@ -211,10 +209,8 @@ still non-vacuous bound of case 1.</p>
 <p>The combination of these two reasons is why we suspect something
 deeper and more elegant under the surface of these proofs and results.
 As discussed in the sequel, these suspicions were deemed to be true.</p>
-</section>
-</section>
-<section id="an-alternative-complex-analytic-proof" class="level1">
-<h1>An alternative complex-analytic proof</h1>
+<h1 id="an-alternative-complex-analytic-proof">An alternative
+complex-analytic proof</h1>
 <p>First, let us go through a quick primer on holomorphic self-maps of
 the disk and why they’re useful.</p>
 <p>We can embed our real kernel map <span
@@ -263,9 +259,8 @@ correct scale when the attracting fixed point sits on the
 boundary).</em></p></li>
 </ul>
 </div>
-<section id="the-three-classical-tools-we-need-with-intuition"
-class="level2">
-<h2>The three classical tools we need (with intuition)</h2>
+<h2 id="the-three-classical-tools-we-need-with-intuition">The three
+classical tools we need (with intuition)</h2>
 <p>Below are the exact statements we will use, quoted in the standard
 disk notation. Each appears (or is recalled) in <span class="citation"
 data-cites="mercer2018">(<a href="#ref-mercer2018"
@@ -338,9 +333,8 @@ z}\)</span>.</em></p>
 class="math inline">\(\alpha\)</span> at the origin, this is the largest
 one-step radial gain still compatible with Schwarz–Pick.</em></p>
 </div>
-</section>
-<section id="complex-analytic-master-theorem-camt" class="level2">
-<h2>Complex-Analytic Master Theorem (CAMT)</h2>
+<h2 id="complex-analytic-master-theorem-camt">Complex-Analytic Master
+Theorem (CAMT)</h2>
 <div class="theorem">
 <p><strong>Theorem 2</strong> (Complex-Analytic Master Theorem). <em>Let
 <span class="math inline">\(\kappa:\mathbb{D}\to\mathbb{D}\)</span> be
@@ -409,9 +403,7 @@ the boundary. Iterating multiplies those factors, giving geometric decay
 (and <span class="math inline">\(O(1/\ell)\)</span> in the parabolic
 boundary case).</em></p>
 </div>
-</section>
-<section id="proof-idea" class="level2">
-<h2>Proof idea</h2>
+<h2 id="proof-idea">Proof idea</h2>
 <p>Schwarz–Pick makes every holomorphic self-map non-expansive in the
 hyperbolic metric; we need a strict global contraction with an explicit
 factor. For interior fixed points we first recenter the disk so the
@@ -427,13 +419,10 @@ class="math inline">\(H_1\)</span>. For the parabolic boundary case
 linearization conjugates the map to a unit translation on a right
 half-plane, yielding a one-step logistic improvement that telescopes to
 <span class="math inline">\(O(1/\ell)\)</span>.</p>
-</section>
-<section id="formal-proof" class="level2">
-<h2>Formal proof</h2>
+<h2 id="formal-proof">Formal proof</h2>
 <p>We treat (C1)–(C4) in turn.</p>
-<section id="c1-centered-interior-fixed-point-at-0" class="level3">
-<h3>(C1) Centered interior fixed point at <span
-class="math inline">\(0\)</span></h3>
+<h3 id="c1-centered-interior-fixed-point-at-0">(C1) Centered interior
+fixed point at <span class="math inline">\(0\)</span></h3>
 <div class="proof">
 <p><em>Proof.</em> <em>Setup.</em> Assume <span
 class="math inline">\(\kappa:\mathbb{D}\to\mathbb{D}\)</span> is
@@ -461,10 +450,8 @@ majorization. Hence <span class="math display">\[E_0\big(\kappa(z)\big)
 E_0\big(\kappa^{\circ \ell}(z)\big) \leq
 \left(\tfrac{1+\alpha}{2}\right)^{\ell}E_0(z).\]</span> ◻</p>
 </div>
-</section>
-<section id="c4-interior-fixed-point-at-rhostar" class="level3">
-<h3>(C4) Interior fixed point at <span
-class="math inline">\(\rho^\star\)</span></h3>
+<h3 id="c4-interior-fixed-point-at-rhostar">(C4) Interior fixed point at
+<span class="math inline">\(\rho^\star\)</span></h3>
 <div class="proof">
 <p><em>Proof.</em> <em>Setup.</em> Assume <span
 class="math inline">\(\kappa(\rho^\star)=\rho^\star\)</span> for some
@@ -488,10 +475,8 @@ E_0\big(\psi(\kappa(z))\big) = E_0\big(g(\psi(z))\big)
 \frac{1+q}{2}\,E_{\rho^\star}(z).\]</span></p>
 <p>Iterating proves (C4). ◻</p>
 </div>
-</section>
-<section id="c2-strictly-attractive-boundary-fixed-point-at-1"
-class="level3">
-<h3>(C2) Strictly attractive boundary fixed point at <span
+<h3 id="c2-strictly-attractive-boundary-fixed-point-at-1">(C2) Strictly
+attractive boundary fixed point at <span
 class="math inline">\(1\)</span></h3>
 <div class="proof">
 <p><em>Proof.</em> <em>Setup.</em> Assume <span
@@ -512,10 +497,8 @@ class="math inline">\(\ell\)</span> times to get <span
 class="math inline">\(H_1(\kappa^{\circ \ell}(z))\leq \beta^\ell
 H_1(z)\)</span>. ◻</p>
 </div>
-</section>
-<section id="c3-parabolic-boundary-fixed-point-kappa11-non-automorphism"
-class="level3">
-<h3>(C3) Parabolic boundary fixed point (<span
+<h3 id="c3-parabolic-boundary-fixed-point-kappa11-non-automorphism">(C3)
+Parabolic boundary fixed point (<span
 class="math inline">\(\kappa&#39;(1)=1\)</span>, non-automorphism)</h3>
 <div class="proof">
 <p><em>Proof sketch.</em> <em>Setup.</em> Assume <span
@@ -549,10 +532,7 @@ class="math inline">\(O(1/\ell)\)</span> law is optimal in general for
 the parabolic case; no geometric (exponential) rate exists without extra
 structure.</em></p>
 </div>
-</section>
-</section>
-<section id="comparison-between-proofs" class="level2">
-<h2>Comparison between proofs</h2>
+<h2 id="comparison-between-proofs">Comparison between proofs</h2>
 <ul>
 <li><p>Which “distance” shrinks?</p>
 <ul>
@@ -667,5 +647,3 @@ Lemma Und Die Randwerte Analytischer Funktionen.”</span>
 <em>Mathematische Annalen</em> 115: 336–51.
 </div>
 </div>
-</section>
-</section>
