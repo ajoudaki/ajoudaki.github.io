@@ -24,6 +24,16 @@ MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
 </script>
+<style>
+#refs {
+  padding-left: 0;
+}
+#refs .csl-entry {
+  margin-bottom: 0.8em;
+  padding-left: 2em;
+  text-indent: -2em;
+}
+</style>
 
 <h1 id="prelude-bridging-fields-with-ai">Prelude: bridging fields with
 AI</h1>

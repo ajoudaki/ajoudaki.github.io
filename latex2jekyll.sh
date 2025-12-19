@@ -93,7 +93,17 @@ for tex_file in _latex/*.tex; do
 MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
-</script>'
+</script>
+<style>
+#refs {
+  padding-left: 0;
+}
+#refs .csl-entry {
+  margin-bottom: 0.8em;
+  padding-left: 2em;
+  text-indent: -2em;
+}
+</style>'
         echo ""
         cat temp_body.html
     } > "$output_file"
