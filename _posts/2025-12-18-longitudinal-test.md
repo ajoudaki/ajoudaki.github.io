@@ -24,7 +24,7 @@ One tempting response is to focus on opening the box: interpretability, mechanis
 
 If internals remain partly opaque, and persuasion remains cheap, we need evidence that does not collapse under those conditions.
 
-I keep coming back to an answer that feels like a secret hidden in plain sight.: **time**.
+I keep coming back to a simple answer hiding in plain sight: **time**.
 
 To see why, consider a human analogy which is imperfect, but clarifying. Suppose two people both sound supportive. One is steady in a way that holds up across context changes: boredom, temptation, asymmetries, private opportunities to cut corners, moments when telling you something true would cost them something. The other is skilled at *appearing* supportive, but mostly as a strategy: attentive when watched, “caring” when it pays, agreeable when it deepens dependence. If the strategic one is talented, distinguishing them in a single conversation—or even a short run of them—can be nearly impossible. A snapshot can be gamed. But life is not a snapshot. Over time, regularities emerge—not as a revelation of “true intent,” but as a clearer picture of what the relationship reliably becomes.
 
