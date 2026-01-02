@@ -3,7 +3,7 @@ layout: distill
 title: "In Search of Lost Time: The Long View"
 description: "When motives are opaque and persuasion is cheap, behavior over time may be our most honest evidence of character."
 date: 2025-12-18
-tags: dynamical-systems, incentives, takens-theorem, longitudinal-testing, human-psychology
+tags: dynamical-systems, takens-theorem, longitudinal-testing
 giscus_comments: true
 related_publications: true
 authors:
